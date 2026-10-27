@@ -56,7 +56,7 @@ export function Footer() {
         <div className="text-sm text-muted-foreground space-y-2">
           <p className="flex items-center gap-2"><MapPin size={14} /> Teresina – PI</p>
           <a href={whatsappLink("Olá!")} target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-foreground"><MessageCircle size={14} /> WhatsApp</a>
-          <a href="https://instagram.com" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-foreground"><Instagram size={14} /> Instagram</a>
+          <a href="https://instagram.com/herragnes.teresina" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-foreground"><Instagram size={14} /> @herragnes.teresina</a>
         </div>
         <p className="text-xs text-muted-foreground md:text-right">Beba com moderação. Venda proibida para menores de 18 anos.</p>
       </div>
