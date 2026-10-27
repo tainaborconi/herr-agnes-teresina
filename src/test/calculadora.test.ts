@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calcularLitros, sugerirBarris } from "@/lib/site";
+import { calcularLitros, mensagemOrcamento, sugerirBarris } from "@/lib/site";
 
 /** Tabela oficial HERR AGNES: [convidados, litros]. */
 const TABELA: [number, number][] = [
