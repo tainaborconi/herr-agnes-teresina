@@ -43,10 +43,25 @@ export const INCLUSO = [
  */
 export const MAX_CONVIDADOS_TABELA = 200;
 
-export function calcularLitros(pessoas: number) {
+/**
+ * Duração da festa considerada no cálculo. A tabela oficial da casa é a base
+ * para uma festa de 4 horas; durações maiores ou menores ajustam a estimativa.
+ */
+export const DURACOES = [
+  { h: 2, rotulo: "2 horas", fator: 0.7 },
+  { h: 4, rotulo: "4 horas", fator: 1 },
+  { h: 6, rotulo: "6 horas", fator: 1.2 },
+  { h: 8, rotulo: "8 horas ou mais", fator: 1.4 },
+] as const;
+
+export const DURACAO_PADRAO = 4;
+
+export function calcularLitros(pessoas: number, horas: number = DURACAO_PADRAO) {
   if (pessoas <= 0) return 0;
   const faixa = Math.ceil(pessoas / 5); // faixa 1 = 1 a 5 convidados, 2 = 6 a 10...
-  return 10 * (faixa - Math.floor(faixa / 6));
+  const base = 10 * (faixa - Math.floor(faixa / 6));
+  const fator = DURACOES.find((d) => d.h === horas)?.fator ?? 1;
+  return Math.round((base * fator) / 10) * 10;
 }
 
 export const OBS_CALCULADORA =

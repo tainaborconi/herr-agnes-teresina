@@ -34,6 +34,7 @@
   --color-red-soft: var(--red-soft);
   --color-overlay: var(--overlay);
   --color-ink: var(--ink);
+  --color-wine: var(--wine);
 }
 
 :root {
@@ -61,6 +62,7 @@
   --red-soft: oklch(0.63 0.19 25);
   --overlay: oklch(0.08 0.02 25 / 0.8);
   --ink: oklch(0.085 0.012 25);
+  --wine: oklch(0.28 0.09 25);
 }
 
 @layer base {
@@ -98,4 +100,19 @@
   color: var(--color-foreground);
   font-weight: 600; font-size: 0.9rem; transition: background .2s;
   &:hover { background: color-mix(in oklab, var(--color-red-soft) 24%, transparent); }
+}
+
+/* Faixa vermelha: fundo vinho da marca com cartões e campos no tom certo */
+@utility section-wine {
+  background-color: var(--color-wine);
+  --card: oklch(0.38 0.105 25);
+  --muted: oklch(0.38 0.105 25);
+  --secondary: oklch(0.44 0.11 25);
+  --border: oklch(0.53 0.09 25);
+  --input: oklch(0.53 0.09 25);
+  --accent: oklch(0.45 0.13 22);
+  --overlay: oklch(0.14 0.05 25 / 0.75);
+  --muted-foreground: oklch(0.86 0.03 55);
+  --red-soft: oklch(0.72 0.17 25);
+  & .rounded-lg { box-shadow: 0 12px 30px oklch(0.1 0.04 25 / 0.45); }
 }
