@@ -2,7 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { MessageCircle } from "lucide-react";
 import { PageHero } from "@/components/Layout";
-import { calcularLitros, sugerirBarris, whatsappLink, SABORES, type Perfil } from "@/lib/site";
+import {
+  OBS_CALCULADORA,
+  MAX_CONVIDADOS_TABELA,
+  calcularLitros,
+  sugerirBarris,
+  whatsappLink,
+} from "@/lib/site";
 
 export const Route = createFileRoute("/calculadora")({
   head: () => ({
@@ -20,47 +26,37 @@ const field = "mt-2 w-full rounded-md border bg-secondary px-3 py-2.5 text-foreg
 
 function Calc() {
   const [pessoas, setPessoas] = useState(50);
-  const [horas, setHoras] = useState(5);
-  const [perfil, setPerfil] = useState<Perfil>("moderado");
-  const [sabor, setSabor] = useState<string>(SABORES[0]?.nome ?? "Pilsen");
-  const litros = calcularLitros(pessoas, horas, perfil);
+  const litros = calcularLitros(pessoas);
   const b = sugerirBarris(litros);
   const barrisTxt = [b.b50 && `${b.b50} barril(is) de 50L`, b.b30 && `${b.b30} barril(is) de 30L`].filter(Boolean).join(" + ");
-  const msg = `Olá! Calculei no site: ${pessoas} pessoas, ${horas}h de festa, consumo ${perfil}. Estimativa de ${litros}L de chopp ${sabor} (${barrisTxt}). Gostaria de um orçamento.`;
+  const msg = `Olá! Calculei no site: ${pessoas} convidados. Estimativa de ${litros}L de chopp (${barrisTxt}). Gostaria de um orçamento.`;
 
   return (
     <>
-      <PageHero eyebrow="Calcule seu chopp" title="Quanto chopp sua festa precisa?" text="Conte apenas os convidados que bebem. A estimativa é uma referência; confirmamos tudo no orçamento." />
+      <PageHero eyebrow="Calcule seu chopp" title="Quanto chopp sua festa precisa?" text="Informe o número de convidados e veja a estimativa de litros e os barris ideais." />
       <section className="mx-auto grid max-w-6xl gap-8 px-5 pb-20 md:grid-cols-2">
         <div className="space-y-5 rounded-lg border bg-card p-7">
-          <label className="block text-sm">Convidados que bebem
+          <label className="block text-sm">Convidados
             <input type="number" min={1} value={pessoas} onChange={(e) => setPessoas(Math.max(0, +e.target.value))} className={field} />
           </label>
-          <label className="block text-sm">Duração da festa (horas)
-            <input type="number" min={1} max={24} value={horas} onChange={(e) => setHoras(Math.max(0, +e.target.value))} className={field} />
-          </label>
-          <label className="block text-sm">Perfil de consumo
-            <select value={perfil} onChange={(e) => setPerfil(e.target.value as Perfil)} className={field}>
-              <option value="leve">Leve (0,4L por pessoa/hora)</option>
-              <option value="moderado">Moderado (0,6L por pessoa/hora)</option>
-              <option value="intenso">Intenso (0,8L por pessoa/hora)</option>
-            </select>
-          </label>
-          <label className="block text-sm">Sabor
-            <select value={sabor} onChange={(e) => setSabor(e.target.value)} className={field}>
-              {SABORES.map((s) => <option key={s.nome}>{s.nome}</option>)}
-            </select>
-          </label>
+          <p className="text-xs text-muted-foreground">
+            A estimativa segue a tabela da casa, de 1 a {MAX_CONVIDADOS_TABELA} convidados. Acima disso, ajustamos a quantidade no orçamento.
+          </p>
         </div>
         <div className="flex flex-col justify-between rounded-lg border border-red-soft/50 bg-card p-7">
           <div>
             <p className="eyebrow">Sua estimativa</p>
             <p className="mt-4 font-display text-7xl text-gold">{litros}<span className="text-3xl"> litros</span></p>
-            <p className="mt-4 text-muted-foreground">{litros > 0 ? `Sugestão: ${barrisTxt} (${b.total}L).` : "Preencha os campos ao lado."}</p>
+            <p className="mt-4 text-muted-foreground">{litros > 0 ? `Sugestão: ${barrisTxt} (${b.total}L).` : "Informe o número de convidados."}</p>
           </div>
-          <a href={whatsappLink(msg)} target="_blank" rel="noreferrer" className="btn-gold mt-8 w-fit">
-            <MessageCircle size={16} /> Enviar orçamento no WhatsApp
-          </a>
+          <div className="mt-8">
+            <p className="rounded-md border border-gold/25 bg-secondary/60 p-4 text-xs leading-relaxed text-muted-foreground">
+              <span className="font-semibold text-gold">Observação:</span> {OBS_CALCULADORA}
+            </p>
+            <a href={whatsappLink(msg)} target="_blank" rel="noreferrer" className="btn-gold mt-6 w-fit">
+              <MessageCircle size={16} /> Enviar orçamento no WhatsApp
+            </a>
+          </div>
         </div>
       </section>
     </>

@@ -150,7 +150,7 @@ function Index() {
         <div>
           <p className="eyebrow">Calculadora</p>
           <h2 className="mt-3 text-4xl">Quantos litros sua festa precisa?</h2>
-          <p className="mt-4 text-muted-foreground">Informe convidados e duração. Indicamos a quantidade e os barris ideais em segundos.</p>
+          <p className="mt-4 text-muted-foreground">Informe o número de convidados. Indicamos a quantidade e os barris ideais em segundos.</p>
           <Link to="/calculadora" className="btn-gold mt-8"><Calculator size={16} /> Calcular agora</Link>
         </div>
       </section>
