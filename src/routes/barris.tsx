@@ -43,14 +43,14 @@ function Barris() {
         </div>
       </section>
 
-      <section className="border-t bg-card">
+      <section className="section-wine border-t">
         <div className="mx-auto max-w-6xl px-5 py-20">
           <p className="eyebrow">Delivery</p>
           <h2 className="mt-3 text-4xl">Pedido hoje, recebido hoje</h2>
           <p className="mt-3 max-w-lg text-muted-foreground">No delivery da Agnes você pede e recebe o barril no mesmo dia, com tudo o que é preciso para servir.</p>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {INCLUSO.map((i) => (
-              <div key={i.nome} className="rounded-lg border p-6">
+              <div key={i.nome} className="rounded-lg border bg-card p-6">
                 <Check size={18} className="text-red-soft" />
                 <h3 className="mt-3 text-xl">{i.nome}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{i.desc}</p>

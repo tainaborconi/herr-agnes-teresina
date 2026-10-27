@@ -43,7 +43,7 @@ function Calc() {
             A estimativa segue a tabela da casa, de 1 a {MAX_CONVIDADOS_TABELA} convidados. Acima disso, ajustamos a quantidade no orçamento.
           </p>
         </div>
-        <div className="flex flex-col justify-between rounded-lg border border-red-soft/50 bg-card p-7">
+        <div className="section-wine flex flex-col justify-between rounded-lg border p-7">
           <div>
             <p className="eyebrow">Sua estimativa</p>
             <p className="mt-4 font-display text-7xl text-gold">{litros}<span className="text-3xl"> litros</span></p>
