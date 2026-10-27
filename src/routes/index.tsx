@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MessageCircle, Calculator, Award, Truck, Snowflake } from "lucide-react";
+import { MessageCircle, Calculator, Award, Truck, Snowflake, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
 import hero from "@/assets/hero.jpg";
 import festa from "@/assets/festa.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
-import { SABORES, whatsappLink } from "@/lib/site";
+import { SABORES, TIPOS_EVENTO, INCLUSO, whatsappLink } from "@/lib/site";
 
 type Evento = { nome: string; detalhe: string; src: string; pos?: string };
 
@@ -28,13 +28,22 @@ const EVENTOS: Evento[] = [
   },
 ];
 
+const ICONE_EVENTO: Record<string, LucideIcon> = {
+  "Aniversários": PartyPopper,
+  "Casamentos": Heart,
+  "Formaturas": GraduationCap,
+  "Eventos corporativos": Building2,
+  "Eventos culturais": Music2,
+  "Outros formatos": Sparkles,
+};
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "HERR AGNES — Chopp artesanal para festas em Teresina" },
-      { name: "description", content: "Chopp artesanal premium em Teresina. Calcule quantos litros sua festa precisa e peça orçamento no WhatsApp." },
+      { name: "description", content: "Chopp artesanal premium em Teresina para aniversários, casamentos, formaturas e eventos corporativos. Delivery com barril no mesmo dia." },
       { property: "og:title", content: "HERR AGNES — Chopp artesanal em Teresina" },
-      { property: "og:description", content: "Calcule seu chopp e peça orçamento no WhatsApp." },
+      { property: "og:description", content: "Aniversários, casamentos, formaturas e eventos corporativos com chopp gelado. Delivery no mesmo dia em Teresina." },
     ],
   }),
   component: Index,
@@ -65,7 +74,7 @@ function Index() {
         {[
           { i: Award, t: "Qualidade artesanal", d: "Receitas próprias e ingredientes selecionados." },
           { i: Snowflake, t: "Sempre gelado", d: "Chopeira e gelo para servir na temperatura ideal." },
-          { i: Truck, t: "Entrega em Teresina", d: "Levamos e recolhemos os barris no seu evento." },
+          { i: Truck, t: "Delivery no mesmo dia", d: "Você pede e recebe o barril no mesmo dia, com chopeira e kit de extração." },
         ].map(({ i: Icon, t, d }) => (
           <div key={t} className="rounded-lg border bg-card p-7">
             <Icon className="text-red-soft" />
@@ -73,6 +82,50 @@ function Index() {
             <p className="mt-2 text-sm text-muted-foreground">{d}</p>
           </div>
         ))}
+      </section>
+
+      <section className="border-y bg-card">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-20 md:grid-cols-2">
+          <div>
+            <p className="eyebrow">Delivery</p>
+            <h2 className="mt-3 text-4xl">Pediu, recebeu: o barril chega no mesmo dia</h2>
+            <p className="mt-4 text-muted-foreground">No modo delivery da Agnes você escolhe o sabor, combina tudo pelo WhatsApp e recebe o barril pronto para servir no mesmo dia do evento.</p>
+            <a href={whatsappLink("Olá! Quero o delivery de chopp da Agnes no mesmo dia.")} target="_blank" rel="noreferrer" className="btn-gold mt-8"><MessageCircle size={16} /> Pedir delivery hoje</a>
+          </div>
+          <div className="rounded-lg border p-7">
+            <h3 className="text-2xl">O que já vem incluso</h3>
+            <ul className="mt-5 space-y-4">
+              {INCLUSO.map((i) => (
+                <li key={i.nome} className="flex gap-3">
+                  <Check size={18} className="mt-1 shrink-0 text-red-soft" />
+                  <div>
+                    <p className="font-semibold">{i.nome}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{i.desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 py-20">
+        <p className="eyebrow">Eventos que atendemos</p>
+        <h2 className="mt-3 text-4xl">A Agnes vai onde tem brinde</h2>
+        <p className="mt-3 max-w-lg text-muted-foreground">De uma reunião de amigos a uma produção grande em Teresina: diga o formato da festa e a gente monta o chopp.</p>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {TIPOS_EVENTO.map((e) => {
+            const Icon = ICONE_EVENTO[e.nome] ?? Sparkles;
+            return (
+              <div key={e.nome} className="rounded-lg border p-6">
+                <Icon className="text-red-soft" />
+                <h3 className="mt-4 text-xl">{e.nome}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{e.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+        <a href={whatsappLink("Olá! Vou fazer um evento e quero chopp da Agnes.")} target="_blank" rel="noreferrer" className="btn-outline-gold mt-10"><MessageCircle size={16} /> Contar meu evento</a>
       </section>
 
       <section className="border-y bg-card">
