@@ -5,8 +5,10 @@ import festa from "@/assets/festa.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { SABORES, TIPOS_EVENTO, INCLUSO, whatsappLink } from "@/lib/site";
 import { InstagramBand } from "@/components/InstagramFeed";
+import { feedQueryOptions } from "@/lib/instagram.queries";
 
 type Evento = { nome: string; detalhe: string; src: string; pos?: string };
 
@@ -47,10 +49,12 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: "Aniversários, casamentos, formaturas e eventos corporativos com chopp gelado. Delivery no mesmo dia em Teresina." },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(feedQueryOptions),
   component: Index,
 });
 
 function Index() {
+  const { data: feed } = useSuspenseQuery(feedQueryOptions);
   return (
     <>
       <section className="relative overflow-hidden">
@@ -180,7 +184,7 @@ function Index() {
         </div>
       </section>
 
-      <InstagramBand />
+      <InstagramBand feed={feed} />
     </>
   );
 }
