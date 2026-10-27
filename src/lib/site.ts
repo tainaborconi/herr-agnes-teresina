@@ -16,6 +16,24 @@ export const SABORES = [
 
 export const BARRIS = [30, 50] as const;
 
+/** Tipos de evento que a HERR AGNES atende em Teresina. */
+export const TIPOS_EVENTO = [
+  { nome: "Aniversários", desc: "Do infantil ao marco de 50 anos, com chopp sempre gelado." },
+  { nome: "Casamentos", desc: "Bar de chopp para a recepção e o brinde dos noivos." },
+  { nome: "Formaturas", desc: "Barris e chopeira para a festa durar a noite toda." },
+  { nome: "Eventos corporativos", desc: "Confraternizações, lançamentos e happy hours da empresa." },
+  { nome: "Eventos culturais", desc: "Feiras, shows e festivais com estrutura pronta para servir." },
+  { nome: "Outros formatos", desc: "Churrasco, inauguração, reunião de amigos: a gente atende." },
+];
+
+/** Tudo que já vem no pedido da Agnes, sem custo extra para montar. */
+export const INCLUSO = [
+  { nome: "Barril lacrado", desc: "Chega vedado, com selo de origem e data de envase." },
+  { nome: "Chopeira elétrica", desc: "Gela e serve no ponto certo do primeiro ao último copo." },
+  { nome: "Kit de extração", desc: "Tudo para puxar o chopp com o creme na medida." },
+  { nome: "Suporte via WhatsApp 24h", desc: "Resposta rápida se algo precisar durante o seu evento." },
+];
+
 export type Perfil = "leve" | "moderado" | "intenso";
 export const LITROS_POR_HORA: Record<Perfil, number> = { leve: 0.4, moderado: 0.6, intenso: 0.8 };
 
