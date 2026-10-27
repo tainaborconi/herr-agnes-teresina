@@ -83,4 +83,21 @@ describe("calculadora de chopp", () => {
   it("80L vira 50L + 30L", () => {
     expect(sugerirBarris(80)).toEqual({ b50: 1, b30: 1, total: 80 });
   });
+
+  it("leva os sabores escolhidos no pedido de orçamento", () => {
+    const msg = mensagemOrcamento(80, 4, ["IPA", "Munich"]);
+    expect(msg).toContain("Sabores: IPA, Munich");
+    expect(msg).toContain("80 convidados");
+    expect(msg).toContain("Estimativa de 140L");
+    expect(msg).toContain("festa de 4 horas");
+  });
+
+  it("marca os sabores como a definir quando ninguém escolhe", () => {
+    expect(mensagemOrcamento(80, 4, [])).toContain("Sabores: a definir com a Agnes");
+  });
+
+  it("o sabor não muda a quantidade estimada", () => {
+    expect(mensagemOrcamento(80, 4, ["IPA"])).toContain("Estimativa de 140L");
+    expect(mensagemOrcamento(80, 4, ["Pilsen", "Zero Glúten", "Chopp de Vinho"])).toContain("Estimativa de 140L");
+  });
 });
