@@ -111,7 +111,7 @@ function Index() {
 
       <section className="mx-auto max-w-6xl px-5 py-20">
         <p className="eyebrow">Eventos que atendemos</p>
-        <h2 className="mt-3 text-4xl">A Agnes vai onde tem brinde</h2>
+        <h2 className="mt-3 text-4xl">Levamos chopp para qualquer evento</h2>
         <p className="mt-3 max-w-lg text-muted-foreground">De uma reunião de amigos a uma produção grande em Teresina: diga o formato da festa e a gente monta o chopp.</p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {TIPOS_EVENTO.map((e) => {
@@ -125,7 +125,7 @@ function Index() {
             );
           })}
         </div>
-        <a href={whatsappLink("Olá! Vou fazer um evento e quero chopp da Agnes.")} target="_blank" rel="noreferrer" className="btn-outline-gold mt-10"><MessageCircle size={16} /> Contar meu evento</a>
+        <a href={whatsappLink("Olá! Vou fazer um evento e quero chopp da Agnes.")} target="_blank" rel="noreferrer" className="btn-outline-gold mt-10"><MessageCircle size={16} /> Cotar meu evento</a>
       </section>
 
       <section className="border-y bg-card">
