@@ -10,33 +10,91 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BarrisRouteImport } from './routes/barris'
+import { Route as CalculadoraRouteImport } from './routes/calculadora'
+import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as MarcaRouteImport } from './routes/marca'
+import { Route as SaboresRouteImport } from './routes/sabores'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BarrisRoute = BarrisRouteImport.update({
+  id: '/barris',
+  path: '/barris',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculadoraRoute = CalculadoraRouteImport.update({
+  id: '/calculadora',
+  path: '/calculadora',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarcaRoute = MarcaRouteImport.update({
+  id: '/marca',
+  path: '/marca',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SaboresRoute = SaboresRouteImport.update({
+  id: '/sabores',
+  path: '/sabores',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/barris': typeof BarrisRoute
+  '/calculadora': typeof CalculadoraRoute
+  '/contato': typeof ContatoRoute
+  '/marca': typeof MarcaRoute
+  '/sabores': typeof SaboresRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/barris': typeof BarrisRoute
+  '/calculadora': typeof CalculadoraRoute
+  '/contato': typeof ContatoRoute
+  '/marca': typeof MarcaRoute
+  '/sabores': typeof SaboresRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/barris': typeof BarrisRoute
+  '/calculadora': typeof CalculadoraRoute
+  '/contato': typeof ContatoRoute
+  '/marca': typeof MarcaRoute
+  '/sabores': typeof SaboresRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/barris' | '/calculadora' | '/contato' | '/marca' | '/sabores'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/barris' | '/calculadora' | '/contato' | '/marca' | '/sabores'
+  id:
+    | '__root__'
+    | '/'
+    | '/barris'
+    | '/calculadora'
+    | '/contato'
+    | '/marca'
+    | '/sabores'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BarrisRoute: typeof BarrisRoute
+  CalculadoraRoute: typeof CalculadoraRoute
+  ContatoRoute: typeof ContatoRoute
+  MarcaRoute: typeof MarcaRoute
+  SaboresRoute: typeof SaboresRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +106,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/barris': {
+      id: '/barris'
+      path: '/barris'
+      fullPath: '/barris'
+      preLoaderRoute: typeof BarrisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculadora': {
+      id: '/calculadora'
+      path: '/calculadora'
+      fullPath: '/calculadora'
+      preLoaderRoute: typeof CalculadoraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marca': {
+      id: '/marca'
+      path: '/marca'
+      fullPath: '/marca'
+      preLoaderRoute: typeof MarcaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sabores': {
+      id: '/sabores'
+      path: '/sabores'
+      fullPath: '/sabores'
+      preLoaderRoute: typeof SaboresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BarrisRoute: BarrisRoute,
+  CalculadoraRoute: CalculadoraRoute,
+  ContatoRoute: ContatoRoute,
+  MarcaRoute: MarcaRoute,
+  SaboresRoute: SaboresRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
