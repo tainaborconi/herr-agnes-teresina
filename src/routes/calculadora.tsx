@@ -22,7 +22,7 @@ function Calc() {
   const [pessoas, setPessoas] = useState(50);
   const [horas, setHoras] = useState(5);
   const [perfil, setPerfil] = useState<Perfil>("moderado");
-  const [sabor, setSabor] = useState(SABORES[0].nome);
+  const [sabor, setSabor] = useState<string>(SABORES[0]?.nome ?? "Pilsen");
   const litros = calcularLitros(pessoas, horas, perfil);
   const b = sugerirBarris(litros);
   const barrisTxt = [b.b50 && `${b.b50} barril(is) de 50L`, b.b30 && `${b.b30} barril(is) de 30L`].filter(Boolean).join(" + ");
