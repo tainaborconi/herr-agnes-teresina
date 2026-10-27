@@ -70,21 +70,23 @@ function Index() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-6 px-5 py-20 md:grid-cols-3">
-        {[
-          { i: Award, t: "Qualidade artesanal", d: "Receitas próprias e ingredientes selecionados." },
-          { i: Snowflake, t: "Sempre gelado", d: "Chopeira e gelo para servir na temperatura ideal." },
-          { i: Truck, t: "Delivery no mesmo dia", d: "Você pede e recebe o barril no mesmo dia, com chopeira e kit de extração." },
-        ].map(({ i: Icon, t, d }) => (
-          <div key={t} className="rounded-lg border bg-card p-7">
-            <Icon className="text-red-soft" />
-            <h3 className="mt-4 text-2xl">{t}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{d}</p>
-          </div>
-        ))}
+      <section className="section-wine">
+        <div className="mx-auto grid max-w-6xl gap-6 px-5 py-20 md:grid-cols-3">
+          {[
+            { i: Award, t: "Qualidade artesanal", d: "Receitas próprias e ingredientes selecionados." },
+            { i: Snowflake, t: "Sempre gelado", d: "Chopeira e gelo para servir na temperatura ideal." },
+            { i: Truck, t: "Delivery no mesmo dia", d: "Você pede e recebe o barril no mesmo dia, com chopeira e kit de extração." },
+          ].map(({ i: Icon, t, d }) => (
+            <div key={t} className="rounded-lg border bg-card p-7">
+              <Icon className="text-red-soft" />
+              <h3 className="mt-4 text-2xl">{t}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{d}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
-      <section className="border-y bg-card">
+      <section className="border-y">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-20 md:grid-cols-2">
           <div>
             <p className="eyebrow">Delivery</p>
@@ -92,7 +94,7 @@ function Index() {
             <p className="mt-4 text-muted-foreground">No modo delivery da Agnes você escolhe o sabor, combina tudo pelo WhatsApp e recebe o barril pronto para servir no mesmo dia do evento.</p>
             <a href={whatsappLink("Olá! Quero o delivery de chopp da Agnes no mesmo dia.")} target="_blank" rel="noreferrer" className="btn-gold mt-8"><MessageCircle size={16} /> Pedir delivery hoje</a>
           </div>
-          <div className="rounded-lg border p-7">
+          <div className="rounded-lg border bg-card p-7">
             <h3 className="text-2xl">O que já vem incluso</h3>
             <ul className="mt-5 space-y-4">
               {INCLUSO.map((i) => (
@@ -109,33 +111,34 @@ function Index() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-5 py-20">
-        <p className="eyebrow">Eventos que atendemos</p>
-        <h2 className="mt-3 text-4xl">Levamos chopp para qualquer evento</h2>
-        <p className="mt-3 max-w-lg text-muted-foreground">De uma reunião de amigos a uma produção grande em Teresina: diga o formato da festa e a gente monta o chopp.</p>
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {TIPOS_EVENTO.map((e) => {
-            const Icon = ICONE_EVENTO[e.nome] ?? Sparkles;
-            return (
-              <div key={e.nome} className="rounded-lg border p-6">
-                <Icon className="text-red-soft" />
-                <h3 className="mt-4 text-xl">{e.nome}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{e.desc}</p>
-              </div>
-            );
-          })}
+      <section className="section-wine">
+        <div className="mx-auto max-w-6xl px-5 py-20">
+          <p className="eyebrow">Eventos que atendemos</p>
+          <h2 className="mt-3 text-4xl">Levamos chopp para qualquer evento</h2>
+          <p className="mt-3 max-w-lg text-muted-foreground">De uma reunião de amigos a uma produção grande em Teresina: diga o formato da festa e a gente monta o chopp.</p>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {TIPOS_EVENTO.map((e) => {
+              const Icon = ICONE_EVENTO[e.nome] ?? Sparkles;
+              return (
+                <div key={e.nome} className="rounded-lg border bg-card p-6">
+                  <Icon className="text-red-soft" />
+                  <h3 className="mt-4 text-xl">{e.nome}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{e.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+          <a href={whatsappLink("Olá! Vou fazer um evento e quero chopp da Agnes.")} target="_blank" rel="noreferrer" className="btn-outline-gold mt-10"><MessageCircle size={16} /> Cotar meu evento</a>
         </div>
-        <a href={whatsappLink("Olá! Vou fazer um evento e quero chopp da Agnes.")} target="_blank" rel="noreferrer" className="btn-outline-gold mt-10"><MessageCircle size={16} /> Cotar meu evento</a>
       </section>
 
-      <section className="border-y bg-card">
+      <section className="border-y">
         <div className="mx-auto max-w-6xl px-5 py-20">
           <p className="eyebrow">Nossos sabores</p>
           <h2 className="mt-3 text-4xl">Um chopp para cada ocasião</h2>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {SABORES.map((s) => (
-              <div key={s.nome} className="rounded-lg border p-6">
-                
+              <div key={s.nome} className="rounded-lg border bg-card p-6">
                 <h3 className="mt-1 text-2xl">{s.nome}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
               </div>
@@ -145,24 +148,26 @@ function Index() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-20 md:grid-cols-2">
-        <img src={festa} alt="Amigos brindando com chopp" loading="lazy" width={1200} height={912} className="rounded-lg" />
-        <div>
-          <p className="eyebrow">Calculadora</p>
-          <h2 className="mt-3 text-4xl">Quantos litros sua festa precisa?</h2>
-          <p className="mt-4 text-muted-foreground">Informe o número de convidados. Indicamos a quantidade e os barris ideais em segundos.</p>
-          <Link to="/calculadora" className="btn-gold mt-8"><Calculator size={16} /> Calcular agora</Link>
+      <section className="section-wine">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-20 md:grid-cols-2">
+          <img src={festa} alt="Amigos brindando com chopp" loading="lazy" width={1200} height={912} className="rounded-lg" />
+          <div>
+            <p className="eyebrow">Calculadora</p>
+            <h2 className="mt-3 text-4xl">Quantos litros sua festa precisa?</h2>
+            <p className="mt-4 text-muted-foreground">Informe o número de convidados. Indicamos a quantidade e os barris ideais em segundos.</p>
+            <Link to="/calculadora" className="btn-gold mt-8"><Calculator size={16} /> Calcular agora</Link>
+          </div>
         </div>
       </section>
 
-      <section className="border-t bg-card">
+      <section className="border-t">
         <div className="mx-auto max-w-6xl px-5 py-20">
           <p className="eyebrow">Eventos</p>
           <h2 className="mt-3 text-4xl">A Agnes nos eventos</h2>
           <p className="mt-3 max-w-lg text-muted-foreground">Levamos nosso chopp para corridas, festas e encontros por Teresina.</p>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {EVENTOS.map((e) => (
-              <figure key={e.nome} className="rounded-lg border p-3">
+              <figure key={e.nome} className="rounded-lg border bg-card p-3">
                 <img src={e.src} alt={e.nome} loading="lazy" style={{ objectPosition: e.pos ?? "center" }} className="aspect-[3/4] w-full rounded-md object-cover" />
                 <figcaption className="px-2 py-3">
                   <h3 className="text-xl">{e.nome}</h3>
