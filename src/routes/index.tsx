@@ -2,7 +2,16 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MessageCircle, Calculator, Award, Truck, Snowflake } from "lucide-react";
 import hero from "@/assets/hero.jpg";
 import festa from "@/assets/festa.jpg";
+import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import { SABORES, whatsappLink } from "@/lib/site";
+
+const EVENTOS = [
+  {
+    nome: "Corrida da Advocacia Teresina 2026",
+    detalhe: "Chopp gelado servido na chegada dos corredores.",
+    src: corridaAdvocacia.url,
+  },
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -75,6 +84,25 @@ function Index() {
           <h2 className="mt-3 text-4xl">Quantos litros sua festa precisa?</h2>
           <p className="mt-4 text-muted-foreground">Informe convidados e duração. Indicamos a quantidade e os barris ideais em segundos.</p>
           <Link to="/calculadora" className="btn-gold mt-8"><Calculator size={16} /> Calcular agora</Link>
+        </div>
+      </section>
+
+      <section className="border-t bg-card">
+        <div className="mx-auto max-w-6xl px-5 py-20">
+          <p className="eyebrow">Eventos</p>
+          <h2 className="mt-3 text-4xl">A Agnes nos eventos</h2>
+          <p className="mt-3 max-w-lg text-muted-foreground">Levamos nosso chopp para corridas, festas e encontros por Teresina.</p>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {EVENTOS.map((e) => (
+              <figure key={e.nome} className="rounded-lg border p-3">
+                <img src={e.src} alt={e.nome} loading="lazy" className="aspect-[3/4] w-full rounded-md object-cover" />
+                <figcaption className="px-2 py-3">
+                  <h3 className="text-xl">{e.nome}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{e.detalhe}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
       </section>
     </>
