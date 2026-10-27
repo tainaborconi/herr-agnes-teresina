@@ -3,6 +3,7 @@ import { MessageCircle, Calculator, Award, Truck, Snowflake } from "lucide-react
 import hero from "@/assets/hero.jpg";
 import festa from "@/assets/festa.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
+import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import { SABORES, whatsappLink } from "@/lib/site";
 
 const EVENTOS = [
@@ -10,6 +11,11 @@ const EVENTOS = [
     nome: "Corrida da Advocacia Teresina 2026",
     detalhe: "Chopp gelado servido na chegada dos corredores.",
     src: corridaAdvocacia.url,
+  },
+  {
+    nome: "Oktoberfest Parnaíba 2026",
+    detalhe: "Nossos chopps na maior festa da cerveja no litoral do Piauí.",
+    src: oktoberfest.url,
   },
 ];
 
