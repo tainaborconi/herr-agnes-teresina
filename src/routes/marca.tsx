@@ -26,7 +26,7 @@ function Marca() {
             ["Confiança", "Atendimento próximo, pontualidade e transparência."],
             ["Tradição", "Receitas inspiradas na escola cervejeira alemã."],
           ].map(([t, d]) => (
-            <div key={t} className="border-l-2 border-primary pl-5">
+            <div key={t} className="border-l-2 border-red-soft pl-5">
               <h3 className="text-2xl">{t}</h3>
               <p className="mt-1 text-muted-foreground">{d}</p>
             </div>

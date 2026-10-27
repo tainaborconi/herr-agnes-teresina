@@ -16,7 +16,7 @@ export const Route = createFileRoute("/contato")({
   component: Contato,
 });
 
-const field = "mt-2 w-full rounded-md border bg-background px-3 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-ring";
+const field = "mt-2 w-full rounded-md border bg-secondary px-3 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-ring";
 
 function Contato() {
   const [f, setF] = useState({ nome: "", data: "", local: "", convidados: "", obs: "" });

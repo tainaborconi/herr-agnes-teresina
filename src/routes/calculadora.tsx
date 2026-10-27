@@ -16,7 +16,7 @@ export const Route = createFileRoute("/calculadora")({
   component: Calc,
 });
 
-const field = "mt-2 w-full rounded-md border bg-background px-3 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-ring";
+const field = "mt-2 w-full rounded-md border bg-secondary px-3 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-ring";
 
 function Calc() {
   const [pessoas, setPessoas] = useState(50);
@@ -52,7 +52,7 @@ function Calc() {
             </select>
           </label>
         </div>
-        <div className="flex flex-col justify-between rounded-lg border border-primary/40 bg-card p-7">
+        <div className="flex flex-col justify-between rounded-lg border border-red-soft/50 bg-card p-7">
           <div>
             <p className="eyebrow">Sua estimativa</p>
             <p className="mt-4 font-display text-7xl text-gold">{litros}<span className="text-3xl"> litros</span></p>
