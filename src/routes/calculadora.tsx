@@ -50,7 +50,7 @@ function Calc() {
             <p className="mt-4 text-muted-foreground">{litros > 0 ? `Sugestão: ${barrisTxt} (${b.total}L).` : "Informe o número de convidados."}</p>
           </div>
           <div className="mt-8">
-            <p className="rounded-md border border-gold/25 bg-secondary/60 p-4 text-xs leading-relaxed text-muted-foreground">
+            <p className="rounded-md border border-gold/30 bg-secondary/70 p-4 text-sm leading-relaxed text-foreground">
               <span className="font-semibold text-gold">Observação:</span> {OBS_CALCULADORA}
             </p>
             <a href={whatsappLink(msg)} target="_blank" rel="noreferrer" className="btn-gold mt-6 w-fit">
