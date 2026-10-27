@@ -66,6 +66,17 @@ describe("calculadora de chopp", () => {
     expect(calcularLitros(-10)).toBe(0);
   });
 
+  it("mantém a tabela em uma festa de 4 horas (duração padrão)", () => {
+    expect(calcularLitros(80, 4)).toBe(140);
+    expect(calcularLitros(80)).toBe(140);
+  });
+
+  it("ajusta a estimativa pela duração da festa", () => {
+    expect(calcularLitros(80, 2)).toBe(100); // 70% de 140L
+    expect(calcularLitros(80, 6)).toBe(170); // 120% de 140L
+    expect(calcularLitros(80, 8)).toBe(200); // 140% de 140L
+  });
+
   it("sugere 3 barris de 50L para 150L", () => {
     expect(sugerirBarris(150)).toEqual({ b50: 3, b30: 0, total: 150 });
   });
