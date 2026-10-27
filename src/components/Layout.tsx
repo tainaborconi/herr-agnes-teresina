@@ -21,7 +21,7 @@ export function Header() {
         <Link to="/" aria-label="HERR AGNES — início"><img src={logo.url} alt="HERR AGNES Cervejaria" width={1271} height={1124} className="h-14 w-auto" /></Link>
         <nav className="hidden gap-6 text-sm lg:flex">
           {NAV.map((n) => (
-            <Link key={n.to} to={n.to} className="text-muted-foreground hover:text-foreground" activeProps={{ className: "text-gold" }} activeOptions={{ exact: true }}>
+            <Link key={n.to} to={n.to} className="text-muted-foreground hover:text-foreground" activeProps={{ className: "text-gold! underline underline-offset-8 decoration-gold/70" }} activeOptions={{ exact: true }}>
               {n.label}
             </Link>
           ))}
