@@ -105,11 +105,14 @@
 /* Faixa vermelha: fundo vinho da marca com cartões e campos no tom certo */
 @utility section-wine {
   background-color: var(--color-wine);
-  --card: oklch(0.35 0.1 25);
-  --muted: oklch(0.35 0.1 25);
-  --secondary: oklch(0.38 0.105 25);
-  --border: oklch(0.5 0.09 25);
-  --input: oklch(0.5 0.09 25);
-  --accent: oklch(0.42 0.13 22);
+  --card: oklch(0.38 0.105 25);
+  --muted: oklch(0.38 0.105 25);
+  --secondary: oklch(0.44 0.11 25);
+  --border: oklch(0.53 0.09 25);
+  --input: oklch(0.53 0.09 25);
+  --accent: oklch(0.45 0.13 22);
   --overlay: oklch(0.14 0.05 25 / 0.75);
+  --muted-foreground: oklch(0.86 0.03 55);
+  --red-soft: oklch(0.72 0.17 25);
+  & .rounded-lg { box-shadow: 0 12px 30px oklch(0.1 0.04 25 / 0.45); }
 }
