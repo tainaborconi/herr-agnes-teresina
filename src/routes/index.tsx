@@ -6,6 +6,7 @@ import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
 import { SABORES, TIPOS_EVENTO, INCLUSO, whatsappLink } from "@/lib/site";
+import { InstagramBand } from "@/components/InstagramFeed";
 
 type Evento = { nome: string; detalhe: string; src: string; pos?: string };
 
@@ -178,6 +179,8 @@ function Index() {
           </div>
         </div>
       </section>
+
+      <InstagramBand />
     </>
   );
 }
