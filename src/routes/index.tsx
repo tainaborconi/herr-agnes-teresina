@@ -2,7 +2,16 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MessageCircle, Calculator, Award, Truck, Snowflake } from "lucide-react";
 import hero from "@/assets/hero.jpg";
 import festa from "@/assets/festa.jpg";
+import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import { SABORES, whatsappLink } from "@/lib/site";
+
+const EVENTOS = [
+  {
+    nome: "Corrida da Advocacia Teresina 2026",
+    detalhe: "Chopp gelado servido na chegada dos corredores.",
+    src: corridaAdvocacia.url,
+  },
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
