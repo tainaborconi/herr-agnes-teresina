@@ -4,9 +4,12 @@ import hero from "@/assets/hero.jpg";
 import festa from "@/assets/festa.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
+import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
 import { SABORES, whatsappLink } from "@/lib/site";
 
-const EVENTOS = [
+type Evento = { nome: string; detalhe: string; src: string; pos?: string };
+
+const EVENTOS: Evento[] = [
   {
     nome: "Corrida da Advocacia Teresina 2026",
     detalhe: "Chopp gelado servido na chegada dos corredores.",
@@ -16,6 +19,12 @@ const EVENTOS = [
     nome: "Oktoberfest Parnaíba 2026",
     detalhe: "Nossos chopps na maior festa da cerveja no litoral do Piauí.",
     src: oktoberfest.url,
+  },
+  {
+    nome: "BBQ FEST & BEER – Picos 2026",
+    detalhe: "Chopp AGNES Express no festival de churrasco e street food em Picos.",
+    src: bbqFest.url,
+    pos: "bottom",
   },
 ];
 
@@ -101,7 +110,7 @@ function Index() {
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {EVENTOS.map((e) => (
               <figure key={e.nome} className="rounded-lg border p-3">
-                <img src={e.src} alt={e.nome} loading="lazy" className="aspect-[3/4] w-full rounded-md object-cover" />
+                <img src={e.src} alt={e.nome} loading="lazy" style={{ objectPosition: e.pos ?? "center" }} className="aspect-[3/4] w-full rounded-md object-cover" />
                 <figcaption className="px-2 py-3">
                   <h3 className="text-xl">{e.nome}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">{e.detalhe}</p>
