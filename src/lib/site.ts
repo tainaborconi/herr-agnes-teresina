@@ -80,3 +80,19 @@ export function sugerirBarris(litros: number) {
   }
   return best;
 }
+
+/**
+ * Texto do pedido de orçamento gerado pela calculadora.
+ * O sabor não altera a quantidade estimada; ele só acompanha a solicitação
+ * para que a Agnes já receba a preferência do cliente.
+ */
+export function mensagemOrcamento(pessoas: number, horas: number, sabores: string[]) {
+  const litros = calcularLitros(pessoas, horas);
+  const b = sugerirBarris(litros);
+  const barrisTxt = [b.b50 && `${b.b50} barril(is) de 50L`, b.b30 && `${b.b30} barril(is) de 30L`]
+    .filter(Boolean)
+    .join(" + ");
+  const durTxt = DURACOES.find((d) => d.h === horas)?.rotulo ?? `${horas} horas`;
+  const saborTxt = sabores.length ? sabores.join(", ") : "a definir com a Agnes";
+  return `Olá! Calculei no site: ${pessoas} convidados, festa de ${durTxt}. Estimativa de ${litros}L de chopp (${barrisTxt}). Sabores: ${saborTxt}. Gostaria de um orçamento.`;
+}
