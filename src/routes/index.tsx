@@ -179,6 +179,8 @@ function Index() {
           </div>
         </div>
       </section>
+
+      <InstagramBand />
     </>
   );
 }
