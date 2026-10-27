@@ -73,6 +73,9 @@
     font-family: var(--font-sans);
   }
   h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.01em; }
+  ::placeholder { color: color-mix(in oklab, var(--color-muted-foreground) 75%, transparent); opacity: 1; }
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="number"]::-webkit-inner-spin-button { filter: invert(0.85); opacity: 0.85; cursor: pointer; }
 }
 
 @utility eyebrow {
@@ -105,14 +108,15 @@
 /* Faixa vermelha: fundo vinho da marca com cartões e campos no tom certo */
 @utility section-wine {
   background-color: var(--color-wine);
-  --card: oklch(0.38 0.105 25);
-  --muted: oklch(0.38 0.105 25);
-  --secondary: oklch(0.44 0.11 25);
-  --border: oklch(0.53 0.09 25);
-  --input: oklch(0.53 0.09 25);
-  --accent: oklch(0.45 0.13 22);
+  --card: oklch(0.42 0.108 25);
+  --muted: oklch(0.42 0.108 25);
+  --secondary: oklch(0.48 0.112 25);
+  --border: oklch(0.6 0.075 25);
+  --input: oklch(0.6 0.075 25);
+  --accent: oklch(0.5 0.13 22);
   --overlay: oklch(0.14 0.05 25 / 0.75);
-  --muted-foreground: oklch(0.86 0.03 55);
-  --red-soft: oklch(0.72 0.17 25);
+  --muted-foreground: oklch(0.88 0.03 55);
+  --red-soft: oklch(0.75 0.17 25);
+  --gold: oklch(0.88 0.1 85);
   & .rounded-lg { box-shadow: 0 12px 30px oklch(0.1 0.04 25 / 0.45); }
 }
