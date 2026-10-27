@@ -13,21 +13,28 @@ const post = (extra: Partial<FeedPost> = {}): FeedPost => ({
   ...extra,
 });
 
+/** O primeiro quadrado da grade, com a garantia de que ele existe. */
+function primeiro(posts: FeedPost[]) {
+  const [tile] = montarFeed(posts);
+  if (!tile) throw new Error("A grade não deveria estar vazia");
+  return tile;
+}
+
 describe("grade do Instagram", () => {
   it("usa a própria foto no post de imagem", () => {
-    const [tile] = montarFeed([post()]);
+    const tile = primeiro([post()]);
     expect(tile.src).toBe("https://cdn.example.com/foto.jpg");
     expect(tile.video).toBe(false);
   });
 
   it("usa a capa no vídeo e no álbum de fotos", () => {
-    const [video] = montarFeed([
+    const video = primeiro([
       post({ mediaType: "VIDEO", mediaUrl: "https://cdn.example.com/video.mp4", thumbnailUrl: "https://cdn.example.com/capa.jpg" }),
     ]);
     expect(video.src).toBe("https://cdn.example.com/capa.jpg");
     expect(video.video).toBe(true);
 
-    const [album] = montarFeed([
+    const album = primeiro([
       post({ mediaType: "CAROUSEL_ALBUM", mediaUrl: "https://cdn.example.com/1.jpg", thumbnailUrl: "https://cdn.example.com/capa-album.jpg" }),
     ]);
     expect(album.src).toBe("https://cdn.example.com/capa-album.jpg");
@@ -35,18 +42,17 @@ describe("grade do Instagram", () => {
   });
 
   it("cada quadrado abre o post no Instagram", () => {
-    const [tile] = montarFeed([post()]);
-    expect(tile.href).toBe("https://www.instagram.com/p/CabcDEF/");
+    expect(primeiro([post()]).href).toBe("https://www.instagram.com/p/CabcDEF/");
   });
 
   it("usa a legenda como texto alternativo, sem quebras de linha", () => {
-    const [tile] = montarFeed([post({ caption: "Bar de chopp\nno casamento da Ana" })]);
-    expect(tile.alt).toBe("Bar de chopp no casamento da Ana");
+    expect(primeiro([post({ caption: "Bar de chopp\nno casamento da Ana" })]).alt).toBe(
+      "Bar de chopp no casamento da Ana",
+    );
   });
 
   it("dá um texto alternativo quando o post não tem legenda", () => {
-    const [tile] = montarFeed([post({ caption: null })]);
-    expect(tile.alt).toBe("Post de @herragnes.teresina no Instagram");
+    expect(primeiro([post({ caption: null })]).alt).toBe("Post de @herragnes.teresina no Instagram");
   });
 
   it("descarta post sem imagem ou sem link", () => {
