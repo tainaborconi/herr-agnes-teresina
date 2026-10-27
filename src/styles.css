@@ -31,6 +31,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-gold: var(--gold);
+  --color-red-soft: var(--red-soft);
   --color-overlay: var(--overlay);
 }
 
@@ -38,24 +39,25 @@
   --radius: 0.375rem;
   --background: oklch(0.28 0.09 25);
   --foreground: oklch(0.94 0.02 85);
-  --card: oklch(0.33 0.1 25);
+  --card: oklch(0.35 0.1 25);
   --card-foreground: oklch(0.94 0.02 85);
-  --popover: oklch(0.33 0.1 25);
+  --popover: oklch(0.35 0.1 25);
   --popover-foreground: oklch(0.94 0.02 85);
   --primary: oklch(0.46 0.16 22);
   --primary-foreground: oklch(0.97 0.01 85);
-  --secondary: oklch(0.37 0.105 25);
+  --secondary: oklch(0.38 0.105 25);
   --secondary-foreground: oklch(0.94 0.02 85);
-  --muted: oklch(0.37 0.105 25);
-  --muted-foreground: oklch(0.76 0.035 40);
+  --muted: oklch(0.38 0.105 25);
+  --muted-foreground: oklch(0.82 0.03 50);
   --accent: oklch(0.42 0.13 22);
   --accent-foreground: oklch(0.97 0.01 85);
   --destructive: oklch(0.6 0.2 27);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.43 0.09 25);
-  --input: oklch(0.4 0.09 25);
-  --ring: oklch(0.55 0.17 22);
+  --border: oklch(0.5 0.09 25);
+  --input: oklch(0.5 0.09 25);
+  --ring: oklch(0.66 0.15 25);
   --gold: oklch(0.8 0.12 82);
+  --red-soft: oklch(0.66 0.15 25);
   --overlay: oklch(0.14 0.05 25 / 0.75);
 }
 
@@ -87,7 +89,7 @@
 @utility btn-outline-gold {
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.7rem 1.4rem; border-radius: var(--radius);
-  border: 1px solid var(--color-primary); color: var(--color-foreground);
+  border: 1px solid var(--color-red-soft); color: var(--color-foreground);
   font-weight: 600; font-size: 0.9rem; transition: background .2s;
-  &:hover { background: color-mix(in oklab, var(--color-primary) 12%, transparent); }
+  &:hover { background: color-mix(in oklab, var(--color-red-soft) 18%, transparent); }
 }
