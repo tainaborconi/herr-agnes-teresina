@@ -4,6 +4,7 @@ import hero from "@/assets/hero.jpg";
 import festa from "@/assets/festa.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
+import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
 import { SABORES, whatsappLink } from "@/lib/site";
 
 const EVENTOS = [
@@ -16,6 +17,11 @@ const EVENTOS = [
     nome: "Oktoberfest Parnaíba 2026",
     detalhe: "Nossos chopps na maior festa da cerveja no litoral do Piauí.",
     src: oktoberfest.url,
+  },
+  {
+    nome: "BBQ FEST & BEER – Picos 2026",
+    detalhe: "Chopp AGNES Express no festival de churrasco e street food em Picos.",
+    src: bbqFest.url,
   },
 ];
 
