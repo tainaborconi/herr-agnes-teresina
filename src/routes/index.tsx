@@ -51,10 +51,10 @@ function Index() {
         <div className="mx-auto max-w-6xl px-5 py-20">
           <p className="eyebrow">Nossos sabores</p>
           <h2 className="mt-3 text-4xl">Um chopp para cada ocasião</h2>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {SABORES.map((s) => (
               <div key={s.nome} className="rounded-lg border p-6">
-                <p className="text-xs text-gold">{s.abv}</p>
+                
                 <h3 className="mt-1 text-2xl">{s.nome}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
               </div>

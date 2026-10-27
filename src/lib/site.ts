@@ -1,15 +1,17 @@
-// Número provisório — substitua pelo WhatsApp oficial da HERR AGNES.
-export const WHATSAPP_NUMBER = "5586999999999";
+// WhatsApp oficial da HERR AGNES.
+export const WHATSAPP_NUMBER = "5586994274772";
 
 export function whatsappLink(message: string) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
 export const SABORES = [
-  { nome: "Pilsen", desc: "Leve, dourado e refrescante. O clássico para qualquer festa.", abv: "4,5%" },
-  { nome: "Puro Malte", desc: "Encorpado e equilibrado, com notas maltadas marcantes.", abv: "5,0%" },
-  { nome: "Vinho", desc: "Chopp de vinho suave e frutado, perfeito para brindar.", abv: "5,5%" },
-  { nome: "IPA", desc: "Aromático e amargor elegante para paladares exigentes.", abv: "6,0%" },
+  { nome: "Pilsen", desc: "Leve, dourado e refrescante. O clássico para qualquer festa." },
+  { nome: "Puro Malte", desc: "Encorpado e equilibrado, com notas maltadas marcantes." },
+  { nome: "Zero Glúten", desc: "Todo o sabor do chopp, sem glúten. Para todos brindarem." },
+  { nome: "IPA", desc: "Aromático, com amargor elegante para paladares exigentes." },
+  { nome: "Munich", desc: "Escuro e maltado, com notas de caramelo e tradição alemã." },
+  { nome: "Chopp de Vinho", desc: "Suave e frutado, perfeito para brindar." },
 ];
 
 export const BARRIS = [30, 50] as const;

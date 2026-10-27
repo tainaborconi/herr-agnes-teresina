@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, MessageCircle, Instagram, MapPin } from "lucide-react";
 import { whatsappLink } from "@/lib/site";
+import logo from "@/assets/logo.png.asset.json";
 
 const NAV = [
   { to: "/", label: "Início" },
@@ -17,7 +18,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-        <Link to="/" className="font-display text-2xl tracking-[0.2em] text-gold">HERR AGNES</Link>
+        <Link to="/" aria-label="HERR AGNES — início"><img src={logo.url} alt="HERR AGNES Cervejaria" width={1271} height={1124} className="h-14 w-auto" /></Link>
         <nav className="hidden gap-6 text-sm lg:flex">
           {NAV.map((n) => (
             <Link key={n.to} to={n.to} className="text-muted-foreground hover:text-foreground" activeProps={{ className: "text-primary" }} activeOptions={{ exact: true }}>
@@ -49,7 +50,7 @@ export function Footer() {
     <footer className="border-t bg-card">
       <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 md:grid-cols-3">
         <div>
-          <p className="font-display text-2xl tracking-[0.2em] text-gold">HERR AGNES</p>
+          <img src={logo.url} alt="HERR AGNES Cervejaria" width={1271} height={1124} loading="lazy" className="h-24 w-auto" />
           <p className="mt-2 text-sm text-muted-foreground">Chopp artesanal em Teresina, Piauí.</p>
         </div>
         <div className="text-sm text-muted-foreground space-y-2">
