@@ -20,17 +20,6 @@ type RespostaFeed = {
  */
 export const getInstagramFeed = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ posts: FeedPost[]; error?: string }> => {
-    return {
-      posts: Array.from({ length: 8 }, (_, i) => ({
-        id: `demo${i}`,
-        timestamp: "2026-10-01T09:49:14+0000",
-        permalink: "https://www.instagram.com/p/CabcDEF/",
-        mediaType: (i % 3 === 0 ? "VIDEO" : "IMAGE") as "VIDEO" | "IMAGE",
-        mediaUrl: `https://picsum.photos/seed/agnes${i}/600/600`,
-        thumbnailUrl: i % 3 === 0 ? `https://picsum.photos/seed/capa${i}/600/600` : null,
-        caption: i % 2 === 0 ? `Chopp da Agnes no evento ${i}` : null,
-      })),
-    };
     const usuario = FEEDFUSION_USERNAME.trim();
     const chave = FEEDFUSION_PUBLIC_KEY.trim();
     if (!usuario || !chave) return { posts: [] };
