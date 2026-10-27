@@ -42,19 +42,19 @@
   --card-foreground: oklch(0.94 0.02 85);
   --popover: oklch(0.18 0.01 60);
   --popover-foreground: oklch(0.94 0.02 85);
-  --primary: oklch(0.76 0.13 75);
-  --primary-foreground: oklch(0.14 0.008 60);
+  --primary: oklch(0.5 0.17 22);
+  --primary-foreground: oklch(0.97 0.01 85);
   --secondary: oklch(0.22 0.012 60);
   --secondary-foreground: oklch(0.94 0.02 85);
   --muted: oklch(0.22 0.012 60);
   --muted-foreground: oklch(0.7 0.03 80);
-  --accent: oklch(0.66 0.14 60);
-  --accent-foreground: oklch(0.14 0.008 60);
+  --accent: oklch(0.38 0.13 22);
+  --accent-foreground: oklch(0.97 0.01 85);
   --destructive: oklch(0.6 0.2 27);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.3 0.02 70);
+  --border: oklch(0.3 0.04 25);
   --input: oklch(0.3 0.02 70);
-  --ring: oklch(0.76 0.13 75);
+  --ring: oklch(0.55 0.17 22);
   --gold: oklch(0.8 0.12 82);
   --overlay: oklch(0.1 0.005 60 / 0.7);
 }
@@ -87,7 +87,7 @@
 @utility btn-outline-gold {
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.7rem 1.4rem; border-radius: var(--radius);
-  border: 1px solid var(--color-primary); color: var(--color-primary);
+  border: 1px solid var(--color-primary); color: var(--color-foreground);
   font-weight: 600; font-size: 0.9rem; transition: background .2s;
   &:hover { background: color-mix(in oklab, var(--color-primary) 12%, transparent); }
 }
