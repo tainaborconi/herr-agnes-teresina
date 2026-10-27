@@ -40,7 +40,7 @@ function Index() {
           { i: Truck, t: "Entrega em Teresina", d: "Levamos e recolhemos os barris no seu evento." },
         ].map(({ i: Icon, t, d }) => (
           <div key={t} className="rounded-lg border bg-card p-7">
-            <Icon className="text-primary" />
+            <Icon className="text-red-soft" />
             <h3 className="mt-4 text-2xl">{t}</h3>
             <p className="mt-2 text-sm text-muted-foreground">{d}</p>
           </div>

@@ -33,7 +33,7 @@ function Barris() {
               <h2 className="text-4xl">Barril {o.l}L</h2>
               <p className="mt-1 text-sm text-gold">{o.ideal}</p>
               <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-                {o.itens.map((i) => <li key={i} className="flex gap-2"><Check size={16} className="text-primary" />{i}</li>)}
+                {o.itens.map((i) => <li key={i} className="flex gap-2"><Check size={16} className="text-red-soft" />{i}</li>)}
               </ul>
               <a href={whatsappLink(`Olá! Quero orçamento de um barril de ${o.l}L.`)} target="_blank" rel="noreferrer" className="btn-outline-gold mt-6">
                 <MessageCircle size={16} /> Orçar barril {o.l}L
