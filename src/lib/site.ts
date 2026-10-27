@@ -34,14 +34,24 @@ export const INCLUSO = [
   { nome: "Suporte via WhatsApp 24h", desc: "Resposta rápida se algo precisar durante o seu evento." },
 ];
 
-export type Perfil = "leve" | "moderado" | "intenso";
-export const LITROS_POR_HORA: Record<Perfil, number> = { leve: 0.4, moderado: 0.6, intenso: 0.8 };
+/**
+ * Estimativa de chopp por número de convidados, na tabela oficial da HERR AGNES.
+ * São faixas de 5 em 5 convidados; a cada 6 faixas a quantidade se repete
+ * (26 a 30 = 50L, 56 a 60 = 100L, 86 a 90 = 150L, 116 a 120 = 200L,
+ * 146 a 150 = 250L, 176 a 180 = 300L). A tabela oficial cobre 1 a 200
+ * convidados; acima disso o mesmo ritmo continua.
+ */
+export const MAX_CONVIDADOS_TABELA = 200;
 
-/** Litros estimados: pessoas que bebem × horas × consumo por hora, arredondado para cima. */
-export function calcularLitros(pessoas: number, horas: number, perfil: Perfil) {
-  if (pessoas <= 0 || horas <= 0) return 0;
-  return Math.ceil(pessoas * horas * LITROS_POR_HORA[perfil]);
+export function calcularLitros(pessoas: number) {
+  if (pessoas <= 0) return 0;
+  const faixa = Math.ceil(pessoas / 5); // faixa 1 = 1 a 5 convidados, 2 = 6 a 10...
+  return 10 * (faixa - Math.floor(faixa / 6));
 }
+
+export const OBS_CALCULADORA =
+  "Os valores são estimativas iniciais e podem variar conforme a duração do evento, o perfil dos convidados, o clima e o consumo de outras bebidas.";
+
 
 /** Combinação de barris de 50L e 30L que cobre os litros com a menor sobra. */
 export function sugerirBarris(litros: number) {
