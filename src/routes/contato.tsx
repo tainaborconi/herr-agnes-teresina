@@ -28,7 +28,7 @@ function Contato() {
   };
   return (
     <>
-      <PageHero eyebrow="Contato" title="Peça seu orçamento" text="Preencha os dados e envie direto para o nosso WhatsApp." />
+      <PageHero eyebrow="Contato" title="Peça seu orçamento" text="Preencha os dados e envie direto para o nosso WhatsApp. Atendemos aniversários, casamentos, formaturas, eventos corporativos e culturais, com entrega no mesmo dia." />
       <section className="mx-auto max-w-2xl px-5 pb-20">
         <form onSubmit={submit} className="grid gap-5 rounded-lg border bg-card p-7 sm:grid-cols-2">
           <label className="text-sm sm:col-span-2">Nome<input required value={f.nome} onChange={set("nome")} className={field} /></label>
