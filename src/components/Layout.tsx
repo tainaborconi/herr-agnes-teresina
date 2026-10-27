@@ -47,7 +47,7 @@ export function Header() {
 
 export function Footer() {
   return (
-    <footer className="border-t bg-card">
+    <footer className="border-t bg-ink">
       <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 md:grid-cols-3">
         <div>
           <img src={logo.url} alt="HERR AGNES Cervejaria" width={1271} height={1124} loading="lazy" className="h-24 w-auto" />
