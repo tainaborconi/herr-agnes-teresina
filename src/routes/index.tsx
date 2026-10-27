@@ -7,7 +7,9 @@ import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
 import { SABORES, whatsappLink } from "@/lib/site";
 
-const EVENTOS = [
+type Evento = { nome: string; detalhe: string; src: string; pos?: string };
+
+const EVENTOS: Evento[] = [
   {
     nome: "Corrida da Advocacia Teresina 2026",
     detalhe: "Chopp gelado servido na chegada dos corredores.",
