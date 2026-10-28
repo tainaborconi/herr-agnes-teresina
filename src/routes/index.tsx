@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MessageCircle, Calculator, Award, Truck, Snowflake, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
 import hero from "@/assets/hero.jpg";
 import festa from "@/assets/festa.jpg";
+import miniKegs from "@/assets/Expositor de Mini-Kegs AGNES Artesanais.png";
 import barris from "@/assets/565388034_17925816492157491_3189516691680693208_n.jpg";
 import tirandoChopp from "@/assets/88.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
@@ -186,6 +187,7 @@ function Index() {
         <div className="mx-auto max-w-6xl px-5 py-20">
           <p className="eyebrow">Nossos sabores</p>
           <h2 className="mt-3 text-4xl">Um chopp para cada ocasião</h2>
+          <img src={miniKegs} alt="Expositor de Mini-Kegs AGNES Artesanais" loading="lazy" className="mt-8 max-h-[520px] w-full rounded-lg border object-contain object-left" />
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {SABORES.map((s) => (
               <div key={s.nome} className="rounded-lg border bg-card p-6">
