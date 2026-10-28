@@ -64,10 +64,8 @@ function Index() {
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
         <div className="relative mx-auto max-w-6xl px-5 py-28 md:py-40">
           <p className="eyebrow">Chopp artesanal · Teresina – PI</p>
-          <h1 className="mt-4 text-4xl leading-[1.06] sm:text-5xl md:text-6xl lg:text-7xl">
-            AGNES,
-            <br />O SABOR DE
-            <br />SER FELIZ!
+          <h1 className="mt-4 max-w-4xl text-4xl leading-[1.06] sm:text-5xl md:text-6xl lg:text-7xl">
+            Sua festa merece chopp gelado, sem complicação.
           </h1>
           <p className="mt-5 max-w-md text-muted-foreground">Chopp gelado, cremoso e entregue no seu evento. Do aniversário ao casamento.</p>
           <div className="mt-8 flex flex-wrap gap-3">
