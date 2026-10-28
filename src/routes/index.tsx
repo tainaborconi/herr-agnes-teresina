@@ -202,7 +202,7 @@ function Index() {
               </div>
             ))}
           </div>
-          <Link to="/sabores" className="btn-outline-gold mt-10">Ver todos os sabores</Link>
+          <a href={whatsappLink("Olá! Quero conhecer os sabores de chopp HERR AGNES e fazer um orçamento.")} target="_blank" rel="noreferrer" className="btn-outline-gold mt-10"><MessageCircle size={16} /> Consultar sabores pelo WhatsApp</a>
         </div>
       </section>
 
