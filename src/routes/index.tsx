@@ -160,15 +160,19 @@ function Index() {
         </div>
       </section>
 
-      <section className="section-wine">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-20 md:grid-cols-2">
-          <img src={festa} alt="Amigos brindando com chopp" loading="lazy" width={1200} height={912} className="rounded-lg" />
-          <div>
+      <section className="section-wine" id="calculadora">
+        <div className="mx-auto max-w-6xl px-5 py-20">
+          <div className="mb-8">
             <p className="eyebrow">Calculadora</p>
             <h2 className="mt-3 text-4xl">Quantos litros sua festa precisa?</h2>
-            <p className="mt-4 text-muted-foreground">Informe o número de convidados. Indicamos a quantidade e os barris ideais em segundos.</p>
-            <Link to="/calculadora" className="btn-gold mt-8"><Calculator size={16} /> Calcular agora</Link>
+            <p className="mt-4 max-w-2xl text-muted-foreground">Informe o número de convidados e a duração da festa. Calcule a quantidade de chopp diretamente aqui, sem sair da página.</p>
           </div>
+          <iframe
+            src="/calculadora"
+            title="Calculadora de litros de chopp para sua festa"
+            loading="lazy"
+            className="h-[900px] w-full rounded-lg border bg-background md:h-[760px]"
+          />
         </div>
       </section>
 
