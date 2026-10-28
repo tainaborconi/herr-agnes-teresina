@@ -4,10 +4,6 @@ import hero from "@/assets/hero.jpg";
 import festa from "@/assets/festa.jpg";
 import barris from "@/assets/delivery-barril.jpg";
 import tirandoChopp from "@/assets/tirando-chopp.jpg";
-import evCasamento from "@/assets/ev-casamento.jpg";
-import evAniversario from "@/assets/ev-aniversario.jpg";
-import evFormatura from "@/assets/ev-formatura.jpg";
-import evCorporativo from "@/assets/ev-corporativo.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
@@ -36,15 +32,6 @@ const EVENTOS: Evento[] = [
     pos: "bottom",
   },
 ];
-
-const FOTO_EVENTO: Record<string, string> = {
-  "Aniversários": evAniversario,
-  "Casamentos": evCasamento,
-  "Formaturas": evFormatura,
-  "Eventos corporativos": evCorporativo,
-  "Eventos culturais": oktoberfest.url,
-  "Outros formatos": festa,
-};
 
 const ICONE_EVENTO: Record<string, LucideIcon> = {
   "Aniversários": PartyPopper,
@@ -146,10 +133,7 @@ function Index() {
             {TIPOS_EVENTO.map((e) => {
               const Icon = ICONE_EVENTO[e.nome] ?? Sparkles;
               return (
-                <div key={e.nome} className="group overflow-hidden rounded-lg border bg-card">
-                  <div className="aspect-[4/3] overflow-hidden">
-                    <img src={FOTO_EVENTO[e.nome] ?? festa} alt={e.nome} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                  </div>
+                <div key={e.nome} className="rounded-lg border bg-card">
                   <div className="p-6">
                     <div className="flex items-center gap-3"><Icon className="text-red-soft" /><h3 className="text-xl">{e.nome}</h3></div>
                     <p className="mt-2 text-sm text-muted-foreground">{e.desc}</p>
