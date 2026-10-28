@@ -164,7 +164,6 @@ function Index() {
         <div className="mx-auto max-w-6xl px-5 py-20">
           <div className="mb-8">
             <p className="eyebrow">Calculadora</p>
-            <h2 className="mt-3 text-4xl">Quantos litros sua festa precisa?</h2>
             <p className="mt-4 max-w-2xl text-muted-foreground">Informe o número de convidados e a duração da festa. Calcule a quantidade de chopp diretamente aqui, sem sair da página.</p>
           </div>
           <iframe
