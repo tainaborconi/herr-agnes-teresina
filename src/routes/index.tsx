@@ -141,27 +141,6 @@ function Index() {
         </div>
       </section>
 
-      <section className="section-wine">
-        <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-20 lg:grid-cols-[1fr_1.4fr]">
-          <img src={tirandoChopp} alt="Chopp dourado sendo tirado na chopeira" width={1024} height={1280} loading="lazy" className="aspect-[4/5] w-full rounded-lg border object-cover shadow-2xl" />
-          <div className="grid gap-5">
-          {[
-            { i: Award, t: "Qualidade artesanal", d: "Receitas próprias e ingredientes selecionados." },
-            { i: Snowflake, t: "Sempre gelado", d: "Chopeira e gelo para servir na temperatura ideal." },
-            { i: Truck, t: "Delivery no mesmo dia", d: "Você pede e recebe o barril no mesmo dia, com chopeira e kit de extração." },
-          ].map(({ i: Icon, t, d }) => (
-            <div key={t} className="flex gap-5 rounded-lg border bg-card p-6">
-              <Icon className="mt-1 shrink-0 text-red-soft" />
-              <div>
-                <h3 className="text-2xl">{t}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{d}</p>
-              </div>
-            </div>
-          ))}
-          </div>
-        </div>
-      </section>
-
       <section className="border-y">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-20 md:grid-cols-2">
           <div>
