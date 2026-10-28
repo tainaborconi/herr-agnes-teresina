@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MessageCircle, Calculator, Award, Truck, Snowflake, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
-import hero from "@/assets/hero.jpg";
 import festa from "@/assets/festa.jpg";
 import miniKegs from "@/assets/Expositor de Mini-Kegs AGNES Artesanais.png";
 import barris from "@/assets/565388034_17925816492157491_3189516691680693208_n.jpg";
@@ -127,7 +126,7 @@ function Index() {
   return (
     <>
       <section className="relative overflow-hidden">
-        <img src={hero} alt="Copo de chopp HERR AGNES com espuma cremosa" width={1600} height={1008} className="absolute inset-0 h-full w-full object-cover" />
+        <img src={tirandoChopp} alt="Chopp HERR AGNES sendo servido" width={1024} height={1280} className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
         <div className="relative mx-auto max-w-6xl px-5 py-28 md:py-40">
           <p className="eyebrow">Chopp artesanal · Teresina – PI</p>
