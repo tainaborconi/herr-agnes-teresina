@@ -95,9 +95,14 @@ function HomeCalculator() {
                   key={s.nome}
                   aria-pressed={ativo}
                   onClick={() => alternarSabor(s.nome)}
-                  className={ativo
-                    ? "inline-flex items-center gap-1.5 rounded-md border border-gold bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground"
-                    : "inline-flex items-center gap-1.5 rounded-md border bg-secondary px-3 py-2 text-sm text-foreground hover:bg-accent"}
+                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-2 text-sm transition-all hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${({
+                    "Pilsen": ativo ? "border-amber-700 bg-amber-500 text-white shadow-sm" : "border-amber-300 bg-amber-50 text-amber-950",
+                    "Puro Malte": ativo ? "border-orange-800 bg-orange-700 text-white shadow-sm" : "border-orange-300 bg-orange-100 text-orange-950",
+                    "Zero Glúten": ativo ? "border-emerald-800 bg-emerald-700 text-white shadow-sm" : "border-emerald-300 bg-emerald-50 text-emerald-950",
+                    "IPA": ativo ? "border-orange-900 bg-orange-600 text-white shadow-sm" : "border-orange-300 bg-orange-50 text-orange-950",
+                    "Munich": ativo ? "border-stone-800 bg-stone-800 text-white shadow-sm" : "border-stone-400 bg-stone-200 text-stone-900",
+                    "Chopp de Vinho": ativo ? "border-rose-900 bg-rose-800 text-white shadow-sm" : "border-rose-300 bg-rose-50 text-rose-950",
+                  } as Record<string, string>)[s.nome] ?? (ativo ? "border-gold bg-primary text-primary-foreground" : "border bg-secondary text-foreground")}`}
                 >
                   {ativo && <Check size={14} />} {s.nome}
                 </button>
