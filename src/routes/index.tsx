@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MessageCircle, Calculator, Award, Truck, Snowflake, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
 import hero from "@/assets/hero.jpg";
 import festa from "@/assets/festa.jpg";
-import barris from "@/assets/barris.jpg";
+import barris from "@/assets/delivery-barril.jpg";
 import tirandoChopp from "@/assets/tirando-chopp.jpg";
 import evCasamento from "@/assets/ev-casamento.jpg";
 import evAniversario from "@/assets/ev-aniversario.jpg";
@@ -118,7 +118,7 @@ function Index() {
             <h2 className="mt-3 text-4xl">Pediu, recebeu: o barril chega no mesmo dia</h2>
             <p className="mt-4 text-muted-foreground">No modo delivery da Agnes você escolhe o sabor, combina tudo pelo WhatsApp e recebe o barril pronto para servir no mesmo dia do evento.</p>
             <a href={whatsappLink("Olá! Quero o delivery de chopp da Agnes no mesmo dia.")} target="_blank" rel="noreferrer" className="btn-gold mt-8"><MessageCircle size={16} /> Pedir delivery hoje</a>
-            <img src={barris} alt="Barris de chopp HERR AGNES prontos para entrega" loading="lazy" className="mt-10 aspect-video w-full rounded-lg border object-cover" />
+            <img src={barris} alt="Barril e chopeira elétrica montados para a festa" width={1280} height={720} loading="lazy" className="mt-10 aspect-video w-full rounded-lg border object-cover" />
           </div>
           <div className="rounded-lg border bg-card p-7">
             <h3 className="text-2xl">O que já vem incluso</h3>
