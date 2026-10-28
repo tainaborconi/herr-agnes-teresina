@@ -8,7 +8,8 @@ import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { SABORES, TIPOS_EVENTO, INCLUSO, whatsappLink } from "@/lib/site";
+import { useState } from "react";
+import { SABORES, TIPOS_EVENTO, INCLUSO, whatsappLink, DURACOES, DURACAO_PADRAO, calcularLitros, sugerirBarris } from "@/lib/site";
 import { InstagramBand } from "@/components/InstagramFeed";
 import { feedQueryOptions } from "@/lib/instagram.queries";
 
@@ -54,6 +55,43 @@ export const Route = createFileRoute("/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(feedQueryOptions),
   component: Index,
 });
+
+const calcField = "mt-2 w-full rounded-md border bg-secondary px-3 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-ring";
+
+function HomeCalculator() {
+  const [pessoas, setPessoas] = useState(50);
+  const [horas, setHoras] = useState<number>(DURACAO_PADRAO);
+  const litros = calcularLitros(pessoas, horas);
+  const barris = sugerirBarris(litros);
+  const barrisTxt = [barris.b50 && `${barris.b50} barril(is) de 50L`, barris.b30 && `${barris.b30} barril(is) de 30L`].filter(Boolean).join(" + ");
+  const duracao = DURACOES.find((d) => d.h === horas)?.rotulo ?? `${horas} horas`;
+  const mensagem = `Olá! Gostaria de um orçamento de chopp para ${pessoas} convidados, com duração de ${duracao}. Estimativa: ${litros}L (${barrisTxt || "quantidade a definir"}).`;
+
+  return (
+    <div className="grid gap-6 rounded-lg border bg-card p-6 md:grid-cols-2 md:p-8">
+      <div className="space-y-5">
+        <label className="block text-sm">Número de convidados
+          <input type="number" min={1} max={1000} value={pessoas} onChange={(e) => setPessoas(Math.max(1, Math.min(1000, Number(e.target.value) || 1)))} className={calcField} />
+        </label>
+        <label className="block text-sm">Duração da festa
+          <select value={horas} onChange={(e) => setHoras(Number(e.target.value))} className={calcField}>
+            {DURACOES.map((d) => <option key={d.h} value={d.h}>{d.rotulo}</option>)}
+          </select>
+        </label>
+        <p className="text-xs text-muted-foreground">Estimativa inicial; o consumo pode variar conforme o perfil dos convidados, o clima e outras bebidas.</p>
+      </div>
+      <div className="section-wine flex flex-col justify-between rounded-lg border p-6">
+        <div>
+          <p className="eyebrow">Sua estimativa</p>
+          <p className="mt-3 font-display text-5xl text-gold sm:text-6xl">{litros}<span className="ml-2 text-2xl">litros</span></p>
+          <p className="mt-3 text-sm text-muted-foreground">Para {pessoas} convidados em {duracao.toLowerCase()}, sugerimos:</p>
+          <p className="mt-2 font-semibold">{barrisTxt || "Consulte a equipe para definir os barris"}{barris.total > 0 ? ` (${barris.total}L no total)` : ""}</p>
+        </div>
+        <a href={whatsappLink(mensagem)} target="_blank" rel="noreferrer" className="btn-gold mt-6 w-fit"><MessageCircle size={16} /> Pedir orçamento no WhatsApp</a>
+      </div>
+    </div>
+  );
+}
 
 function Index() {
   const { data: feed } = useSuspenseQuery(feedQueryOptions);
@@ -164,14 +202,9 @@ function Index() {
         <div className="mx-auto max-w-6xl px-5 py-20">
           <div className="mb-8">
             <p className="eyebrow">Calculadora</p>
-            <p className="mt-4 max-w-2xl text-muted-foreground">Informe o número de convidados e a duração da festa. Calcule a quantidade de chopp diretamente aqui, sem sair da página.</p>
+            <p className="mt-4 max-w-2xl text-muted-foreground">Descubra uma estimativa de chopp para sua festa sem sair da página.</p>
           </div>
-          <iframe
-            src="/calculadora"
-            title="Calculadora de litros de chopp para sua festa"
-            loading="lazy"
-            className="h-[900px] w-full rounded-lg border bg-background md:h-[760px]"
-          />
+          <HomeCalculator />
         </div>
       </section>
 
