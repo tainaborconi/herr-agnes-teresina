@@ -10,8 +10,8 @@ export const INSTAGRAM_URL = `https://instagram.com/${INSTAGRAM_HANDLE}`;
  * o FeedFusion, e o próprio serviço libera o acesso pelo navegador (CORS aberto).
  * Deixe em branco enquanto o feed não for criado: a faixa mostra o convite para seguir.
  */
-export const FEEDFUSION_USERNAME = "";
-export const FEEDFUSION_PUBLIC_KEY = "";
+export const FEEDFUSION_USERNAME = "herragnes.teresina";
+export const FEEDFUSION_PUBLIC_KEY = "51799b1c75aceeca3f2ad8db803f89df";
 
 /** Quantos posts buscar para a grade da home. */
 export const FEED_POSTS = 8;
