@@ -3,7 +3,7 @@ import { MessageCircle, Calculator, Award, Truck, Snowflake, Check, PartyPopper,
 import hero from "@/assets/hero.jpg";
 import festa from "@/assets/festa.jpg";
 import barris from "@/assets/delivery-barril.jpg";
-import tirandoChopp from "@/assets/tirando-chopp.jpg";
+import tirandoChopp from "@/assets/88.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
