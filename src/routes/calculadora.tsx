@@ -73,7 +73,7 @@ function Calc() {
                     onClick={() => alternar(s.nome)}
                     className={
                       ativo
-                        ? "inline-flex items-center gap-1.5 rounded-md border border-gold bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground"
+                        ? "inline-flex items-center gap-1.5 rounded-md border border-gold bg-wine px-3 py-2 text-sm font-semibold text-primary-foreground"
                         : "inline-flex items-center gap-1.5 rounded-md border bg-secondary px-3 py-2 text-sm text-foreground hover:bg-accent"
                     }
                   >
