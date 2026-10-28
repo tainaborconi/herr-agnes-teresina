@@ -2,6 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MessageCircle, Calculator, Award, Truck, Snowflake, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
 import hero from "@/assets/hero.jpg";
 import festa from "@/assets/festa.jpg";
+import barris from "@/assets/barris.jpg";
+import tirandoChopp from "@/assets/tirando-chopp.jpg";
+import evCasamento from "@/assets/ev-casamento.jpg";
+import evAniversario from "@/assets/ev-aniversario.jpg";
+import evFormatura from "@/assets/ev-formatura.jpg";
+import evCorporativo from "@/assets/ev-corporativo.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
@@ -30,6 +36,15 @@ const EVENTOS: Evento[] = [
     pos: "bottom",
   },
 ];
+
+const FOTO_EVENTO: Record<string, string> = {
+  "Aniversários": evAniversario,
+  "Casamentos": evCasamento,
+  "Formaturas": evFormatura,
+  "Eventos corporativos": evCorporativo,
+  "Eventos culturais": oktoberfest.url,
+  "Outros formatos": festa,
+};
 
 const ICONE_EVENTO: Record<string, LucideIcon> = {
   "Aniversários": PartyPopper,
@@ -76,18 +91,23 @@ function Index() {
       </section>
 
       <section className="section-wine">
-        <div className="mx-auto grid max-w-6xl gap-6 px-5 py-20 md:grid-cols-3">
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-20 lg:grid-cols-[1fr_1.4fr]">
+          <img src={tirandoChopp} alt="Chopp dourado sendo tirado na chopeira" width={1024} height={1280} loading="lazy" className="aspect-[4/5] w-full rounded-lg border object-cover shadow-2xl" />
+          <div className="grid gap-5">
           {[
             { i: Award, t: "Qualidade artesanal", d: "Receitas próprias e ingredientes selecionados." },
             { i: Snowflake, t: "Sempre gelado", d: "Chopeira e gelo para servir na temperatura ideal." },
             { i: Truck, t: "Delivery no mesmo dia", d: "Você pede e recebe o barril no mesmo dia, com chopeira e kit de extração." },
           ].map(({ i: Icon, t, d }) => (
-            <div key={t} className="rounded-lg border bg-card p-7">
-              <Icon className="text-red-soft" />
-              <h3 className="mt-4 text-2xl">{t}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{d}</p>
+            <div key={t} className="flex gap-5 rounded-lg border bg-card p-6">
+              <Icon className="mt-1 shrink-0 text-red-soft" />
+              <div>
+                <h3 className="text-2xl">{t}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{d}</p>
+              </div>
             </div>
           ))}
+          </div>
         </div>
       </section>
 
@@ -98,6 +118,7 @@ function Index() {
             <h2 className="mt-3 text-4xl">Pediu, recebeu: o barril chega no mesmo dia</h2>
             <p className="mt-4 text-muted-foreground">No modo delivery da Agnes você escolhe o sabor, combina tudo pelo WhatsApp e recebe o barril pronto para servir no mesmo dia do evento.</p>
             <a href={whatsappLink("Olá! Quero o delivery de chopp da Agnes no mesmo dia.")} target="_blank" rel="noreferrer" className="btn-gold mt-8"><MessageCircle size={16} /> Pedir delivery hoje</a>
+            <img src={barris} alt="Barris de chopp HERR AGNES prontos para entrega" loading="lazy" className="mt-10 aspect-video w-full rounded-lg border object-cover" />
           </div>
           <div className="rounded-lg border bg-card p-7">
             <h3 className="text-2xl">O que já vem incluso</h3>
@@ -125,10 +146,14 @@ function Index() {
             {TIPOS_EVENTO.map((e) => {
               const Icon = ICONE_EVENTO[e.nome] ?? Sparkles;
               return (
-                <div key={e.nome} className="rounded-lg border bg-card p-6">
-                  <Icon className="text-red-soft" />
-                  <h3 className="mt-4 text-xl">{e.nome}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{e.desc}</p>
+                <div key={e.nome} className="group overflow-hidden rounded-lg border bg-card">
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <img src={FOTO_EVENTO[e.nome] ?? festa} alt={e.nome} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  </div>
+                  <div className="p-6">
+                    <div className="flex items-center gap-3"><Icon className="text-red-soft" /><h3 className="text-xl">{e.nome}</h3></div>
+                    <p className="mt-2 text-sm text-muted-foreground">{e.desc}</p>
+                  </div>
                 </div>
               );
             })}
