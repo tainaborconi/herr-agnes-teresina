@@ -62,11 +62,15 @@ const calcField = "mt-2 w-full rounded-md border bg-secondary px-3 py-2.5 text-f
 function HomeCalculator() {
   const [pessoas, setPessoas] = useState(50);
   const [horas, setHoras] = useState<number>(DURACAO_PADRAO);
+  const [sabores, setSabores] = useState<string[]>([]);
+  const alternarSabor = (nome: string) =>
+    setSabores((atuais) => atuais.includes(nome) ? atuais.filter((s) => s !== nome) : [...atuais, nome]);
   const litros = calcularLitros(pessoas, horas);
   const barris = sugerirBarris(litros);
   const barrisTxt = [barris.b50 && `${barris.b50} barril(is) de 50L`, barris.b30 && `${barris.b30} barril(is) de 30L`].filter(Boolean).join(" + ");
   const duracao = DURACOES.find((d) => d.h === horas)?.rotulo ?? `${horas} horas`;
-  const mensagem = `Olá! Gostaria de um orçamento de chopp para ${pessoas} convidados, com duração de ${duracao}. Estimativa: ${litros}L (${barrisTxt || "quantidade a definir"}).`;
+  const saborTxt = sabores.length ? sabores.join(", ") : "a definir com a Agnes";
+  const mensagem = `Olá! Gostaria de um orçamento de chopp para ${pessoas} convidados, com duração de ${duracao}. Estimativa: ${litros}L (${barrisTxt || "quantidade a definir"}). Sabores escolhidos: ${saborTxt}.`;
 
   return (
     <div className="grid gap-6 rounded-lg border bg-card p-6 md:grid-cols-2 md:p-8">
@@ -79,6 +83,28 @@ function HomeCalculator() {
             {DURACOES.map((d) => <option key={d.h} value={d.h}>{d.rotulo}</option>)}
           </select>
         </label>
+        <fieldset>
+          <legend className="text-sm">Sabor do chopp <span className="text-muted-foreground">(opcional)</span></legend>
+          <p className="mt-1 text-xs text-muted-foreground">Escolha um ou mais sabores. Essa seleção não altera a quantidade estimada; ela será enviada junto ao pedido de orçamento.</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {SABORES.map((s) => {
+              const ativo = sabores.includes(s.nome);
+              return (
+                <button
+                  type="button"
+                  key={s.nome}
+                  aria-pressed={ativo}
+                  onClick={() => alternarSabor(s.nome)}
+                  className={ativo
+                    ? "inline-flex items-center gap-1.5 rounded-md border border-gold bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground"
+                    : "inline-flex items-center gap-1.5 rounded-md border bg-secondary px-3 py-2 text-sm text-foreground hover:bg-accent"}
+                >
+                  {ativo && <Check size={14} />} {s.nome}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
         <p className="text-xs text-muted-foreground">Estimativa inicial; o consumo pode variar conforme o perfil dos convidados, o clima e outras bebidas.</p>
       </div>
       <div className="section-wine flex flex-col justify-between rounded-lg border p-6">
