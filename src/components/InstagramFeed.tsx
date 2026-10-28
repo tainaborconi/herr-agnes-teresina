@@ -16,7 +16,7 @@ export function InstagramBand({ feed }: { feed?: Feed }) {
     <section className="section-wine">
       <div className="mx-auto max-w-6xl px-5 py-20">
         <p className="eyebrow">Instagram</p>
-        <h2 className="mt-3 text-4xl">Acompanhe o @{INSTAGRAM_HANDLE}</h2>
+        <h2 className="mt-3 text-3xl sm:text-4xl">Acompanhe-nos no Instagram</h2>
         <p className="mt-3 max-w-lg text-muted-foreground">
           Bastidores, eventos e os chopps da Agnes, direto do nosso perfil.
         </p>
