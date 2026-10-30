@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MessageCircle, Calculator, Award, Truck, Snowflake, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
+import { MessageCircle, Calculator, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
 import festa from "@/assets/festa.jpg";
-import miniKegs from "@/assets/Expositor de Mini-Kegs AGNES Artesanais.png";
 import barris from "@/assets/565388034_17925816492157491_3189516691680693208_n.jpg";
 import tirandoChopp from "@/assets/88.jpg";
+import evAniversario from "@/assets/ev-aniversario.jpg";
+import evCasamento from "@/assets/ev-casamento.jpg";
+import evFormatura from "@/assets/ev-formatura.jpg";
+import evCorporativo from "@/assets/ev-corporativo.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
@@ -11,6 +14,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { SABORES, TIPOS_EVENTO, INCLUSO, whatsappLink, DURACOES, DURACAO_PADRAO, calcularLitros, sugerirBarris } from "@/lib/site";
 import { InstagramBand } from "@/components/InstagramFeed";
+import { ChoppCarousel, type CarouselSlide } from "@/components/ChoppCarousel";
 import { feedQueryOptions } from "@/lib/instagram.queries";
 
 type Evento = { nome: string; detalhe: string; src: string; pos?: string };
@@ -42,6 +46,14 @@ const ICONE_EVENTO: Record<string, LucideIcon> = {
   "Eventos culturais": Music2,
   "Outros formatos": Sparkles,
 };
+
+const CARROSSEL: CarouselSlide[] = [
+  { src: evAniversario, alt: "Copos de chopp AGNES em uma festa de aniversário", titulo: "Aniversários", detalhe: "O brinde que anima a festa do começo ao fim." },
+  { src: evCasamento, alt: "Taças de chopp AGNES servidas em um casamento", titulo: "Casamentos", detalhe: "Chopp gelado no brinde do grande dia." },
+  { src: evFormatura, alt: "Copos de chopp AGNES em uma festa de formatura", titulo: "Formaturas", detalhe: "A comemoração que coroa o diploma." },
+  { src: evCorporativo, alt: "Chopeira AGNES servindo chopp em um evento corporativo", titulo: "Eventos corporativos", detalhe: "Estação de chopp para eventos da empresa." },
+  { src: festa, alt: "Convidados brindando com chopp AGNES em uma festa", titulo: "Festas e encontros", detalhe: "Do churrasco de amigos ao evento cultural: a Agnes vai." },
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -193,7 +205,9 @@ function Index() {
         <div className="mx-auto max-w-6xl px-5 py-20">
           <p className="eyebrow">Nossos sabores</p>
           <h2 className="mt-3 text-4xl">Um chopp para cada ocasião</h2>
-          <img src={miniKegs} alt="Expositor de Mini-Kegs AGNES Artesanais" loading="lazy" className="mt-8 max-h-[520px] w-full rounded-lg border object-contain object-left" />
+          <div className="mt-8">
+            <ChoppCarousel slides={CARROSSEL} />
+          </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {SABORES.map((s) => (
               <div key={s.nome} className="rounded-lg border bg-card p-6">

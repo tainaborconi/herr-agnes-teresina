@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { MessageCircle } from "lucide-react";
 import { PageHero } from "@/components/Layout";
 import { SABORES, whatsappLink } from "@/lib/site";
+import miniKegs from "@/assets/Expositor de Mini-Kegs AGNES Artesanais.png";
 
 export const Route = createFileRoute("/sabores")({
   head: () => ({
@@ -19,6 +20,7 @@ function Sabores() {
   return (
     <>
       <PageHero eyebrow="Nossos sabores" title="Escolha o seu chopp" />
+      <img src={miniKegs} alt="Expositor de Mini-Kegs AGNES Artesanais" loading="lazy" className="mx-auto mt-10 max-h-[440px] w-full max-w-4xl rounded-lg border object-contain px-5" />
       <section className="mx-auto grid max-w-6xl gap-6 px-5 pb-20 md:grid-cols-2 lg:grid-cols-3">
         {SABORES.map((s) => (
           <div key={s.nome} className="flex flex-col rounded-lg border bg-card p-8">
