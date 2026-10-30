@@ -1,6 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MessageCircle, Calculator, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
-import festa from "@/assets/festa.jpg";
+import choppVinho from "@/assets/FEED - CHOPP VINHO.jpg";
+import ipa from "@/assets/FEED - IPA.png";
+import munich from "@/assets/FEED - MUNICH.jpg";
+import pilsen from "@/assets/FEED - PILSEN.jpg";
+import puroMalte from "@/assets/FEED - PURO MALTE.png";
+import semGluten from "@/assets/FEED - SEM GLÚTEN.jpeg";
 import barris from "@/assets/565388034_17925816492157491_3189516691680693208_n.jpg";
 import tirandoChopp from "@/assets/88.jpg";
 import evAniversario from "@/assets/ev-aniversario.jpg";
@@ -48,11 +53,12 @@ const ICONE_EVENTO: Record<string, LucideIcon> = {
 };
 
 const CARROSSEL: CarouselSlide[] = [
-  { src: evAniversario, alt: "Copos de chopp AGNES em uma festa de aniversário", titulo: "Aniversários", detalhe: "O brinde que anima a festa do começo ao fim." },
-  { src: evCasamento, alt: "Taças de chopp AGNES servidas em um casamento", titulo: "Casamentos", detalhe: "Chopp gelado no brinde do grande dia." },
-  { src: evFormatura, alt: "Copos de chopp AGNES em uma festa de formatura", titulo: "Formaturas", detalhe: "A comemoração que coroa o diploma." },
-  { src: evCorporativo, alt: "Chopeira AGNES servindo chopp em um evento corporativo", titulo: "Eventos corporativos", detalhe: "Estação de chopp para eventos da empresa." },
-  { src: festa, alt: "Convidados brindando com chopp AGNES em uma festa", titulo: "Festas e encontros", detalhe: "Do churrasco de amigos ao evento cultural: a Agnes vai." },
+  { src: choppVinho, alt: "Chopp Vinho HERR AGNES", titulo: "Chopp Vinho", detalhe: "Uma opção marcante para quem gosta de sabores especiais." },
+  { src: ipa, alt: "Chopp IPA HERR AGNES", titulo: "IPA", detalhe: "Amargor e personalidade em cada gole." },
+  { src: munich, alt: "Chopp Munich HERR AGNES", titulo: "Munich", detalhe: "Um sabor encorpado para apreciar cada momento." },
+  { src: pilsen, alt: "Chopp Pilsen HERR AGNES", titulo: "Pilsen", detalhe: "Leveza e refrescância para qualquer ocasião." },
+  { src: puroMalte, alt: "Chopp Puro Malte HERR AGNES", titulo: "Puro Malte", detalhe: "O clássico que combina com bons encontros." },
+  { src: semGluten, alt: "Chopp sem glúten HERR AGNES", titulo: "Sem Glúten", detalhe: "Mais uma opção para brindar e compartilhar." },
 ];
 
 export const Route = createFileRoute("/")({
