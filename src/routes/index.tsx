@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MessageCircle, Calculator, Award, Truck, Snowflake, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
+import { MessageCircle, Calculator, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
 import festa from "@/assets/festa.jpg";
-import miniKegs from "@/assets/Expositor de Mini-Kegs AGNES Artesanais.png";
 import barris from "@/assets/565388034_17925816492157491_3189516691680693208_n.jpg";
 import tirandoChopp from "@/assets/88.jpg";
+import evAniversario from "@/assets/ev-aniversario.jpg";
+import evCasamento from "@/assets/ev-casamento.jpg";
+import evFormatura from "@/assets/ev-formatura.jpg";
+import evCorporativo from "@/assets/ev-corporativo.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
@@ -11,6 +14,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { SABORES, TIPOS_EVENTO, INCLUSO, whatsappLink, DURACOES, DURACAO_PADRAO, calcularLitros, sugerirBarris } from "@/lib/site";
 import { InstagramBand } from "@/components/InstagramFeed";
+import { ChoppCarousel, type CarouselSlide } from "@/components/ChoppCarousel";
 import { feedQueryOptions } from "@/lib/instagram.queries";
 
 type Evento = { nome: string; detalhe: string; src: string; pos?: string };
