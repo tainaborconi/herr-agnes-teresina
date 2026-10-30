@@ -47,6 +47,14 @@ const ICONE_EVENTO: Record<string, LucideIcon> = {
   "Outros formatos": Sparkles,
 };
 
+const CARROSSEL: CarouselSlide[] = [
+  { src: evAniversario, alt: "Copos de chopp AGNES em uma festa de aniversário", titulo: "Aniversários", detalhe: "O brinde que anima a festa do começo ao fim." },
+  { src: evCasamento, alt: "Taças de chopp AGNES servidas em um casamento", titulo: "Casamentos", detalhe: "Chopp gelado no brinde do grande dia." },
+  { src: evFormatura, alt: "Copos de chopp AGNES em uma festa de formatura", titulo: "Formaturas", detalhe: "A comemoração que coroa o diploma." },
+  { src: evCorporativo, alt: "Chopeira AGNES servindo chopp em um evento corporativo", titulo: "Eventos corporativos", detalhe: "Estação de chopp para eventos da empresa." },
+  { src: festa, alt: "Convidados brindando com chopp AGNES em uma festa", titulo: "Festas e encontros", detalhe: "Do churrasco de amigos ao evento cultural: a Agnes vai." },
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -197,7 +205,9 @@ function Index() {
         <div className="mx-auto max-w-6xl px-5 py-20">
           <p className="eyebrow">Nossos sabores</p>
           <h2 className="mt-3 text-4xl">Um chopp para cada ocasião</h2>
-          <img src={miniKegs} alt="Expositor de Mini-Kegs AGNES Artesanais" loading="lazy" className="mt-8 max-h-[520px] w-full rounded-lg border object-contain object-left" />
+          <div className="mt-8">
+            <ChoppCarousel slides={CARROSSEL} />
+          </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {SABORES.map((s) => (
               <div key={s.nome} className="rounded-lg border bg-card p-6">

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { MessageCircle } from "lucide-react";
 import { PageHero } from "@/components/Layout";
 import { SABORES, whatsappLink } from "@/lib/site";
+import miniKegs from "@/assets/Expositor de Mini-Kegs AGNES Artesanais.png";
 
 export const Route = createFileRoute("/sabores")({
   head: () => ({
