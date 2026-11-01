@@ -157,7 +157,7 @@ function Pedidos() {
             <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">3</span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Agendamento</p><h2 className="mt-1 text-2xl md:text-3xl">Quando deseja receber?</h2></div></div>
             <div className="grid gap-4 rounded-lg border bg-white p-5 md:grid-cols-2 md:p-6">
               <label className="text-sm">Data desejada<input className={fieldClass} type="date" min={new Date().toLocaleDateString("en-CA")} value={data} onChange={(e) => setData(e.target.value)} required /></label>
-              <label className="text-sm">Horário desejado<select className={fieldClass} value={horario} onChange={(e) => setHorario(e.target.value)} required><option value="">Selecione um horário</option>{["08h às 10h","10h às 12h","12h às 14h","14h às 16h","16h às 18h","18h às 20h","20h às 22h"].map((h) => <option key={h}>{h}</option>)}</select></label>
+              <label className="text-sm">Horário desejado<input className={fieldClass} type="time" min="08:00" max="22:00" step="60" value={horario} onChange={(e) => setHorario(e.target.value)} required /><span className="mt-1 block text-xs text-[#686868]">Escolha o horário exato desejado, entre 08h e 22h.</span></label>
               <p className="flex gap-2 text-xs leading-relaxed text-[#686868] md:col-span-2"><CalendarDays size={16} className="shrink-0 text-[#941b25]"/> A data e o horário são uma preferência. Nossa equipe confirmará a disponibilidade pelo WhatsApp antes de concluir o pedido.</p>
             </div>
           </div>
