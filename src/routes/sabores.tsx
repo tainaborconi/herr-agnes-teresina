@@ -1,7 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { MessageCircle } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHero } from "@/components/Layout";
-import { SABORES, whatsappLink } from "@/lib/site";
+import { SABORES } from "@/lib/site";
 import miniKegs from "@/assets/Expositor de Mini-Kegs AGNES Artesanais.png";
 
 export const Route = createFileRoute("/sabores")({
@@ -27,12 +26,14 @@ function Sabores() {
             <p className="eyebrow">Chopp HERR AGNES</p>
             <h2 className="mt-2 text-4xl">{s.nome}</h2>
             <p className="mt-3 flex-1 text-muted-foreground">{s.desc}</p>
-            <a href={whatsappLink(`Olá! Quero orçamento do chopp ${s.nome}.`)} target="_blank" rel="noreferrer" className="btn-outline-gold mt-6 w-fit">
-              <MessageCircle size={16} /> Pedir {s.nome}
-            </a>
           </div>
         ))}
       </section>
+      <div className="mx-auto max-w-6xl px-5 pb-20 text-center">
+        <h2 className="font-display text-2xl">Já escolheu seu sabor?</h2>
+        <p className="mt-2 text-sm text-muted-foreground">Confira os tamanhos e valores e monte seu pedido online.</p>
+        <Link to="/pedidos" className="btn-gold mx-auto mt-5 w-fit">Fazer pedido</Link>
+      </div>
     </>
   );
 }
