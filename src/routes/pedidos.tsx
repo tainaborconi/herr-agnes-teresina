@@ -188,6 +188,7 @@ function Pedidos() {
           </div>
           <div className="mt-4 rounded-lg border p-5 text-sm text-[#686868]"><p className="font-semibold text-[#171717]">Atendemos Teresina, Timon e região.</p><p className="mt-1">A entrega será confirmada pela nossa equipe.</p><Link to="/barris" className="mt-3 inline-block text-[#941b25] underline underline-offset-4">Conheça os barris</Link></div>
         </aside>
+        </div>
       </section>
     </>
   );
