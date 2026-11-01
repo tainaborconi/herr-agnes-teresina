@@ -10,6 +10,7 @@ const NAV = [
   { to: "/sabores", label: "Nossos sabores" },
   { to: "/calculadora", label: "Calcule seu chopp" },
   { to: "/barris", label: "Barris" },
+  { to: "/pedidos", label: "Fazer pedido" },
   { to: "/contato", label: "Contato" },
 ] as const;
 

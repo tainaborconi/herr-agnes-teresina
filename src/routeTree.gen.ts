@@ -15,6 +15,7 @@ import { Route as CalculadoraRouteImport } from './routes/calculadora'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as MarcaRouteImport } from './routes/marca'
 import { Route as SaboresRouteImport } from './routes/sabores'
+import { Route as PedidosRouteImport } from './routes/pedidos'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -44,6 +45,11 @@ const MarcaRoute = MarcaRouteImport.update({
 const SaboresRoute = SaboresRouteImport.update({
   id: '/sabores',
   path: '/sabores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PedidosRoute = PedidosRouteImport.update({
+  id: '/pedidos',
+  path: '/pedidos',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -86,6 +92,7 @@ export interface FileRouteTypes {
     | '/contato'
     | '/marca'
     | '/sabores'
+    | '/pedidos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -95,6 +102,7 @@ export interface RootRouteChildren {
   ContatoRoute: typeof ContatoRoute
   MarcaRoute: typeof MarcaRoute
   SaboresRoute: typeof SaboresRoute
+  PedidosRoute: typeof PedidosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -141,6 +149,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SaboresRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pedidos': {
+      id: '/pedidos'
+      path: '/pedidos'
+      fullPath: '/pedidos'
+      preLoaderRoute: typeof PedidosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -151,6 +166,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContatoRoute: ContatoRoute,
   MarcaRoute: MarcaRoute,
   SaboresRoute: SaboresRoute,
+  PedidosRoute: PedidosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
