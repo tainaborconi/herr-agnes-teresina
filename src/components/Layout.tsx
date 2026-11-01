@@ -6,7 +6,6 @@ import logo from "@/assets/logo.png.asset.json";
 
 const NAV = [
   { to: "/", label: "Início" },
-  { to: "/marca", label: "Conheça a marca" },
   { to: "/sabores", label: "Nossos sabores" },
   { to: "/calculadora", label: "Calcule seu chopp" },
   { to: "/barris", label: "Barris" },
