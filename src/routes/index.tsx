@@ -140,7 +140,7 @@ function HomeCalculator() {
 function Index() {
   const { data: feed } = useSuspenseQuery(feedQueryOptions);
   return (
-    <>
+    <div className="home-page">
       <section className="relative overflow-hidden">
         <img src={tirandoChopp} alt="Chopp HERR AGNES sendo servido" width={1024} height={1280} className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
@@ -255,6 +255,6 @@ function Index() {
       </section>
 
       <InstagramBand feed={feed} />
-    </>
+    </div>
   );
 }
