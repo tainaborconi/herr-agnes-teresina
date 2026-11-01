@@ -69,6 +69,7 @@ export interface FileRoutesByTo {
   '/contato': typeof ContatoRoute
   '/marca': typeof MarcaRoute
   '/sabores': typeof SaboresRoute
+  '/pedidos': typeof PedidosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -78,6 +79,7 @@ export interface FileRoutesById {
   '/contato': typeof ContatoRoute
   '/marca': typeof MarcaRoute
   '/sabores': typeof SaboresRoute
+  '/pedidos': typeof PedidosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
