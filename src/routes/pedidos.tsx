@@ -97,7 +97,7 @@ function Pedidos() {
           <div>
             <div className="mb-5 flex items-center gap-3">
               <span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">1</span>
-              <div><p className="eyebrow">Escolha seus produtos</p><h2 className="mt-1 text-2xl md:text-3xl">Monte seu pedido</h2></div>
+              <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Escolha seus produtos</p><h2 className="mt-1 text-2xl md:text-3xl">Monte seu pedido</h2></div>
             </div>
             <div className="space-y-4">
               {itens.map((item, index) => {
@@ -144,7 +144,7 @@ function Pedidos() {
           </div>
 
           <div>
-            <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">2</span><div><p className="eyebrow">Seus dados</p><h2 className="mt-1 text-2xl md:text-3xl">Onde vamos entregar?</h2></div></div>
+            <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">2</span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Seus dados</p><h2 className="mt-1 text-2xl md:text-3xl">Onde vamos entregar?</h2></div></div>
             <div className="grid gap-4 rounded-lg border bg-white p-5 md:grid-cols-2 md:p-6">
               <label className="text-sm">Nome completo<input className={fieldClass} value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Como podemos chamar você?" autoComplete="name" required /></label>
               <label className="text-sm">WhatsApp<input className={fieldClass} value={telefone} onChange={(e) => setTelefone(e.target.value)} placeholder="(00) 00000-0000" inputMode="tel" autoComplete="tel" required /></label>
@@ -154,7 +154,7 @@ function Pedidos() {
           </div>
 
           <div>
-            <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">3</span><div><p className="eyebrow">Agendamento</p><h2 className="mt-1 text-2xl md:text-3xl">Quando deseja receber?</h2></div></div>
+            <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">3</span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Agendamento</p><h2 className="mt-1 text-2xl md:text-3xl">Quando deseja receber?</h2></div></div>
             <div className="grid gap-4 rounded-lg border bg-white p-5 md:grid-cols-2 md:p-6">
               <label className="text-sm">Data desejada<input className={fieldClass} type="date" min={new Date().toLocaleDateString("en-CA")} value={data} onChange={(e) => setData(e.target.value)} required /></label>
               <label className="text-sm">Horário desejado<select className={fieldClass} value={horario} onChange={(e) => setHorario(e.target.value)} required><option value="">Selecione um horário</option>{["08h às 10h","10h às 12h","12h às 14h","14h às 16h","16h às 18h","18h às 20h","20h às 22h"].map((h) => <option key={h}>{h}</option>)}</select></label>
@@ -163,7 +163,7 @@ function Pedidos() {
           </div>
 
           <div>
-            <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">4</span><div><p className="eyebrow">Pagamento</p><h2 className="mt-1 text-2xl md:text-3xl">Como prefere pagar?</h2></div></div>
+            <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">4</span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Pagamento</p><h2 className="mt-1 text-2xl md:text-3xl">Como prefere pagar?</h2></div></div>
             <div className="grid gap-3 sm:grid-cols-2">
               {["Pix","Cartão"].map((metodo) => <button type="button" key={metodo} onClick={() => setPagamento(metodo)} className={`rounded-lg border p-5 text-left transition ${pagamento === metodo ? "border-[#941b25] bg-[#941b25]/[0.06] ring-1 ring-[#941b25]" : "bg-white hover:border-[#941b25]/60"}`}><span className="flex items-center justify-between font-semibold">{metodo}{pagamento === metodo && <CheckCircle2 size={18} className="text-[#941b25]"/>}</span><span className="mt-1 block text-xs text-[#686868]">{metodo === "Pix" ? "Pagamento via Pix" : "Pagamento com cartão"}</span></button>)}
             </div>
@@ -173,7 +173,7 @@ function Pedidos() {
 
         <aside className="lg:sticky lg:top-28 lg:self-start">
           <div className="rounded-lg border border-[#941b25]/50 bg-white p-6 shadow-xl">
-            <div className="flex items-center gap-2"><ShoppingBag size={18} className="text-[#941b25]"/><p className="eyebrow">Resumo do pedido</p></div>
+            <div className="flex items-center gap-2"><ShoppingBag size={18} className="text-[#941b25]"/><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Resumo do pedido</p></div>
             <div className="mt-5 space-y-3">
               {itens.map((item, i) => {
                 const p = CATALOGO.find((produto) => produto.nome === item.sabor)!;
