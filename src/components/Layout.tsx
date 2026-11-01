@@ -27,9 +27,9 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <a href={whatsappLink("Olá! Quero um orçamento de chopp HERR AGNES.")} target="_blank" rel="noreferrer" className="btn-gold hidden lg:inline-flex">
-          <MessageCircle size={16} /> Orçamento
-        </a>
+        <Link to="/pedidos" className="btn-gold hidden lg:inline-flex">
+          Faça seu pedido
+        </Link>
         <button aria-label="Menu" className="lg:hidden" onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
       </div>
       {open && (
@@ -37,9 +37,9 @@ export function Header() {
           {NAV.map((n) => (
             <Link key={n.to} to={n.to} onClick={() => setOpen(false)} className="text-foreground">{n.label}</Link>
           ))}
-          <a href={whatsappLink("Olá! Quero um orçamento de chopp HERR AGNES.")} target="_blank" rel="noreferrer" className="btn-gold w-fit">
-            <MessageCircle size={16} /> Pedir orçamento
-          </a>
+          <Link to="/pedidos" onClick={() => setOpen(false)} className="btn-gold w-fit">
+            Faça seu pedido
+          </Link>
         </nav>
       )}
     </header>
