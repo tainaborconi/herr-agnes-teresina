@@ -153,7 +153,7 @@ function Index() {
           </h1>
           <p className="mt-5 max-w-md text-muted-foreground">Chopp gelado, cremoso e entregue no seu evento. Do aniversário ao casamento.</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href={whatsappLink("Olá! Quero um orçamento de chopp HERR AGNES.")} target="_blank" rel="noreferrer" className="btn-gold"><MessageCircle size={16} /> Pedir orçamento</a>
+            <Link to="/pedidos" className="btn-gold"><MessageCircle size={16} /> Faça seu pedido</Link>
             <Link to="/calculadora" className="btn-outline-gold"><Calculator size={16} /> Calcular meu chopp</Link>
           </div>
         </div>
