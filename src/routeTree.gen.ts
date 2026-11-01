@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BarrisRouteImport } from './routes/barris'
 import { Route as CalculadoraRouteImport } from './routes/calculadora'
 import { Route as ContatoRouteImport } from './routes/contato'
-import { Route as MarcaRouteImport } from './routes/marca'
 import { Route as PedidosRouteImport } from './routes/pedidos'
 import { Route as SaboresRouteImport } from './routes/sabores'
 
@@ -37,11 +36,6 @@ const ContatoRoute = ContatoRouteImport.update({
   path: '/contato',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MarcaRoute = MarcaRouteImport.update({
-  id: '/marca',
-  path: '/marca',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PedidosRoute = PedidosRouteImport.update({
   id: '/pedidos',
   path: '/pedidos',
@@ -58,7 +52,6 @@ export interface FileRoutesByFullPath {
   '/barris': typeof BarrisRoute
   '/calculadora': typeof CalculadoraRoute
   '/contato': typeof ContatoRoute
-  '/marca': typeof MarcaRoute
   '/pedidos': typeof PedidosRoute
   '/sabores': typeof SaboresRoute
 }
@@ -88,7 +81,6 @@ export interface FileRouteTypes {
     | '/barris'
     | '/calculadora'
     | '/contato'
-    | '/marca'
     | '/pedidos'
     | '/sabores'
   fileRoutesByTo: FileRoutesByTo
@@ -116,7 +108,6 @@ export interface RootRouteChildren {
   BarrisRoute: typeof BarrisRoute
   CalculadoraRoute: typeof CalculadoraRoute
   ContatoRoute: typeof ContatoRoute
-  MarcaRoute: typeof MarcaRoute
   PedidosRoute: typeof PedidosRoute
   SaboresRoute: typeof SaboresRoute
 }
@@ -151,13 +142,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContatoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/marca': {
-      id: '/marca'
-      path: '/marca'
-      fullPath: '/marca'
-      preLoaderRoute: typeof MarcaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/pedidos': {
       id: '/pedidos'
       path: '/pedidos'
@@ -180,7 +164,6 @@ const rootRouteChildren: RootRouteChildren = {
   BarrisRoute: BarrisRoute,
   CalculadoraRoute: CalculadoraRoute,
   ContatoRoute: ContatoRoute,
-  MarcaRoute: MarcaRoute,
   PedidosRoute: PedidosRoute,
   SaboresRoute: SaboresRoute,
 }
