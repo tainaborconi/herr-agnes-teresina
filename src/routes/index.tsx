@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MessageCircle, Calculator, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
+import { ShoppingBag, Calculator, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
 import choppVinho from "@/assets/FEED - CHOPP VINHO.jpg";
 import ipa from "@/assets/FEED - IPA.png";
 import munich from "@/assets/FEED - MUNICH.jpg";
@@ -17,7 +17,7 @@ import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { SABORES, TIPOS_EVENTO, INCLUSO, whatsappLink, DURACOES, DURACAO_PADRAO, calcularLitros, sugerirBarris } from "@/lib/site";
+import { SABORES, TIPOS_EVENTO, INCLUSO, DURACOES, DURACAO_PADRAO, calcularLitros, sugerirBarris } from "@/lib/site";
 import { InstagramBand } from "@/components/InstagramFeed";
 import { ChoppCarousel, type CarouselSlide } from "@/components/ChoppCarousel";
 import { feedQueryOptions } from "@/lib/instagram.queries";
@@ -86,8 +86,6 @@ function HomeCalculator() {
   const barris = sugerirBarris(litros);
   const barrisTxt = [barris.b50 && `${barris.b50} barril(is) de 50L`, barris.b30 && `${barris.b30} barril(is) de 30L`].filter(Boolean).join(" + ");
   const duracao = DURACOES.find((d) => d.h === horas)?.rotulo ?? `${horas} horas`;
-  const saborTxt = sabores.length ? sabores.join(", ") : "a definir com a Agnes";
-  const mensagem = `Olá! Gostaria de um orçamento de chopp para ${pessoas} convidados, com duração de ${duracao}. Estimativa: ${litros}L (${barrisTxt || "quantidade a definir"}). Sabores escolhidos: ${saborTxt}.`;
 
   return (
     <div className="grid gap-6 rounded-lg border bg-card p-6 md:grid-cols-2 md:p-8">
@@ -133,7 +131,7 @@ function HomeCalculator() {
           <p className="mt-3 text-sm text-muted-foreground">Para {pessoas} convidados em {duracao.toLowerCase()}, sugerimos:</p>
           <p className="mt-2 font-semibold">{barrisTxt || "Consulte a equipe para definir os barris"}{barris.total > 0 ? ` (${barris.total}L no total)` : ""}</p>
         </div>
-        <a href={whatsappLink(mensagem)} target="_blank" rel="noreferrer" className="btn-gold mt-6 w-fit"><MessageCircle size={16} /> Pedir orçamento no WhatsApp</a>
+        <Link to="/pedidos" className="btn-gold mt-6 w-fit"><ShoppingBag size={16} /> Fazer pedido online</Link>
       </div>
     </div>
   );
@@ -153,7 +151,7 @@ function Index() {
           </h1>
           <p className="mt-5 max-w-md text-muted-foreground">Chopp gelado, cremoso e entregue no seu evento. Do aniversário ao casamento.</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/pedidos" className="btn-gold"><MessageCircle size={16} /> Faça seu pedido</Link>
+            <Link to="/pedidos" className="btn-gold"><ShoppingBag size={16} /> Faça seu pedido</Link>
             <Link to="/calculadora" className="btn-outline-gold"><Calculator size={16} /> Calcular meu chopp</Link>
           </div>
         </div>
@@ -165,7 +163,7 @@ function Index() {
             <p className="eyebrow">Delivery</p>
             <h2 className="mt-3 text-4xl">Pediu, recebeu: o barril chega no mesmo dia</h2>
             <p className="mt-4 text-muted-foreground">No modo delivery da Agnes você escolhe o sabor, combina tudo pelo WhatsApp e recebe o barril pronto para servir no mesmo dia do evento.</p>
-            <a href={whatsappLink("Olá! Quero o delivery de chopp da Agnes no mesmo dia.")} target="_blank" rel="noreferrer" className="btn-gold mt-8"><MessageCircle size={16} /> Pedir delivery hoje</a>
+            <Link to="/pedidos" className="btn-gold mt-8"><ShoppingBag size={16} /> Fazer pedido online</Link>
             <img src={barris} alt="Barril e chopeira elétrica montados para a festa" width={1280} height={720} loading="lazy" className="mt-10 aspect-video w-full rounded-lg border object-cover" />
           </div>
           <div className="rounded-lg border bg-card p-7">
@@ -203,7 +201,7 @@ function Index() {
               );
             })}
           </div>
-          <a href={whatsappLink("Olá! Vou fazer um evento e quero chopp da Agnes.")} target="_blank" rel="noreferrer" className="btn-outline-gold mt-10"><MessageCircle size={16} /> Cotar meu evento</a>
+          <Link to="/pedidos" className="btn-outline-gold mt-10"><ShoppingBag size={16} /> Fazer pedido online</Link>
         </div>
       </section>
 
@@ -222,7 +220,7 @@ function Index() {
               </div>
             ))}
           </div>
-          <a href={whatsappLink("Olá! Quero conhecer os sabores de chopp HERR AGNES e fazer um orçamento.")} target="_blank" rel="noreferrer" className="btn-outline-gold mt-10"><MessageCircle size={16} /> Consultar sabores pelo WhatsApp</a>
+          <Link to="/pedidos" className="btn-outline-gold mt-10"><ShoppingBag size={16} /> Ver sabores e fazer pedido</Link>
         </div>
       </section>
 
