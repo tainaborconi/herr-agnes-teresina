@@ -220,7 +220,7 @@ function Index() {
               </div>
             ))}
           </div>
-          <Link to="/pedidos" className="btn-outline-gold mt-10"><ShoppingBag size={16} /> Ver sabores e fazer pedido</Link>
+          <Link to="/sabores" className="btn-outline-gold mt-10">Conhecer nossos sabores</Link>
         </div>
       </section>
 
