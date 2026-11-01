@@ -75,7 +75,7 @@ function Pedidos() {
     window.open(whatsappLink(mensagem), "_blank", "noopener,noreferrer");
   };
 
-  const formularioValido = nome.trim() && telefone.trim() && endereco.trim() && data && horario && itens.length > 0;
+  const formularioValido = Boolean(nome.trim() && telefone.trim() && endereco.trim() && data && horario && itens.length > 0);
 
   return (
     <>
