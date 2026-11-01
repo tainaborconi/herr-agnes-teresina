@@ -82,9 +82,7 @@ function Pedidos() {
     <>
       <section className="border-b border-[#e5e5e0] bg-[#f7f7f5] text-[#171717]">
         <div className="mx-auto max-w-6xl px-5 py-14 md:py-20">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#941b25]">Pedido online</p>
-          <h1 className="mt-3 max-w-3xl text-5xl leading-tight text-[#171717] md:text-6xl">Seu chopp. Sua festa. <span className="text-[#941b25]">Do seu jeito.</span></h1>
-          <p className="mt-5 max-w-2xl text-sm text-[#686868] md:text-base">Monte seu pedido em poucos passos. Escolha os sabores, informe onde e quando deseja receber e envie tudo pelo WhatsApp.</p>
+          <p className="max-w-2xl text-sm leading-relaxed text-[#686868] md:text-base">Monte seu pedido em poucos passos. Escolha os sabores, informe onde e quando deseja receber e envie tudo pelo WhatsApp. É rápido e fácil!</p>
           <div className="mt-7 flex flex-wrap gap-3 text-xs text-[#686868]">
             <span className="rounded-full border px-4 py-2">30L e 50L</span>
             <span className="rounded-full border px-4 py-2">Chopeira elétrica inclusa</span>
