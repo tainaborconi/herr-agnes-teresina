@@ -102,17 +102,12 @@ function Calc() {
             <p className="rounded-md border border-gold/50 bg-secondary p-4 text-sm leading-relaxed text-foreground">
               <span className="font-semibold text-gold">Observação:</span> {OBS_CALCULADORA}
             </p>
-            <a href={whatsappLink(msg)} target="_blank" rel="noreferrer" className="btn-gold mt-6 w-fit">
-              <MessageCircle size={16} /> Enviar orçamento no WhatsApp
-            </a>
+            <Link to="/pedidos" className="btn-gold mt-6 w-fit">
+              Fazer pedido online agora
+            </Link>
           </div>
         </div>
       </section>
-      <div className="mx-auto -mt-10 max-w-6xl px-5 pb-20 text-center">
-        <Link to="/pedidos" className="btn-gold inline-flex">
-          Fazer pedido online agora
-        </Link>
-      </div>
     </>
   );
 }
