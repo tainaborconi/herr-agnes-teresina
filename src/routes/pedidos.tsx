@@ -36,6 +36,7 @@ function Pedidos() {
   const [data, setData] = useState("");
   const [horario, setHorario] = useState("");
   const [pagamento, setPagamento] = useState("Pix");
+  const [condicaoCartao, setCondicaoCartao] = useState("Crédito à vista");
   const [observacoes, setObservacoes] = useState("");
 
   const total = useMemo(() => itens.reduce((sum, item) => {
@@ -67,7 +68,7 @@ function Pedidos() {
       referencia ? `Referência: ${referencia}` : "",
       `Data desejada: ${data}`,
       `Horário desejado: ${horario}`,
-      `Pagamento: ${pagamento}`,
+      `Pagamento: ${pagamento === "Cartão" ? "Cartão de crédito — " + condicaoCartao + (condicaoCartao === "Até 3x" ? " (com acréscimo da máquina)" : "") : "Pix"}`,
       observacoes ? `Observações: ${observacoes}` : "",
       "",
       "Sei que a data e o horário serão confirmados pela equipe."
@@ -165,8 +166,15 @@ function Pedidos() {
           <div>
             <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">4</span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Pagamento</p><h2 className="mt-1 text-2xl md:text-3xl">Como prefere pagar?</h2></div></div>
             <div className="grid gap-3 sm:grid-cols-2">
-              {["Pix","Cartão"].map((metodo) => <button type="button" key={metodo} onClick={() => setPagamento(metodo)} className={`rounded-lg border p-5 text-left transition ${pagamento === metodo ? "border-[#941b25] bg-[#941b25]/[0.06] ring-1 ring-[#941b25]" : "bg-white hover:border-[#941b25]/60"}`}><span className="flex items-center justify-between font-semibold">{metodo}{pagamento === metodo && <CheckCircle2 size={18} className="text-[#941b25]"/>}</span><span className="mt-1 block text-xs text-[#686868]">{metodo === "Pix" ? "Pagamento via Pix" : "Pagamento com cartão"}</span></button>)}
+              {["Pix","Cartão"].map((metodo) => <button type="button" key={metodo} onClick={() => setPagamento(metodo)} className={`rounded-lg border p-5 text-left transition ${pagamento === metodo ? "border-[#941b25] bg-[#941b25]/[0.06] ring-1 ring-[#941b25]" : "bg-white hover:border-[#941b25]/60"}`}><span className="flex items-center justify-between font-semibold">{metodo}{pagamento === metodo && <CheckCircle2 size={18} className="text-[#941b25]"/>}</span><span className="mt-1 block text-xs text-[#686868]">{metodo === "Pix" ? "Pagamento via Pix" : "Pagamento com cartão de crédito"}</span></button>)}
             </div>
+            {pagamento === "Cartão" && <div className="mt-4 rounded-lg border border-[#deded9] bg-white p-5">
+              <p className="text-sm font-semibold">Escolha a condição de pagamento</p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {["Crédito à vista","Até 3x"].map((condicao) => <button type="button" key={condicao} onClick={() => setCondicaoCartao(condicao)} className={`rounded-md border p-4 text-left transition ${condicaoCartao === condicao ? "border-[#941b25] bg-[#941b25]/[0.06] ring-1 ring-[#941b25]" : "border-[#deded9] hover:border-[#941b25]/60"}`}><span className="flex items-center justify-between text-sm font-semibold">{condicao}{condicaoCartao === condicao && <CheckCircle2 size={17} className="text-[#941b25]"/>}</span><span className="mt-1 block text-xs text-[#686868]">{condicao === "Crédito à vista" ? "Sem parcelamento" : "Com acréscimo da máquina"}</span></button>)}
+              </div>
+              <p className="mt-3 text-xs leading-relaxed text-[#686868]">No parcelamento em até 3x, será aplicado o acréscimo da máquina de cartão. O valor final será informado pela equipe.</p>
+            </div>}
             <label className="mt-4 block text-sm">Observações <span className="text-[#686868]">(opcional)</span><textarea className={fieldClass} rows={3} value={observacoes} onChange={(e) => setObservacoes(e.target.value)} placeholder="Alguma informação importante sobre seu pedido?"/></label>
           </div>
         </div>
