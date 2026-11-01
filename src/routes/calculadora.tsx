@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Check, MessageCircle } from "lucide-react";
 import { PageHero } from "@/components/Layout";
@@ -108,6 +108,11 @@ function Calc() {
           </div>
         </div>
       </section>
+      <div className="mx-auto -mt-10 max-w-6xl px-5 pb-20 text-center">
+        <Link to="/pedidos" className="btn-gold inline-flex">
+          Fazer pedido online agora
+        </Link>
+      </div>
     </>
   );
 }
