@@ -127,3 +127,34 @@
   visibility: hidden !important;
   pointer-events: none !important;
 }
+
+
+/* Destaque pulsante dos botões da página inicial */
+@keyframes home-button-neon {
+  0%, 100% {
+    box-shadow: 0 0 0 1px oklch(0.78 0.12 78 / 0.22), 0 0 10px oklch(0.72 0.16 35 / 0.28), 0 6px 18px oklch(0.1 0.04 25 / 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 2px oklch(0.86 0.13 82 / 0.48), 0 0 22px oklch(0.72 0.19 28 / 0.62), 0 0 34px oklch(0.68 0.16 32 / 0.28), 0 6px 18px oklch(0.1 0.04 25 / 0.5);
+  }
+}
+
+.home-page a.btn-gold,
+.home-page a.btn-outline-gold,
+.home-page button {
+  animation: home-button-neon 2.4s ease-in-out infinite;
+}
+
+.home-page a.btn-gold:hover,
+.home-page a.btn-outline-gold:hover,
+.home-page button:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page a.btn-gold,
+  .home-page a.btn-outline-gold,
+  .home-page button {
+    animation: none;
+  }
+}
