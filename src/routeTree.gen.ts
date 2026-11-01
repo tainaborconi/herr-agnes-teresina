@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BarrisRouteImport } from './routes/barris'
 import { Route as CalculadoraRouteImport } from './routes/calculadora'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as PedidosRouteImport } from './routes/pedidos'
@@ -19,11 +18,6 @@ import { Route as SaboresRouteImport } from './routes/sabores'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BarrisRoute = BarrisRouteImport.update({
-  id: '/barris',
-  path: '/barris',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CalculadoraRoute = CalculadoraRouteImport.update({
@@ -49,7 +43,6 @@ const SaboresRoute = SaboresRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/barris': typeof BarrisRoute
   '/calculadora': typeof CalculadoraRoute
   '/contato': typeof ContatoRoute
   '/pedidos': typeof PedidosRoute
@@ -60,7 +53,6 @@ export interface FileRoutesByTo {
   '/barris': typeof BarrisRoute
   '/calculadora': typeof CalculadoraRoute
   '/contato': typeof ContatoRoute
-  '/marca': typeof MarcaRoute
   '/pedidos': typeof PedidosRoute
   '/sabores': typeof SaboresRoute
 }
@@ -78,7 +70,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/barris'
     | '/calculadora'
     | '/contato'
     | '/pedidos'
@@ -89,7 +80,6 @@ export interface FileRouteTypes {
     | '/barris'
     | '/calculadora'
     | '/contato'
-    | '/marca'
     | '/pedidos'
     | '/sabores'
   id:
@@ -105,7 +95,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BarrisRoute: typeof BarrisRoute
   CalculadoraRoute: typeof CalculadoraRoute
   ContatoRoute: typeof ContatoRoute
   PedidosRoute: typeof PedidosRoute
@@ -119,13 +108,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/barris': {
-      id: '/barris'
-      path: '/barris'
-      fullPath: '/barris'
-      preLoaderRoute: typeof BarrisRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/calculadora': {
@@ -161,7 +143,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BarrisRoute: BarrisRoute,
   CalculadoraRoute: CalculadoraRoute,
   ContatoRoute: ContatoRoute,
   PedidosRoute: PedidosRoute,
