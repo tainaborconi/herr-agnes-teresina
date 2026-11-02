@@ -87,7 +87,7 @@ function Pedidos() {
       `👤 Nome: ${nome}`,
       `📱 Telefone: ${telefone}`,
       `📍 Endereço: ${endereco}`,
-      referencia ? `📌 Referência: ${referencia}` : "",
+      referencia ? `📌 Referência: ${referencia}` : null,
       "",
       "*ITENS DO PEDIDO*",
       linhas,
@@ -100,10 +100,10 @@ function Pedidos() {
       "",
       "*PAGAMENTO*",
       `💳 Forma de pagamento: ${formaPagamento}`,
-      observacoes ? `📝 Observações: ${observacoes}` : "",
+      observacoes ? `📝 Observações: ${observacoes}` : null,
       "",
-      "\n*A data, o horário e as condições de entrega estão sujeitos à confirmação da equipe HERR AGNES.*"
-    ].filter(Boolean).join("\n");
+      "*A data, o horário e as condições de entrega estão sujeitos à confirmação da equipe HERR AGNES.*"
+    ].filter((linha) => linha !== null).join("\n");
     window.open(whatsappLink(mensagem), "_blank", "noopener,noreferrer");
   };
 
