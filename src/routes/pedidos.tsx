@@ -38,6 +38,7 @@ function Pedidos() {
   const [pagamento, setPagamento] = useState("Pix");
   const [condicaoCartao, setCondicaoCartao] = useState("Crédito à vista");
   const [observacoes, setObservacoes] = useState("");
+  const [camposPendentes, setCamposPendentes] = useState<string[]>([]);
 
   const total = useMemo(() => itens.reduce((sum, item) => {
     const produto = CATALOGO.find((p) => p.nome === item.sabor)!;
@@ -49,6 +50,20 @@ function Pedidos() {
   const removerItem = (index: number) => setItens((atual) => atual.length > 1 ? atual.filter((_, i) => i !== index) : atual);
 
   const enviarPedido = () => {
+    const pendentes: string[] = [];
+    if (!nome.trim()) pendentes.push("Nome completo");
+    if (!telefone.trim()) pendentes.push("WhatsApp");
+    if (!endereco.trim()) pendentes.push("Endereço completo");
+    if (!referencia.trim()) pendentes.push("Ponto de referência");
+    if (!data) pendentes.push("Data desejada");
+    if (!horario) pendentes.push("Horário desejado");
+
+    if (pendentes.length > 0) {
+      setCamposPendentes(pendentes);
+      return;
+    }
+    setCamposPendentes([]);
+
     const numeroPedido = Math.floor(Math.random() * 949) + 51;
     const dataFormatada = data ? new Date(`${data}T12:00:00`).toLocaleDateString("pt-BR") : data;
     const formaPagamento = pagamento === "Cartão de crédito" ? "Cartão de crédito — " + condicaoCartao + (condicaoCartao === "Até 3x" ? " (com acréscimo da máquina)" : "") : pagamento;
@@ -162,7 +177,7 @@ function Pedidos() {
               <label className="text-sm">Nome completo<input className={fieldClass} value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Como podemos chamar você?" autoComplete="name" required /></label>
               <label className="text-sm">WhatsApp<input className={fieldClass} value={telefone} onChange={(e) => setTelefone(e.target.value)} placeholder="(00) 00000-0000" inputMode="tel" autoComplete="tel" required /></label>
               <label className="text-sm md:col-span-2">Endereço completo<input className={fieldClass} value={endereco} onChange={(e) => setEndereco(e.target.value)} placeholder="Rua, número, bairro e cidade" autoComplete="street-address" required /></label>
-              <label className="text-sm md:col-span-2">Ponto de referência <span className="text-[#686868]">(opcional)</span><input className={fieldClass} value={referencia} onChange={(e) => setReferencia(e.target.value)} placeholder="Ex.: próximo à praça..." /></label>
+              <label className="text-sm md:col-span-2">Ponto de referência<input className={fieldClass} value={referencia} onChange={(e) => setReferencia(e.target.value)} placeholder="Ex.: próximo à praça..." required /></label>
             </div>
           </div>
 
@@ -203,7 +218,8 @@ function Pedidos() {
             </div>
             <div className="mt-5 flex items-end justify-between border-t pt-5"><span className="text-sm text-[#686868]">Total dos produtos</span><strong className="text-2xl text-[#941b25]">{money(total)}</strong></div>
             <p className="mt-3 text-xs leading-relaxed text-[#686868]">Valor dos barris com chopeira elétrica e kit de extração inclusos. A equipe confirmará a entrega e as condições finais pelo WhatsApp.</p>
-            <button type="button" disabled={!formularioValido} onClick={enviarPedido} className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-[#941b25] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-not-allowed disabled:opacity-40">Enviar pedido pelo WhatsApp</button>
+            {camposPendentes.length > 0 && <div role="alert" aria-live="polite" className="mt-5 rounded-md border border-[#b42318]/30 bg-[#fff4f2] p-4 text-sm text-[#8f1d18]"><p className="font-semibold">Não foi possível enviar. Preencha os campos obrigatórios:</p><ul className="mt-2 list-inside list-disc space-y-1">{camposPendentes.map((campo) => <li key={campo}>{campo}</li>)}</ul></div>}
+            <button type="button" onClick={enviarPedido} className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-[#941b25] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#76151d]">Enviar pedido pelo WhatsApp</button>
             <p className="mt-3 text-center text-[11px] leading-relaxed text-[#686868]">Você ainda poderá revisar as informações antes de enviar a mensagem.</p>
           </div>
           <div className="mt-4 rounded-lg border p-5 text-sm text-[#686868]"><p className="font-semibold text-[#171717]">Atendemos Teresina, Timon e região.</p><p className="mt-1">A entrega será confirmada pela nossa equipe.</p></div>
