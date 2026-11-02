@@ -90,7 +90,7 @@ function Pedidos() {
     window.open(whatsappLink(mensagem), "_blank", "noopener,noreferrer");
   };
 
-  const formularioValido = Boolean(nome.trim() && telefone.trim() && endereco.trim() && data && horario && itens.length > 0);
+  const formularioValido = Boolean(nome.trim() && telefone.trim() && endereco.trim() && referencia.trim() && data && horario && observacoes.trim() && itens.length > 0);
 
   return (
     <>
@@ -187,7 +187,7 @@ function Pedidos() {
               </div>
               <p className="mt-3 text-xs leading-relaxed text-[#686868]">No parcelamento em até 3x, será aplicado o acréscimo da máquina de cartão. O valor final será informado pela equipe.</p>
             </div>}
-            <label className="mt-4 block text-sm">Observações <span className="text-[#686868]">(opcional)</span><textarea className={fieldClass} rows={3} value={observacoes} onChange={(e) => setObservacoes(e.target.value)} placeholder="Alguma informação importante sobre seu pedido?"/></label>
+            <label className="mt-4 block text-sm">Observações<textarea className={fieldClass} rows={3} value={observacoes} onChange={(e) => setObservacoes(e.target.value)} placeholder="Informe detalhes ou escreva “Sem observações”" required /></label>
           </div>
         </div>
 
