@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { CalendarDays, CheckCircle2, ChevronDown, Minus, Plus, ShoppingBag } from "lucide-react";
 import { whatsappLink } from "@/lib/site";
@@ -49,29 +49,43 @@ function Pedidos() {
   const removerItem = (index: number) => setItens((atual) => atual.length > 1 ? atual.filter((_, i) => i !== index) : atual);
 
   const enviarPedido = () => {
+    const numeroPedido = Math.floor(Math.random() * 949) + 51;
+    const dataFormatada = data ? new Date(`${data}T12:00:00`).toLocaleDateString("pt-BR") : data;
+    const formaPagamento = pagamento === "Cartão de crédito" ? "Cartão de crédito — " + condicaoCartao + (condicaoCartao === "Até 3x" ? " (com acréscimo da máquina)" : "") : pagamento;
     const linhas = itens.map((item, i) => {
       const p = CATALOGO.find((produto) => produto.nome === item.sabor)!;
       const preco = item.tamanho === 30 ? p.p30 : p.p50;
       return `${i + 1}. ${item.sabor} — barril ${item.tamanho}L — ${item.quantidade}x — ${money(preco * item.quantidade)}`;
     }).join("\n");
     const mensagem = [
-      "Olá! Quero fazer um pedido pelo site da HERR AGNES.",
+      `Olá, equipe HERR AGNES! Tenho interesse em realizar o pedido abaixo.`,
       "",
-      " *MEU PEDIDO*",
+      `Olá, ${nome}! Segue abaixo o resumo do seu pedido:`,
+      "",
+      `━━━━━━━━━━━━━━━━━━━━`,
+      `🧾 *PEDIDO #${numeroPedido}*`,
+      `━━━━━━━━━━━━━━━━━━━━`,
+      "",
+      "*DADOS DO CLIENTE*",
+      `👤 Nome: ${nome}`,
+      `📱 Telefone: ${telefone}`,
+      `📍 Endereço: ${endereco}`,
+      referencia ? `📌 Referência: ${referencia}` : "",
+      "",
+      "*ITENS DO PEDIDO*",
       linhas,
-      `Total dos produtos: ${money(total)}`,
       "",
-      " *DADOS PARA ENTREGA*",
-      `Nome: ${nome}`,
-      `Telefone: ${telefone}`,
-      `Endereço: ${endereco}`,
-      referencia ? `Referência: ${referencia}` : "",
-      `Data desejada: ${data}`,
-      `Horário desejado: ${horario}`,
-      `Pagamento: ${pagamento === "Cartão de crédito" ? "Cartão de crédito — " + condicaoCartao + (condicaoCartao === "Até 3x" ? " (com acréscimo da máquina)" : "") : pagamento}`,
-      observacoes ? `Observações: ${observacoes}` : "",
+      `💰 *TOTAL DO PEDIDO: ${money(total)}*`,
       "",
-      "Sei que a data e o horário serão confirmados pela equipe."
+      "*ENTREGA*",
+      `📅 Data desejada: ${dataFormatada}`,
+      `🕒 Horário desejado: ${horario}`,
+      "",
+      "*PAGAMENTO*",
+      `💳 Forma de pagamento: ${formaPagamento}`,
+      observacoes ? `📝 Observações: ${observacoes}` : "",
+      "",
+      "A data, o horário e as condições de entrega estão sujeitos à confirmação da equipe HERR AGNES."
     ].filter(Boolean).join("\n");
     window.open(whatsappLink(mensagem), "_blank", "noopener,noreferrer");
   };
@@ -192,7 +206,7 @@ function Pedidos() {
             <button type="button" disabled={!formularioValido} onClick={enviarPedido} className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-[#941b25] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-not-allowed disabled:opacity-40">Enviar pedido pelo WhatsApp</button>
             <p className="mt-3 text-center text-[11px] leading-relaxed text-[#686868]">Você ainda poderá revisar as informações antes de enviar a mensagem.</p>
           </div>
-          <div className="mt-4 rounded-lg border p-5 text-sm text-[#686868]"><p className="font-semibold text-[#171717]">Atendemos Teresina, Timon e região.</p><p className="mt-1">A entrega será confirmada pela nossa equipe.</p><Link to="/barris" className="mt-3 inline-block text-[#941b25] underline underline-offset-4">Conheça os barris</Link></div>
+          <div className="mt-4 rounded-lg border p-5 text-sm text-[#686868]"><p className="font-semibold text-[#171717]">Atendemos Teresina, Timon e região.</p><p className="mt-1">A entrega será confirmada pela nossa equipe.</p></div>
         </aside>
         </div>
       </section>
