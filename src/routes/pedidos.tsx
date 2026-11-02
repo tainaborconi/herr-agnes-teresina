@@ -102,7 +102,7 @@ function Pedidos() {
       `💳 Forma de pagamento: ${formaPagamento}`,
       observacoes ? `📝 Observações: ${observacoes}` : "",
       "",
-      "A data, o horário e as condições de entrega estão sujeitos à confirmação da equipe HERR AGNES."
+      "\n*A data, o horário e as condições de entrega estão sujeitos à confirmação da equipe HERR AGNES.*"
     ].filter(Boolean).join("\n");
     window.open(whatsappLink(mensagem), "_blank", "noopener,noreferrer");
   };
