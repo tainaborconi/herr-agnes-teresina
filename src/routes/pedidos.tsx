@@ -60,6 +60,10 @@ function Pedidos() {
 
     if (pendentes.length > 0) {
       setCamposPendentes(pendentes);
+      const ids: Record<string, string> = { "Nome completo": "campo-nome", "WhatsApp": "campo-telefone", "Endereço completo": "campo-endereco", "Ponto de referência": "campo-referencia", "Data desejada": "campo-data", "Horário desejado": "campo-horario" };
+      const elemento = document.getElementById(ids[pendentes[0]]);
+      elemento?.scrollIntoView({ behavior: "smooth", block: "center" });
+      window.setTimeout(() => elemento?.focus({ preventScroll: true }), 450);
       return;
     }
     setCamposPendentes([]);
@@ -104,8 +108,6 @@ function Pedidos() {
     ].filter(Boolean).join("\n");
     window.open(whatsappLink(mensagem), "_blank", "noopener,noreferrer");
   };
-
-  const formularioValido = Boolean(nome.trim() && telefone.trim() && endereco.trim() && referencia.trim() && data && horario && itens.length > 0);
 
   return (
     <>
@@ -174,18 +176,18 @@ function Pedidos() {
           <div>
             <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">2</span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Seus dados</p><h2 className="mt-1 text-2xl md:text-3xl">Onde vamos entregar?</h2></div></div>
             <div className="grid gap-4 rounded-lg border bg-white p-5 md:grid-cols-2 md:p-6">
-              <label className="text-sm">Nome completo<input className={fieldClass} value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Como podemos chamar você?" autoComplete="name" required /></label>
-              <label className="text-sm">WhatsApp<input className={fieldClass} value={telefone} onChange={(e) => setTelefone(e.target.value)} placeholder="(00) 00000-0000" inputMode="tel" autoComplete="tel" required /></label>
-              <label className="text-sm md:col-span-2">Endereço completo<input className={fieldClass} value={endereco} onChange={(e) => setEndereco(e.target.value)} placeholder="Rua, número, bairro e cidade" autoComplete="street-address" required /></label>
-              <label className="text-sm md:col-span-2">Ponto de referência<input className={fieldClass} value={referencia} onChange={(e) => setReferencia(e.target.value)} placeholder="Ex.: próximo à praça..." required /></label>
+              <label className="text-sm">Nome completo<input id="campo-nome" className={fieldClass} value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Como podemos chamar você?" autoComplete="name" required /></label>
+              <label className="text-sm">WhatsApp<input id="campo-telefone" className={fieldClass} value={telefone} onChange={(e) => setTelefone(e.target.value)} placeholder="(00) 00000-0000" inputMode="tel" autoComplete="tel" required /></label>
+              <label className="text-sm md:col-span-2">Endereço completo<input id="campo-endereco" className={fieldClass} value={endereco} onChange={(e) => setEndereco(e.target.value)} placeholder="Rua, número, bairro e cidade" autoComplete="street-address" required /></label>
+              <label className="text-sm md:col-span-2">Ponto de referência<input id="campo-referencia" className={fieldClass} value={referencia} onChange={(e) => setReferencia(e.target.value)} placeholder="Ex.: próximo à praça..." required /></label>
             </div>
           </div>
 
           <div>
             <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">3</span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Agendamento</p><h2 className="mt-1 text-2xl md:text-3xl">Quando deseja receber?</h2></div></div>
             <div className="grid gap-4 rounded-lg border bg-white p-5 md:grid-cols-2 md:p-6">
-              <label className="text-sm">Data desejada<input className={fieldClass} type="date" min={new Date().toLocaleDateString("en-CA")} value={data} onChange={(e) => setData(e.target.value)} required /></label>
-              <label className="text-sm">Horário desejado<input className={fieldClass} type="time" min="08:00" max="22:00" step="60" value={horario} onChange={(e) => setHorario(e.target.value)} required /><span className="mt-1 block text-xs text-[#686868]">Escolha o horário exato desejado, entre 08h e 22h.</span></label>
+              <label className="text-sm">Data desejada<input id="campo-data" className={fieldClass} type="date" min={new Date().toLocaleDateString("en-CA")} value={data} onChange={(e) => setData(e.target.value)} required /></label>
+              <label className="text-sm">Horário desejado<input id="campo-horario" className={fieldClass} type="time" min="08:00" max="22:00" step="60" value={horario} onChange={(e) => setHorario(e.target.value)} required /><span className="mt-1 block text-xs text-[#686868]">Escolha o horário exato desejado, entre 08h e 22h.</span></label>
               <p className="flex gap-2 text-xs leading-relaxed text-[#686868] md:col-span-2"><CalendarDays size={16} className="shrink-0 text-[#941b25]"/> A data e o horário são uma preferência. Nossa equipe confirmará a disponibilidade pelo WhatsApp antes de concluir o pedido.</p>
             </div>
           </div>
@@ -218,7 +220,6 @@ function Pedidos() {
             </div>
             <div className="mt-5 flex items-end justify-between border-t pt-5"><span className="text-sm text-[#686868]">Total dos produtos</span><strong className="text-2xl text-[#941b25]">{money(total)}</strong></div>
             <p className="mt-3 text-xs leading-relaxed text-[#686868]">Valor dos barris com chopeira elétrica e kit de extração inclusos. A equipe confirmará a entrega e as condições finais pelo WhatsApp.</p>
-            {camposPendentes.length > 0 && <div role="alert" aria-live="polite" className="mt-5 rounded-md border border-[#b42318]/30 bg-[#fff4f2] p-4 text-sm text-[#8f1d18]"><p className="font-semibold">Não foi possível enviar. Preencha os campos obrigatórios:</p><ul className="mt-2 list-inside list-disc space-y-1">{camposPendentes.map((campo) => <li key={campo}>{campo}</li>)}</ul></div>}
             <button type="button" onClick={enviarPedido} className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-[#941b25] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#76151d]">Enviar pedido pelo WhatsApp</button>
             <p className="mt-3 text-center text-[11px] leading-relaxed text-[#686868]">Você ainda poderá revisar as informações antes de enviar a mensagem.</p>
           </div>
