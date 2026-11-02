@@ -77,8 +77,6 @@ function Pedidos() {
       return `${i + 1}. ${item.sabor} — barril ${item.tamanho}L — ${item.quantidade}x — ${money(preco * item.quantidade)}`;
     }).join("\n");
     const mensagem = [
-      `Olá, equipe HERR AGNES! Tenho interesse em realizar o pedido abaixo.`,
-      "",
       `Olá, ${nome}! Segue abaixo o resumo do seu pedido:`,
       "",
       `━━━━━━━━━━━━━━━━━━━━`,
