@@ -58,7 +58,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/barris': typeof BarrisRoute
   '/calculadora': typeof CalculadoraRoute
   '/contato': typeof ContatoRoute
   '/pedidos': typeof PedidosRoute
@@ -66,27 +65,10 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/calculadora'
-    | '/contato'
-    | '/pedidos'
-    | '/sabores'
+  fullPaths: '/' | '/calculadora' | '/contato' | '/pedidos' | '/sabores'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/calculadora'
-    | '/contato'
-    | '/pedidos'
-    | '/sabores'
-  id:
-    | '__root__'
-    | '/'
-    | '/barris'
-    | '/calculadora'
-    | '/contato'
-    | '/pedidos'
-    | '/sabores'
+  to: '/' | '/calculadora' | '/contato' | '/pedidos' | '/sabores'
+  id: '__root__' | '/' | '/calculadora' | '/contato' | '/pedidos' | '/sabores'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {

@@ -7,7 +7,7 @@ import pilsen from "@/assets/FEED - PILSEN.jpg";
 import puroMalte from "@/assets/FEED - PURO MALTE.png";
 import semGluten from "@/assets/FEED - SEM GLÚTEN.jpeg";
 import barris from "@/assets/565388034_17925816492157491_3189516691680693208_n.jpg";
-import tirandoChopp from "@/assets/NOAH _16.JPG";
+import tirandoChopp from "@/assets/noah-16.jpg";
 import evAniversario from "@/assets/ev-aniversario.jpg";
 import evCasamento from "@/assets/ev-casamento.jpg";
 import evFormatura from "@/assets/ev-formatura.jpg";
@@ -192,6 +192,7 @@ function Index() {
         </div>
       </section>
 
+      <section className="testimonials-section">
         <div className="mx-auto max-w-6xl overflow-hidden px-5 pb-12 pt-2">
           <p className="mb-6 text-center text-xs tracking-wide text-muted-foreground">Experiências reais de quem escolheu a HERR AGNES Teresina para brindar.</p>
           <div className="testimonial-marquee" aria-label="Depoimentos de clientes">
