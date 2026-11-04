@@ -138,7 +138,6 @@ fbq('init', '896169796824657');`,
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const pathname = useRouterState({ select: (state) => state.location.pathname });
 
   useEffect(() => {
     const pixelWindow = window as Window & {
@@ -154,7 +153,7 @@ function RootComponent() {
         <Outlet />
       </main>
       {!pathname.startsWith("/admin") && <Footer />}
-      {!pathname.startsWith("/admin") && <WhatsFloat />
+      {!pathname.startsWith("/admin") && <WhatsFloat />}
     </QueryClientProvider>
   );
 }
