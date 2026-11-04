@@ -19,13 +19,13 @@ A função usa as variáveis de ambiente gerenciadas pelo Supabase:
 
 **Nunca** coloque a chave `service_role` ou o segredo Turnstile em `.env` do frontend, em variáveis `VITE_*`, no GitHub ou no navegador.
 
-A função permanece em modo de bloqueio seguro até que o segredo Turnstile seja configurado. Sem ele, a função responde com erro e não grava pedidos. A validação de cabeçalho Origin, isoladamente, não é proteção antiabuso suficiente.
+A função permanece em modo de bloqueio seguro se o segredo Turnstile não estiver configurado. Sem ele, responde com erro e não grava pedidos. A validação de cabeçalho Origin, isoladamente, não é proteção antiabuso suficiente.
 
 As tabelas `profiles`, `orders` e `order_items`, as políticas RLS e o perfil administrador já existem no projeto. Atenção: o histórico remoto de migrações registra a migração de endurecimento, mas não registra `20261104000000_initial_orders.sql`. A estrutura existe, porém há divergência entre o schema e o histórico. A migração inicial foi tornada idempotente para reduzir risco, mas não execute `db push` nem reaplique migrações até reconciliar o histórico com o schema existente.
 
 ## Antes de publicar
 
-1. Criar um site Turnstile no Cloudflare para o hostname `www.herragnesteresina.com.br`.
+1. Confirmar que o site Turnstile do Cloudflare está configurado para o hostname `www.herragnesteresina.com.br`.
 2. Configurar o segredo como `TURNSTILE_SECRET_KEY` nos secrets do Supabase.
 3. Configurar a chave pública como `VITE_TURNSTILE_SITE_KEY` nas variáveis de ambiente de build/deploy do site e reconstruir o frontend.
 4. Confirmar que a URL pública do site é `https://www.herragnesteresina.com.br`.
