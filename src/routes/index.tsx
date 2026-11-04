@@ -142,7 +142,7 @@ function Index() {
   return (
     <div className="home-page">
       <section className="relative overflow-hidden">
-        <img src={tirandoChopp} alt="Chopp HERR AGNES sendo servido" width={1024} height={1280} className="absolute inset-0 h-full w-full object-cover" />
+        <img src={tirandoChopp} alt="Chopp HERR AGNES sendo servido" width={1024} height={1280} style={{ objectPosition: "center 60%" }} className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
         <div className="relative mx-auto max-w-6xl px-5 py-28 md:py-40">
           <p className="eyebrow">Chopp artesanal · Teresina – PI</p>
