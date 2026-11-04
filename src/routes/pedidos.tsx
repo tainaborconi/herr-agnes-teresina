@@ -75,7 +75,7 @@ function TurnstileWidget({ siteKey, onToken }: { siteKey: string; onToken: (toke
       }
       script.addEventListener("load", renderWidget);
       if (script.dataset["loaded"] === "true") renderWidget();
-      script.addEventListener("load", () => { script!.dataset.loaded = "true"; }, { once: true });
+      script.addEventListener("load", () => { script!.dataset["loaded"] = "true"; }, { once: true });
     }
 
     return () => {
