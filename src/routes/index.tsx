@@ -8,7 +8,7 @@ import puroMalte from "@/assets/PURO MALTE - VERT.png";
 import semGluten from "@/assets/SEM GRU - Vert.png";
 import barris from "@/assets/565388034_17925816492157491_3189516691680693208_n.jpg";
 import deliveryImage from "@/assets/WhatsApp Image 2026-11-04 at 12.52.10.jpeg";
-import tirandoChopp from "@/assets/noah-16.jpg";
+import tirandoChopp from "@/assets/NOAH-_161.avif";
 import evAniversario from "@/assets/ev-aniversario.jpg";
 import evCasamento from "@/assets/ev-casamento.jpg";
 import evFormatura from "@/assets/ev-formatura.jpg";
