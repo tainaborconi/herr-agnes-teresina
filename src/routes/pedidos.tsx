@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, CheckCircle2, ChevronDown, Minus, Plus, ShoppingBag } from "lucide-react";
 import { whatsappLink } from "@/lib/site";
+import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL, TURNSTILE_SITE_KEY } from "@/lib/supabase-config";
 
 export const Route = createFileRoute("/pedidos")({
   head: () => ({
@@ -27,6 +28,65 @@ const fieldClass = "mt-2 w-full rounded-md border border-[#d7d7d2] bg-white px-3
 
 type Item = { sabor: string; tamanho: 30 | 50; quantidade: number };
 
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (container: HTMLElement, options: {
+        sitekey: string;
+        action: string;
+        callback: (token: string) => void;
+        "expired-callback"?: () => void;
+        "error-callback"?: () => void;
+      }) => string;
+      remove: (widgetId: string) => void;
+    };
+  }
+}
+
+function TurnstileWidget({ siteKey, onToken }: { siteKey: string; onToken: (token: string) => void }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let widgetId: string | undefined;
+    let cancelled = false;
+
+    const renderWidget = () => {
+      if (cancelled || !containerRef.current || !window.turnstile || widgetId) return;
+      widgetId = window.turnstile.render(containerRef.current, {
+        sitekey: siteKey,
+        action: "order",
+        callback: onToken,
+        "expired-callback": () => onToken(""),
+        "error-callback": () => onToken(""),
+      });
+    };
+
+    if (window.turnstile) {
+      renderWidget();
+    } else {
+      let script = document.getElementById("cloudflare-turnstile") as HTMLScriptElement | null;
+      if (!script) {
+        script = document.createElement("script");
+        script.id = "cloudflare-turnstile";
+        script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+      script.addEventListener("load", renderWidget);
+      if (script.dataset["loaded"] === "true") renderWidget();
+      script.addEventListener("load", () => { script!.dataset["loaded"] = "true"; }, { once: true });
+    }
+
+    return () => {
+      cancelled = true;
+      if (widgetId && window.turnstile) window.turnstile.remove(widgetId);
+    };
+  }, [siteKey, onToken]);
+
+  return <div ref={containerRef} className="mt-3 min-h-[65px]" />;
+}
+
 function Pedidos() {
   const [itens, setItens] = useState<Item[]>([{ sabor: "Pilsen", tamanho: 30, quantidade: 1 }]);
   const [nome, setNome] = useState("");
@@ -39,6 +99,10 @@ function Pedidos() {
   const [condicaoCartao, setCondicaoCartao] = useState("Crédito à vista");
   const [observacoes, setObservacoes] = useState("");
   const [camposPendentes, setCamposPendentes] = useState<string[]>([]);
+  const [enviando, setEnviando] = useState(false);
+  const [erroEnvio, setErroEnvio] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileSiteKey = TURNSTILE_SITE_KEY;
 
   const total = useMemo(() => itens.reduce((sum, item) => {
     const produto = CATALOGO.find((p) => p.nome === item.sabor)!;
@@ -49,7 +113,12 @@ function Pedidos() {
   const adicionarItem = () => setItens((atual) => [...atual, { sabor: "Pilsen", tamanho: 30, quantidade: 1 }]);
   const removerItem = (index: number) => setItens((atual) => atual.length > 1 ? atual.filter((_, i) => i !== index) : atual);
 
-  const enviarPedido = () => {
+  const enviarPedido = async () => {
+    if (enviando) return;
+    if (!turnstileSiteKey || !turnstileToken) {
+      setErroEnvio("Confirme a verificação de segurança antes de enviar o pedido.");
+      return;
+    }
     const pendentes: string[] = [];
     if (!nome.trim()) pendentes.push("Nome completo");
     if (!telefone.trim()) pendentes.push("WhatsApp");
@@ -61,60 +130,115 @@ function Pedidos() {
     if (pendentes.length > 0) {
       setCamposPendentes(pendentes);
       const ids: Record<string, string> = { "Nome completo": "campo-nome", "WhatsApp": "campo-telefone", "Endereço completo": "campo-endereco", "Ponto de referência": "campo-referencia", "Data desejada": "campo-data", "Horário desejado": "campo-horario" };
-      const elemento = document.getElementById(ids[pendentes[0] ?? ""] ?? "");
+      const elemento = document.getElementById(ids[pendentes[0]!]!);
       elemento?.scrollIntoView({ behavior: "smooth", block: "center" });
       window.setTimeout(() => elemento?.focus({ preventScroll: true }), 450);
       return;
     }
     setCamposPendentes([]);
+    setErroEnvio("");
 
-    const numeroPedido = Math.floor(Math.random() * 949) + 51;
-    const dataFormatada = data ? new Date(`${data}T12:00:00`).toLocaleDateString("pt-BR") : data;
-    const formaPagamento = pagamento === "Cartão de crédito" ? "Cartão de crédito — " + condicaoCartao + (condicaoCartao === "Até 3x" ? " (com acréscimo da máquina)" : "") : pagamento;
-    const linhas = itens.map((item, i) => {
-      const p = CATALOGO.find((produto) => produto.nome === item.sabor)!;
-      const preco = item.tamanho === 30 ? p.p30 : p.p50;
-      return `${i + 1}. ${item.sabor} — barril ${item.tamanho}L — ${item.quantidade}x — ${money(preco * item.quantidade)}`;
-    }).join("\n");
-    const mensagem = [
-      `Olá, ${nome}! Segue abaixo o resumo do seu pedido:`,
-      "",
-      `━━━━━━━━━━━━━━━━━━━━`,
-      `🧾 *PEDIDO #${numeroPedido}*`,
-      `━━━━━━━━━━━━━━━━━━━━`,
-      "",
-      "*DADOS DO CLIENTE*",
-      `👤 Nome: ${nome}`,
-      `📱 Telefone: ${telefone}`,
-      `📍 Endereço: ${endereco}`,
-      referencia ? `📌 Referência: ${referencia}` : null,
-      "",
-      "*ITENS DO PEDIDO*",
-      linhas,
-      "",
-      `💰 *TOTAL DO PEDIDO: ${money(total)}*`,
-      "",
-      "*ENTREGA*",
-      `📅 Data desejada: ${dataFormatada}`,
-      `🕒 Horário desejado: ${horario}`,
-      "",
-      "*PAGAMENTO*",
-      `💳 Forma de pagamento: ${formaPagamento}`,
-      observacoes ? `📝 Observações: ${observacoes}` : null,
-      "",
-      "*A data, o horário e as condições de entrega estão sujeitos à confirmação da equipe HERR AGNES.*"
-    ].filter((linha) => linha !== null).join("\n");
-    // Registra o pedido enviado ao WhatsApp como Lead, com o valor calculado no site.
-    const pixelWindow = window as Window & {
-      fbq?: (...args: (string | Record<string, unknown>)[]) => void;
-    };
-    pixelWindow.fbq?.("track", "Lead", {
-      value: Number(total.toFixed(2)),
-      currency: "BRL",
-      order_id: String(numeroPedido),
-    });
+    const supabaseUrl = SUPABASE_URL;
+    const supabaseKey = SUPABASE_PUBLISHABLE_KEY;
+    if (!supabaseUrl || !supabaseKey) {
+      setErroEnvio("O sistema de pedidos está em configuração. Por favor, fale com a equipe pelo WhatsApp.");
+      return;
+    }
 
-    window.open(whatsappLink(mensagem), "_blank", "noopener,noreferrer");
+    // Abre a aba durante o clique do usuário para evitar bloqueio do navegador
+    // enquanto o pedido é salvo no banco.
+    const whatsappWindow = window.open("about:blank", "_blank");
+    if (whatsappWindow) whatsappWindow.opener = null;
+    setEnviando(true);
+
+    try {
+      const response = await fetch(`${supabaseUrl}/functions/v1/create-order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: supabaseKey,
+        },
+        body: JSON.stringify({
+          customer_name: nome.trim(),
+          customer_phone: telefone.trim(),
+          delivery_address: endereco.trim(),
+          delivery_reference: referencia.trim(),
+          delivery_date: data,
+          delivery_time: horario,
+          payment_method: pagamento,
+          payment_condition: pagamento === "Cartão de crédito" ? condicaoCartao : null,
+          notes: observacoes.trim() || null,
+          turnstile_token: turnstileToken,
+          items: itens.map((item) => ({
+            product_name: item.sabor,
+            keg_size: item.tamanho,
+            quantity: item.quantidade,
+          })),
+        }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.order_number) {
+        throw new Error(result.error || "Não foi possível registrar seu pedido. Tente novamente.");
+      }
+
+      const numeroPedido = Number(result.order_number);
+      const dataFormatada = new Date(`${data}T12:00:00`).toLocaleDateString("pt-BR");
+      const formaPagamento = pagamento === "Cartão de crédito" ? "Cartão de crédito — " + condicaoCartao + (condicaoCartao === "Até 3x" ? " (com acréscimo da máquina)" : "") : pagamento;
+      const linhas = itens.map((item, i) => {
+        const p = CATALOGO.find((produto) => produto.nome === item.sabor)!;
+        const preco = item.tamanho === 30 ? p.p30 : p.p50;
+        return `${i + 1}. ${item.sabor} — barril ${item.tamanho}L — ${item.quantidade}x — ${money(preco * item.quantidade)}`;
+      }).join("\n");
+      const mensagem = [
+        `Olá, ${nome}! Segue abaixo o resumo do seu pedido:`,
+        "",
+        `━━━━━━━━━━━━━━━━━━━━`,
+        `🧾 *PEDIDO #${numeroPedido}*`,
+        `━━━━━━━━━━━━━━━━━━━━`,
+        "",
+        "*DADOS DO CLIENTE*",
+        `👤 Nome: ${nome}`,
+        `📱 Telefone: ${telefone}`,
+        `📍 Endereço: ${endereco}`,
+        `📌 Referência: ${referencia}`,
+        "",
+        "*ITENS DO PEDIDO*",
+        linhas,
+        "",
+        `💰 *TOTAL DO PEDIDO: ${money(total)}*`,
+        "",
+        "*ENTREGA*",
+        `📅 Data desejada: ${dataFormatada}`,
+        `🕒 Horário desejado: ${horario}`,
+        "",
+        "*PAGAMENTO*",
+        `💳 Forma de pagamento: ${formaPagamento}`,
+        observacoes ? `📝 Observações: ${observacoes}` : null,
+        "",
+        "*A data, o horário e as condições de entrega estão sujeitos à confirmação da equipe HERR AGNES.*"
+      ].filter((linha) => linha !== null).join("\n");
+
+      const pixelWindow = window as Window & {
+        fbq?: (...args: (string | Record<string, unknown>)[]) => void;
+      };
+      pixelWindow.fbq?.("track", "Lead", {
+        value: Number(total.toFixed(2)),
+        currency: "BRL",
+        order_id: String(numeroPedido),
+      });
+
+      const url = whatsappLink(mensagem);
+      if (whatsappWindow) {
+        whatsappWindow.location.href = url;
+      } else {
+        window.location.href = url;
+      }
+    } catch (error) {
+      whatsappWindow?.close();
+      setErroEnvio(error instanceof Error ? error.message : "Não foi possível enviar seu pedido. Tente novamente.");
+    } finally {
+      setEnviando(false);
+    }
   };
 
   return (
@@ -213,6 +337,14 @@ function Pedidos() {
               <p className="mt-3 text-xs leading-relaxed text-[#686868]">No parcelamento em até 3x, será aplicado o acréscimo da máquina de cartão. O valor final será informado pela equipe.</p>
             </div>}
             <label className="mt-4 block text-sm">Observações <span className="text-[#686868]">(opcional)</span><textarea className={fieldClass} rows={3} value={observacoes} onChange={(e) => setObservacoes(e.target.value)} placeholder="Alguma informação importante sobre seu pedido?"/></label>
+            <div className="mt-5 rounded-lg border border-[#deded9] bg-white p-4">
+              <p className="text-sm font-semibold">Verificação de segurança</p>
+              {turnstileSiteKey ? (
+                <TurnstileWidget siteKey={turnstileSiteKey} onToken={setTurnstileToken} />
+              ) : (
+                <p className="mt-2 text-xs leading-relaxed text-[#686868]">A verificação de segurança está sendo configurada. O envio ficará disponível assim que a equipe concluir essa etapa.</p>
+              )}
+            </div>
           </div>
         </div>
 
@@ -228,7 +360,8 @@ function Pedidos() {
             </div>
             <div className="mt-5 flex items-end justify-between border-t pt-5"><span className="text-sm text-[#686868]">Total dos produtos</span><strong className="text-2xl text-[#941b25]">{money(total)}</strong></div>
             <p className="mt-3 text-xs leading-relaxed text-[#686868]">Valor dos barris com chopeira elétrica e kit de extração inclusos. A equipe confirmará a entrega e as condições finais pelo WhatsApp.</p>
-            <button type="button" onClick={enviarPedido} className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-[#941b25] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#76151d]">Enviar pedido pelo WhatsApp</button>
+            {erroEnvio && <p role="alert" className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{erroEnvio}</p>}
+            <button type="button" onClick={() => void enviarPedido()} disabled={enviando || !turnstileSiteKey || !turnstileToken} className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-[#941b25] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-wait disabled:opacity-60">{enviando ? "Registrando pedido..." : "Enviar pedido pelo WhatsApp"}</button>
             <p className="mt-3 text-center text-[11px] leading-relaxed text-[#686868]">Você ainda poderá revisar as informações antes de enviar a mensagem.</p>
           </div>
           <div className="mt-4 rounded-lg border p-5 text-sm text-[#686868]"><p className="font-semibold text-[#171717]">Atendemos Teresina, Timon e região.</p><p className="mt-1">A entrega será confirmada pela nossa equipe.</p></div>

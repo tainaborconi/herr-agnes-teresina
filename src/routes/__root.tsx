@@ -148,12 +148,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Header />
-      <main className="min-h-[70vh]">
+      {!pathname.startsWith("/admin") && <Header />}
+      <main className={pathname.startsWith("/admin") ? "min-h-screen" : "min-h-[70vh]"}>
         <Outlet />
       </main>
-      <Footer />
-      <WhatsFloat />
+      {!pathname.startsWith("/admin") && <Footer />}
+      {!pathname.startsWith("/admin") && <WhatsFloat />}
     </QueryClientProvider>
   );
 }
