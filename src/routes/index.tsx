@@ -16,7 +16,7 @@ import evCorporativo from "@/assets/ev-corporativo.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { SABORES, TIPOS_EVENTO, INCLUSO, DURACOES, DURACAO_PADRAO, calcularLitros, sugerirBarris } from "@/lib/site";
 import { InstagramBand } from "@/components/InstagramFeed";
@@ -80,7 +80,6 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: "Aniversários, casamentos, formaturas e eventos corporativos com chopp gelado. Delivery no mesmo dia em Teresina." },
     ],
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(feedQueryOptions),
   component: Index,
 });
 
@@ -148,11 +147,11 @@ function HomeCalculator() {
 }
 
 function Index() {
-  const { data: feed } = useSuspenseQuery(feedQueryOptions);
+  const { data: feed } = useQuery(feedQueryOptions);
   return (
     <div className="home-page">
       <section className="relative overflow-hidden">
-        <img src={tirandoChopp} alt="Chopp HERR AGNES sendo servido" width={1024} height={1280} style={{ objectPosition: "center 60%" }} className="absolute inset-0 h-full w-full object-cover" />
+        <img src={tirandoChopp} alt="Chopp HERR AGNES sendo servido" width={1024} height={1280} fetchPriority="high" loading="eager" decoding="async" sizes="100vw" style={{ objectPosition: "center 60%" }} className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
         <div className="relative mx-auto max-w-6xl px-5 py-28 md:py-40">
           <p className="eyebrow">Chopp artesanal · Teresina – PI</p>
