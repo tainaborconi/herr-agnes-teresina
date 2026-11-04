@@ -15,12 +15,18 @@ create table if not exists public.profiles (
   created_at timestamptz not null default now()
 );
 
-create type public.order_status as enum (
-  'pending',
-  'in_progress',
-  'confirmed',
-  'cancelled'
-);
+do $
+begin
+  create type public.order_status as enum (
+    'pending',
+    'in_progress',
+    'confirmed',
+    'cancelled'
+  );
+exception
+  when duplicate_object then null;
+end
+$;
 
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),
