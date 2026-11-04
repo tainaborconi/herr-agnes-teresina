@@ -138,6 +138,7 @@ fbq('init', '896169796824657');`,
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
 
   useEffect(() => {
     const pixelWindow = window as Window & {
@@ -148,12 +149,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Header />
-      <main className="min-h-[70vh]">
+      {!pathname.startsWith("/admin") && <Header />}
+      <main className={pathname.startsWith("/admin") ? "min-h-screen" : "min-h-[70vh]"}>
         <Outlet />
       </main>
-      <Footer />
-      <WhatsFloat />
+      {!pathname.startsWith("/admin") && <Footer />}
+      {!pathname.startsWith("/admin") && <WhatsFloat />
     </QueryClientProvider>
   );
 }
