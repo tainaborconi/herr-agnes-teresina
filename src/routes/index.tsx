@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ShoppingBag, Calculator, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
-import choppVinho from "@/assets/FEED - CHOPP VINHO.jpg";
-import ipa from "@/assets/FEED - IPA.png";
-import munich from "@/assets/FEED - MUNICH.jpg";
-import pilsen from "@/assets/FEED - PILSEN.jpg";
-import puroMalte from "@/assets/FEED - PURO MALTE.png";
-import semGluten from "@/assets/FEED - SEM GLÚTEN.jpeg";
+import choppVinho from "@/assets/RED WEIN - Vert.png";
+import ipa from "@/assets/IPA - Vert.png";
+import munich from "@/assets/MUNICH- STORIES  -Vert.png";
+import pilsen from "@/assets/Pilsen  - VBERTI.png";
+import puroMalte from "@/assets/PURO MALTE - VERT.png";
+import semGluten from "@/assets/SEM GRU - Vert.png";
 import barris from "@/assets/565388034_17925816492157491_3189516691680693208_n.jpg";
 import tirandoChopp from "@/assets/noah-16.jpg";
 import evAniversario from "@/assets/ev-aniversario.jpg";
