@@ -15,18 +15,22 @@ A função precisa ser implantada no projeto Supabase `efdgljkcrngtaztazxgb`. A 
 A função usa as variáveis de ambiente gerenciadas pelo Supabase:
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
+- `TURNSTILE_SECRET_KEY` (segredo do Cloudflare Turnstile)
 
-**Nunca** coloque a chave `service_role` em `.env` do frontend, em variáveis `VITE_*`, no GitHub ou no navegador.
+**Nunca** coloque a chave `service_role` ou o segredo Turnstile em `.env` do frontend, em variáveis `VITE_*`, no GitHub ou no navegador.
+
+A função foi implantada no Supabase, mas está em modo de bloqueio seguro: ela não registra pedidos enquanto o segredo Turnstile e a verificação no formulário não estiverem configurados. A validação de cabeçalho Origin, isoladamente, não é proteção antiabuso suficiente.
 
 A migração `20261104000000_initial_orders.sql` e a criação do perfil administrador já foram aplicadas anteriormente no projeto Supabase. Não execute a migração novamente manualmente sem conferir o estado do banco.
 
 ## Antes de publicar
 
-1. Implantar a Edge Function `create-order` no Supabase.
-2. Confirmar que a URL pública do site é `https://www.herragnesteresina.com.br` (a origem é validada pela função).
-3. Executar o build e corrigir eventuais erros.
-4. Testar login, consulta de pedidos, alteração de status e envio de um pedido de teste.
-5. Só então avaliar a publicação/merge para `lovable-sync`, com autorização explícita da proprietária.
+1. Criar um site Turnstile no Cloudflare e configurar o segredo como `TURNSTILE_SECRET_KEY` nos secrets do Supabase.
+2. Adicionar a chave pública do Turnstile ao frontend e integrar o desafio à página `/pedidos`.
+3. Confirmar que a URL pública do site é `https://www.herragnesteresina.com.br`.
+4. Executar o build e corrigir eventuais erros.
+5. Testar login, consulta de pedidos, alteração de status e envio de um pedido de teste.
+6. Só então avaliar a publicação/merge para `lovable-sync`, com autorização explícita da proprietária.
 
 ## Limites atuais
 
