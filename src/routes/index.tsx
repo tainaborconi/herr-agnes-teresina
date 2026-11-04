@@ -192,6 +192,7 @@ function Index() {
         </div>
       </section>
 
+      <section>
         <div className="mx-auto max-w-6xl overflow-hidden px-5 pb-12 pt-2">
           <p className="mb-6 text-center text-xs tracking-wide text-muted-foreground">Experiências reais de quem escolheu a HERR AGNES Teresina para brindar.</p>
           <div className="testimonial-marquee" aria-label="Depoimentos de clientes">
