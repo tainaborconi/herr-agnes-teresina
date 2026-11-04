@@ -21,7 +21,7 @@ A função usa as variáveis de ambiente gerenciadas pelo Supabase:
 
 A função permanece em modo de bloqueio seguro se o segredo Turnstile não estiver configurado. Sem ele, responde com erro e não grava pedidos. A validação de cabeçalho Origin, isoladamente, não é proteção antiabuso suficiente.
 
-As tabelas `profiles`, `orders` e `order_items`, as políticas RLS e o perfil administrador já existem no projeto. Atenção: o histórico remoto de migrações registra a migração de endurecimento, mas não registra `20261104000000_initial_orders.sql`. A estrutura existe, porém há divergência entre o schema e o histórico. A migração inicial foi tornada idempotente para reduzir risco, mas não execute `db push` nem reaplique migrações até reconciliar o histórico com o schema existente.
+As tabelas `profiles`, `orders` e `order_items`, as políticas RLS e o perfil administrador já existem no projeto. Registrei uma migração de reconciliação no histórico remoto e também no repositório (`20261104212344_reconcile_order_schema_and_security.sql`). A migração inicial foi tornada idempotente para que o histórico local possa ser alinhado com segurança. Não altere nem remova as migrações já aplicadas.
 
 ## Antes de publicar
 
