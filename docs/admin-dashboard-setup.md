@@ -10,7 +10,7 @@
 
 ## Implantação da Edge Function
 
-A função precisa ser implantada no projeto Supabase `efdgljkcrngtaztazxgb`. A configuração em `supabase/config.toml` marca a função como pública na camada de gateway; a própria função valida origem, método, campos, catálogo e quantidades.
+A Edge Function `create-order` já está implantada e ativa no projeto Supabase `efdgljkcrngtaztazxgb` (versão 3). A configuração em `supabase/config.toml` marca a função como pública na camada de gateway; a própria função valida origem, método, campos, catálogo, quantidades e o token Turnstile.
 
 A função usa as variáveis de ambiente gerenciadas pelo Supabase:
 - `SUPABASE_URL`
@@ -19,16 +19,16 @@ A função usa as variáveis de ambiente gerenciadas pelo Supabase:
 
 **Nunca** coloque a chave `service_role` ou o segredo Turnstile em `.env` do frontend, em variáveis `VITE_*`, no GitHub ou no navegador.
 
-A função foi implantada no Supabase, mas está em modo de bloqueio seguro: ela não registra pedidos enquanto o segredo Turnstile e a verificação no formulário não estiverem configurados. A validação de cabeçalho Origin, isoladamente, não é proteção antiabuso suficiente.
+A função permanece em modo de bloqueio seguro até que o segredo Turnstile seja configurado. Sem ele, a função responde com erro e não grava pedidos. A validação de cabeçalho Origin, isoladamente, não é proteção antiabuso suficiente.
 
 A migração `20261104000000_initial_orders.sql` e a criação do perfil administrador já foram aplicadas anteriormente no projeto Supabase. Não execute a migração novamente manualmente sem conferir o estado do banco.
 
 ## Antes de publicar
 
-1. Criar um site Turnstile no Cloudflare e configurar o segredo como `TURNSTILE_SECRET_KEY` nos secrets do Supabase.
-2. Adicionar a chave pública do Turnstile ao frontend e integrar o desafio à página `/pedidos`.
-3. Confirmar que a URL pública do site é `https://www.herragnesteresina.com.br`.
-4. Executar o build e corrigir eventuais erros.
+1. Criar um site Turnstile no Cloudflare para o hostname `www.herragnesteresina.com.br`.
+2. Configurar o segredo como `TURNSTILE_SECRET_KEY` nos secrets do Supabase.
+3. Configurar a chave pública como `VITE_TURNSTILE_SITE_KEY` nas variáveis de ambiente de build/deploy do site e reconstruir o frontend.
+4. Confirmar que a URL pública do site é `https://www.herragnesteresina.com.br`.
 5. Testar login, consulta de pedidos, alteração de status e envio de um pedido de teste.
 6. Só então avaliar a publicação/merge para `lovable-sync`, com autorização explícita da proprietária.
 
