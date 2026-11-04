@@ -282,7 +282,7 @@ function Pedidos() {
                       {([30, 50] as const).map((size) => {
                         const price = size === 30 ? produto.p30 : produto.p50;
                         return <button type="button" key={size} onClick={() => atualizarItem(index, { tamanho: size })} className={`rounded-md border p-4 text-left transition ${item.tamanho === size ? "border-[#941b25] bg-[#941b25]/[0.06] ring-1 ring-[#941b25]" : "border-[#deded9] bg-[#f1f1ee] hover:border-[#941b25]/60"}`}>
-                          <span className="block text-lg font-bold">{size} litros</span><span className="mt-1 block text-sm text-[#941b25]">{money(price)}</span>
+                          <span className="block text-lg font-bold">{size} litros</span><span className="mt-1 block text-sm text-[#941b25]">{money(price)}</span><span className="mt-1 block text-xs text-[#686868]">{money(price / size)} por litro</span>
                         </button>;
                       })}
                     </div>
