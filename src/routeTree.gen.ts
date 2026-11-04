@@ -14,6 +14,7 @@ import { Route as CalculadoraRouteImport } from './routes/calculadora'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as PedidosRouteImport } from './routes/pedidos'
 import { Route as SaboresRouteImport } from './routes/sabores'
+import { Route as AdminRouteImport } from './routes/admin'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +41,11 @@ const SaboresRoute = SaboresRouteImport.update({
   path: '/sabores',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/contato': typeof ContatoRoute
   '/pedidos': typeof PedidosRoute
   '/sabores': typeof SaboresRoute
+  '/admin': typeof AdminRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/admin': typeof AdminRoute
   '/': typeof IndexRoute
   '/calculadora': typeof CalculadoraRoute
   '/contato': typeof ContatoRoute
@@ -65,10 +73,10 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/calculadora' | '/contato' | '/pedidos' | '/sabores'
+  fullPaths: '/' | '/calculadora' | '/contato' | '/pedidos' | '/sabores' | '/admin'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/calculadora' | '/contato' | '/pedidos' | '/sabores'
-  id: '__root__' | '/' | '/calculadora' | '/contato' | '/pedidos' | '/sabores'
+  to: '/' | '/calculadora' | '/contato' | '/pedidos' | '/sabores' | '/admin'
+  id: '__root__' | '/' | '/calculadora' | '/contato' | '/pedidos' | '/sabores' | '/admin'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +85,7 @@ export interface RootRouteChildren {
   ContatoRoute: typeof ContatoRoute
   PedidosRoute: typeof PedidosRoute
   SaboresRoute: typeof SaboresRoute
+  AdminRoute: typeof AdminRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +125,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SaboresRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +141,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContatoRoute: ContatoRoute,
   PedidosRoute: PedidosRoute,
   SaboresRoute: SaboresRoute,
+  AdminRoute: AdminRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
