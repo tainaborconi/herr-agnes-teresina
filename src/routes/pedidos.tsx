@@ -101,7 +101,7 @@ function Pedidos() {
   const [enviando, setEnviando] = useState(false);
   const [erroEnvio, setErroEnvio] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
-  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined;
+  const turnstileSiteKey = (import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined) || "0x4AAAAAAFz7Gu9z2WntD8WF";
 
   const total = useMemo(() => itens.reduce((sum, item) => {
     const produto = CATALOGO.find((p) => p.nome === item.sabor)!;
