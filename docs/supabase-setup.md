@@ -1,44 +1,57 @@
 # HERR AGNES — Supabase setup
 
-## Environment
+## Frontend environment
 
-Create a local `.env.local` from `.env.example` and set:
+Configure these variables in the hosting/build environment:
 
-- `VITE_SUPABASE_URL`: the project base URL, without `/rest/v1/`.
+- `VITE_SUPABASE_URL`: `https://efdgljkcrngtaztazxgb.supabase.co`
 - `VITE_SUPABASE_PUBLISHABLE_KEY`: the project's publishable key.
+- `VITE_TURNSTILE_SITE_KEY`: the public Cloudflare Turnstile site key for `www.herragnesteresina.com.br`.
 
-The publishable key is intended for browser use. Never use a Supabase secret/service-role key or database password in a `VITE_*` variable, frontend source file, or Git commit.
+The publishable key and Turnstile site key are public values. Never place a Supabase secret/service-role key, database password, or Turnstile secret in a `VITE_*` variable, frontend source file, or Git commit.
 
-## Database migration
+## Current database state
 
-Apply the SQL migration in `supabase/migrations` to the Supabase project using the Supabase CLI or SQL Editor.
+The Supabase project already contains:
 
-The migration creates:
+- `profiles`: administrator allowlist.
+- `orders`: customer, delivery, payment, totals, status, and attribution fields.
+- `order_items`: products/kegs belonging to an order.
 
-- `orders`: customer, delivery, payment, totals, status, and Meta attribution fields.
-- `order_items`: individual kegs/products in each order.
-- `profiles`: the allowlist that grants the single business owner the admin role.
+RLS is enabled on all three tables. The existing policies allow an authenticated administrator profile to read orders and items and update order status. The public order form writes through the server-side Edge Function; it does not insert directly into these tables.
 
-Row Level Security is enabled. Anonymous clients receive no direct table access. The public order form must submit through a validated Edge Function; the browser must never receive the service-role key.
+**Migration-history warning:** the remote migration history currently lists `20261104203046_harden_public_trigger_functions`, but does not list `20261104000000_initial_orders`, even though the schema objects and policies from the initial migration exist. The initial migration file in this repository has been made idempotent, but this history/schema drift must be reconciled before running `supabase db push` or applying migrations. Do not re-run the initial migration manually without reviewing the remote schema and migration history.
 
-## Provision the business owner
+## Edge Function
 
-1. In Supabase Authentication, invite the business owner's email address. Keep public sign-ups disabled.
-2. After the owner accepts the invitation, copy the user's UUID from Authentication → Users.
-3. In the SQL Editor, run the following statement with the real UUID:
+The `create-order` Edge Function is already deployed and active (version 4). It:
 
-```sql
-insert into public.profiles (id, role)
-values ('OWNER-AUTH-USER-UUID', 'admin')
-on conflict (id) do update set role = 'admin';
-```
+- Accepts requests from the production site origin.
+- Validates required fields, products, quantities, and server-side prices.
+- Verifies the Cloudflare Turnstile token and expected hostname/action.
+- Writes the order and its items using the server-side service-role credential.
+- Returns the database-generated order number before the browser opens WhatsApp.
 
-Do not create a profile for any other user. The admin route must still enforce authentication and the profile role; hiding the route in the UI alone is not security.
+Required server-side secret:
 
-## Remaining implementation
+- `TURNSTILE_SECRET_KEY`: Cloudflare Turnstile secret.
 
-- Add the Supabase client dependency and typed browser client.
-- Implement the owner-only admin login and order dashboard.
-- Implement a validated public order Edge Function that writes the order and items, then return the database-generated order number before opening WhatsApp.
-- Add the owner action to confirm a sale and send a deduplicated Meta Purchase event through a server-side Edge Function.
-- Configure Supabase Edge Function secrets in the Supabase dashboard; never commit them.
+Supabase provides `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` to the Edge Function runtime. Keep these values server-side only.
+
+## Administrator access
+
+The administrator account and its `profiles.role = 'admin'` record already exist. Public sign-ups should remain disabled. The `/admin` page validates the authenticated user's profile role before loading orders.
+
+## Remaining checks before publication
+
+1. Confirm `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, and `VITE_TURNSTILE_SITE_KEY` are set in the production build environment.
+2. Confirm `TURNSTILE_SECRET_KEY` remains configured in Supabase Edge Function secrets.
+3. Run a production build and inspect the generated TanStack route tree for `/admin`.
+4. Test administrator login, order listing, status changes, Turnstile verification, and one explicitly authorized test order.
+5. Reconcile the migration-history drift before any future schema deployment.
+6. Do not merge or publish until the owner has reviewed and explicitly approved the changes.
+
+## Not implemented
+
+- Meta Conversions API Purchase event after a sale is confirmed.
+- Automated payment processing/gateway.
