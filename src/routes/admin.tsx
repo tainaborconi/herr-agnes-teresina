@@ -101,6 +101,23 @@ function AdminPage() {
     setOrders((await response.json()) as Order[]);
   }
 
+  async function refreshAuthSession(refreshToken: string): Promise<AuthSession> {
+    const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ refresh_token: refreshToken }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !data.access_token || !data.refresh_token) {
+      throw new Error("Sua sessão expirou. Entre novamente.");
+    }
+    return {
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      expires_at: data.expires_at,
+    };
+  }
+
   async function validateAdmin(accessToken: string) {
     const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
       headers: { ...headers, Authorization: `Bearer ${accessToken}` },
@@ -131,9 +148,16 @@ function AdminPage() {
         const saved = sessionStorage.getItem(SESSION_KEY);
         if (saved) {
           const parsed = JSON.parse(saved) as AuthSession;
-          if (parsed.access_token) {
-            await validateAdmin(parsed.access_token);
-            if (active) setSession(parsed);
+          if (parsed.access_token && parsed.refresh_token) {
+            let restored = parsed;
+            try {
+              await validateAdmin(restored.access_token);
+            } catch {
+              restored = await refreshAuthSession(parsed.refresh_token);
+              await validateAdmin(restored.access_token);
+            }
+            sessionStorage.setItem(SESSION_KEY, JSON.stringify(restored));
+            if (active) setSession(restored);
           }
         }
       } catch {
@@ -147,6 +171,25 @@ function AdminPage() {
       active = false;
     };
   }, [configured]);
+
+  useEffect(() => {
+    if (!session) return;
+    const intervalId = window.setInterval(() => {
+      void refreshAuthSession(session.refresh_token)
+        .then(async (refreshed) => {
+          await validateAdmin(refreshed.access_token);
+          sessionStorage.setItem(SESSION_KEY, JSON.stringify(refreshed));
+          setSession(refreshed);
+        })
+        .catch(() => {
+          sessionStorage.removeItem(SESSION_KEY);
+          setSession(null);
+          setOrders([]);
+          setError("Sua sessão expirou. Entre novamente.");
+        });
+    }, 50 * 60 * 1000);
+    return () => window.clearInterval(intervalId);
+  }, [session]);
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
