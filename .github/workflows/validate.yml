@@ -1,0 +1,33 @@
+name: Validate application
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - integration/admin-dashboard-on-main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install locked dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Type-check
+        run: bunx tsc --noEmit
+
+      - name: Build production bundle
+        run: bun run build
