@@ -61,6 +61,15 @@ const CARROSSEL: CarouselSlide[] = [
   { src: semGluten, alt: "Chopp sem glúten HERR AGNES", titulo: "Sem Glúten", detalhe: "Mais uma opção para brindar e compartilhar." },
 ];
 
+
+const DEPOIMENTOS = [
+  { texto: "Turma ficou pedindo mais quando acabou!", nome: "Walysson" },
+  { texto: "Acabou o barril bem no final (tinham só 3 últimos guerreiros). Só elogios!", nome: "Rodrigo" },
+  { texto: "Maravilha! Todo mundo adorou. Voltarei a pedir!", nome: "Wilson" },
+  { texto: "Zero ressaca!", nome: "Rafael" },
+  { texto: "Você falou que eu poderia confiar na qualidade do produto e de fato, ele se mostrou extremamente qualificado! Todo mundo adorou e elogiou!", nome: "Weslley" },
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -179,6 +188,28 @@ function Index() {
                 </li>
               ))}
             </ul>
+          </div>
+        </div>
+      </section>
+
+
+      <section className="section-wine testimonials-section" aria-labelledby="depoimentos-title">
+        <div className="mx-auto max-w-6xl overflow-hidden px-5 py-20">
+          <div className="mb-10 text-center">
+            <p className="eyebrow">Quem já brindou com a Agnes</p>
+            <h2 id="depoimentos-title" className="mt-3 text-4xl">A opinião de quem já pediu</h2>
+            <p className="mt-3 text-muted-foreground">Experiências reais de quem escolheu a HERR AGNES para brindar.</p>
+          </div>
+          <div className="testimonial-marquee" aria-label="Depoimentos de clientes">
+            <div className="testimonial-track">
+              {[...DEPOIMENTOS, ...DEPOIMENTOS].map((depoimento, index) => (
+                <figure key={`${depoimento.nome}-${index}`} className="testimonial-card">
+                  <span aria-hidden="true" className="testimonial-quote">“</span>
+                  <blockquote>{depoimento.texto}</blockquote>
+                  <figcaption>{depoimento.nome}</figcaption>
+                </figure>
+              ))}
+            </div>
           </div>
         </div>
       </section>
