@@ -248,7 +248,7 @@ function Pedidos() {
         <img
           src={noahImage}
           alt="HERR AGNES — chopp para celebrar"
-          className="h-[220px] w-full object-cover object-[center_20%] md:h-[380px]"
+          className="h-[220px] w-full object-cover object-[center_55%] md:h-[380px]"
         />
       </section>
 
