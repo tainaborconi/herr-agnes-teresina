@@ -104,7 +104,8 @@ Deno.serve(async (request) => {
     body: verificationBody,
   });
   const verification = await verificationResponse.json().catch(() => ({ success: false }));
-  if (!verificationResponse.ok || verification.success !== true) {
+  if (!verificationResponse.ok || verification.success !== true ||
+      verification.hostname !== "www.herragnesteresina.com.br" || verification.action !== "order") {
     return json({ error: "A verificação de segurança falhou. Atualize a página e tente novamente." }, 403);
   }
   const paymentCondition = input.payment_method === "Cartão de crédito"
