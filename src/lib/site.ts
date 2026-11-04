@@ -18,7 +18,7 @@ export const BARRIS = [30, 50] as const;
 
 /** Tipos de evento que a HERR AGNES atende em Teresina. */
 export const TIPOS_EVENTO = [
-  { nome: "Aniversários", desc: "Do infantil ao marco de 50 anos, com chopp sempre gelado." },
+  { nome: "Aniversários", desc: "Dos aniversários intimistas às grandes festas, AGNES é presença garantida." },
   { nome: "Casamentos", desc: "Bar de chopp para a recepção e o brinde dos noivos." },
   { nome: "Formaturas", desc: "Barris e chopeira para a festa durar a noite toda." },
   { nome: "Eventos corporativos", desc: "Confraternizações, lançamentos e happy hours da empresa." },
