@@ -191,7 +191,7 @@ function Index() {
           </div>
         </div>
         <div className="mx-auto max-w-6xl overflow-hidden px-5 pb-12 pt-2">
-          <p className="testimonial-intro mb-6 text-center text-4xl font-display">Feedbacks reais de quem escolheu a Agnes</p>
+          <p className="testimonial-intro mb-6 text-center">Feedbacks reais de quem escolheu a Agnes</p>
           <div className="testimonial-marquee" aria-label="Depoimentos de clientes">
             <div className="testimonial-track">
               {[...DEPOIMENTOS, ...DEPOIMENTOS].map((depoimento, index) => (
