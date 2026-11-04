@@ -270,8 +270,9 @@ function AdminPage() {
         throw new Error(body.message || "Não foi possível atualizar o status.");
       }
       const updated = (await response.json()) as Order[];
-      if (updated[0]) {
-        setOrders((current) => current.map((item) => item.id === order.id ? { ...item, status: updated[0].status } : item));
+      const updatedOrder = updated[0];
+      if (updatedOrder) {
+        setOrders((current) => current.map((item) => item.id === order.id ? { ...item, status: updatedOrder.status } : item));
       }
       setNotice(`Pedido #${order.order_number}: ${STATUS_LABEL[status].toLowerCase()}.`);
     } catch (err) {
