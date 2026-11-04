@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, CheckCircle2, ChevronDown, Minus, Plus, ShoppingBag } from "lucide-react";
 import { whatsappLink } from "@/lib/site";
+import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL, TURNSTILE_SITE_KEY } from "@/lib/supabase-config";
 
 export const Route = createFileRoute("/pedidos")({
   head: () => ({
@@ -101,7 +102,7 @@ function Pedidos() {
   const [enviando, setEnviando] = useState(false);
   const [erroEnvio, setErroEnvio] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
-  const turnstileSiteKey = (import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined) || "0x4AAAAAAFz7Gu9z2WntD8WF";
+  const turnstileSiteKey = TURNSTILE_SITE_KEY;
 
   const total = useMemo(() => itens.reduce((sum, item) => {
     const produto = CATALOGO.find((p) => p.nome === item.sabor)!;
@@ -137,8 +138,8 @@ function Pedidos() {
     setCamposPendentes([]);
     setErroEnvio("");
 
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    const supabaseUrl = SUPABASE_URL;
+    const supabaseKey = SUPABASE_PUBLISHABLE_KEY;
     if (!supabaseUrl || !supabaseKey) {
       setErroEnvio("O sistema de pedidos está em configuração. Por favor, fale com a equipe pelo WhatsApp.");
       return;
