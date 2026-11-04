@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { LogOut, RefreshCw, ShieldCheck, ClipboardList } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
@@ -148,7 +148,7 @@ function AdminPage() {
     };
   }, [configured]);
 
-  async function signIn(event: React.FormEvent<HTMLFormElement>) {
+  async function signIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setError("");
