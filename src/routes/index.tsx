@@ -7,6 +7,7 @@ import pilsen from "@/assets/Pilsen  - VBERTI.png";
 import puroMalte from "@/assets/PURO MALTE - VERT.png";
 import semGluten from "@/assets/SEM GRU - Vert.png";
 import barris from "@/assets/565388034_17925816492157491_3189516691680693208_n.jpg";
+import deliveryImage from "@/assets/WhatsApp Image 2026-11-04 at 12.52.10.jpeg";
 import tirandoChopp from "@/assets/noah-16.jpg";
 import evAniversario from "@/assets/ev-aniversario.jpg";
 import evCasamento from "@/assets/ev-casamento.jpg";
@@ -173,7 +174,7 @@ function Index() {
             <h2 className="mt-3 text-4xl">Pediu, recebeu: o barril chega no mesmo dia</h2>
             <p className="mt-4 text-muted-foreground">No modo delivery da Agnes você escolhe o sabor, combina tudo pelo WhatsApp e recebe o barril pronto para servir no mesmo dia do evento.</p>
             <Link to="/pedidos" className="btn-gold mt-8"><ShoppingBag size={16} /> Fazer pedido online</Link>
-            <img src={barris} alt="Barril e chopeira elétrica montados para a festa" width={1280} height={720} loading="lazy" className="mt-10 aspect-video w-full rounded-lg border object-cover" />
+            <img src={deliveryImage} alt="Delivery HERR AGNES" width={1280} height={720} loading="lazy" className="mt-10 aspect-video w-full rounded-lg border object-cover" />
           </div>
           <div className="rounded-lg border bg-card p-7">
             <h3 className="text-2xl">O que já vem incluso</h3>
