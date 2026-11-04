@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, CheckCircle2, ChevronDown, Minus, Plus, ShoppingBag } from "lucide-react";
+import noahImage from "../assets/NOAH .JPG";
 import { whatsappLink } from "@/lib/site";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL, TURNSTILE_SITE_KEY } from "@/lib/supabase-config";
 
@@ -243,6 +244,14 @@ function Pedidos() {
 
   return (
     <>
+      <section className="w-full overflow-hidden bg-[#171717]">
+        <img
+          src={noahImage}
+          alt="HERR AGNES — chopp para celebrar"
+          className="h-[220px] w-full object-cover object-center md:h-[380px]"
+        />
+      </section>
+
       <section className="border-b border-[#e5e5e0] bg-[#f7f7f5] text-[#171717]">
         <div className="mx-auto max-w-6xl px-5 py-14 md:py-20">
           <p className="max-w-2xl text-sm leading-relaxed text-[#686868] md:text-base">Monte seu pedido em poucos passos. Escolha os sabores, informe onde e quando deseja receber e envie tudo pelo WhatsApp. É rápido e fácil!</p>
