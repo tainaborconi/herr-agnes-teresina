@@ -1,0 +1,22 @@
+name: Validate HERR AGNES site
+
+on:
+  push:
+    branches:
+      - feature/supabase-admin-dashboard
+  pull_request:
+    branches:
+      - lovable-sync
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Build site
+        run: bun run build

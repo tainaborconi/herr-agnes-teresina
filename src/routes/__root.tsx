@@ -146,14 +146,16 @@ function RootComponent() {
     pixelWindow.fbq?.("track", "PageView");
   }, [pathname]);
 
+  const isAdminRoute = pathname.startsWith("/admin");
+
   return (
     <QueryClientProvider client={queryClient}>
-      <Header />
-      <main className="min-h-[70vh]">
+      {!isAdminRoute && <Header />}
+      <main className={isAdminRoute ? "min-h-screen" : "min-h-[70vh]"}>
         <Outlet />
       </main>
-      <Footer />
-      <WhatsFloat />
+      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && <WhatsFloat />}
     </QueryClientProvider>
   );
 }
