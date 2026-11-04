@@ -15,7 +15,7 @@ create table if not exists public.profiles (
   created_at timestamptz not null default now()
 );
 
-do $
+do $migration$
 begin
   create type public.order_status as enum (
     'pending',
@@ -26,7 +26,7 @@ begin
 exception
   when duplicate_object then null;
 end
-$;
+$migration$;
 
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),
