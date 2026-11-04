@@ -20,7 +20,7 @@ The Supabase project already contains:
 
 RLS is enabled on all three tables. The existing policies allow an authenticated administrator profile to read orders and items and update order status. The public order form writes through the server-side Edge Function; it does not insert directly into these tables.
 
-**Migration-history warning:** the remote migration history currently lists `20261104203046_harden_public_trigger_functions`, but does not list `20261104000000_initial_orders`, even though the schema objects and policies from the initial migration exist. The initial migration file in this repository has been made idempotent and its PostgreSQL dollar-quoted block corrected, but this history/schema drift must be reconciled before running `supabase db push` or applying future migrations. Do not re-run the initial migration manually without reviewing the remote schema and migration history.
+**Migration history:** the original `20261104000000_initial_orders` was missing from the remote history even though its schema existed. I reconciled the live schema and recorded `20261104212344_reconcile_order_schema_and_security` in both Supabase and this repository. The original migration is now idempotent. Keep the local migration files in sync with the remote history before future schema deployments.
 
 ## Edge Function
 
