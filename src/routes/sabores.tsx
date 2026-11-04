@@ -1,7 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHero } from "@/components/Layout";
 import { SABORES } from "@/lib/site";
-import miniKegs from "@/assets/Expositor de Mini-Kegs AGNES Artesanais.png";
+import { ChoppCarousel, type CarouselSlide } from "@/components/ChoppCarousel";
+import choppVinho from "@/assets/RED WEIN - Vert.png";
+import ipa from "@/assets/IPA - Vert.png";
+import munich from "@/assets/MUNICH- STORIES  -Vert.png";
+import pilsen from "@/assets/Pilsen  - VBERTI.png";
+import puroMalte from "@/assets/PURO MALTE - VERT.png";
+import semGluten from "@/assets/SEM GRU - Vert.png";
+
+const CARROSSEL: CarouselSlide[] = [
+  { src: choppVinho, alt: "Chopp Vinho HERR AGNES", titulo: "Chopp Vinho", detalhe: "Uma opção marcante para quem gosta de sabores especiais." },
+  { src: ipa, alt: "Chopp IPA HERR AGNES", titulo: "IPA", detalhe: "Amargor e personalidade em cada gole." },
+  { src: munich, alt: "Chopp Munich HERR AGNES", titulo: "Munich", detalhe: "Um sabor encorpado para apreciar cada momento." },
+  { src: pilsen, alt: "Chopp Pilsen HERR AGNES", titulo: "Pilsen", detalhe: "Leveza e refrescância para qualquer ocasião." },
+  { src: puroMalte, alt: "Chopp Puro Malte HERR AGNES", titulo: "Puro Malte", detalhe: "O clássico que combina com bons encontros." },
+  { src: semGluten, alt: "Chopp sem glúten HERR AGNES", titulo: "Sem Glúten", detalhe: "Mais uma opção para brindar e compartilhar." },
+];
 
 export const Route = createFileRoute("/sabores")({
   head: () => ({
@@ -19,8 +34,10 @@ function Sabores() {
   return (
     <>
       <PageHero eyebrow="Nossos sabores" title="Escolha o seu chopp" />
-      <img src={miniKegs} alt="Expositor de Mini-Kegs AGNES Artesanais" loading="lazy" className="mx-auto mt-10 max-h-[440px] w-full max-w-4xl rounded-lg border object-contain px-5" />
-      <section className="mx-auto grid max-w-6xl gap-6 px-5 pb-20 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mx-auto mt-10 max-w-5xl px-5">
+        <ChoppCarousel slides={CARROSSEL} />
+      </div>
+      <section className="mx-auto grid max-w-6xl gap-6 px-5 pb-20 pt-12 md:grid-cols-2 lg:grid-cols-3">
         {SABORES.map((s) => (
           <div key={s.nome} className="flex flex-col rounded-lg border bg-card p-8">
             <p className="eyebrow">Chopp HERR AGNES</p>
