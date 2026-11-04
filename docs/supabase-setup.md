@@ -1,14 +1,14 @@
 # HERR AGNES — Supabase setup
 
-## Frontend environment
+## Public browser configuration
 
-Configure these variables in the hosting/build environment:
+The frontend is already bound to the active project through `src/lib/supabase-config.ts`:
 
-- `VITE_SUPABASE_URL`: `https://efdgljkcrngtaztazxgb.supabase.co`
-- `VITE_SUPABASE_PUBLISHABLE_KEY`: the project's publishable key.
-- `VITE_TURNSTILE_SITE_KEY`: the public Cloudflare Turnstile site key for `www.herragnesteresina.com.br`.
+- Supabase URL: `https://efdgljkcrngtaztazxgb.supabase.co`
+- Supabase publishable key: stored in that source file. This is a public client key, not a secret.
+- Cloudflare Turnstile site key: stored in that source file and intended for browser use.
 
-The publishable key and Turnstile site key are public values. Never place a Supabase secret/service-role key, database password, or Turnstile secret in a `VITE_*` variable, frontend source file, or Git commit.
+The publishable key and Turnstile site key are safe to expose in the browser. Never put a Supabase secret/service-role key, database password, or Turnstile secret in frontend source, GitHub, or a `VITE_*` variable.
 
 ## Current database state
 
@@ -20,7 +20,7 @@ The Supabase project already contains:
 
 RLS is enabled on all three tables. The existing policies allow an authenticated administrator profile to read orders and items and update order status. The public order form writes through the server-side Edge Function; it does not insert directly into these tables.
 
-**Migration-history warning:** the remote migration history currently lists `20261104203046_harden_public_trigger_functions`, but does not list `20261104000000_initial_orders`, even though the schema objects and policies from the initial migration exist. The initial migration file in this repository has been made idempotent, but this history/schema drift must be reconciled before running `supabase db push` or applying migrations. Do not re-run the initial migration manually without reviewing the remote schema and migration history.
+**Migration-history warning:** the remote migration history currently lists `20261104203046_harden_public_trigger_functions`, but does not list `20261104000000_initial_orders`, even though the schema objects and policies from the initial migration exist. The initial migration file in this repository has been made idempotent and its PostgreSQL dollar-quoted block corrected, but this history/schema drift must be reconciled before running `supabase db push` or applying future migrations. Do not re-run the initial migration manually without reviewing the remote schema and migration history.
 
 ## Edge Function
 
@@ -40,16 +40,15 @@ Supabase provides `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` to the Edge Fun
 
 ## Administrator access
 
-The administrator account and its `profiles.role = 'admin'` record already exist. Public sign-ups should remain disabled. The `/admin` page validates the authenticated user's profile role before loading orders.
+The administrator account and its `profiles.role = 'admin'` record already exist. Public sign-ups should remain disabled. The `/admin` page validates the authenticated user's profile role before loading orders. Session tokens are refreshed while the panel remains open and when a saved session is restored.
 
 ## Remaining checks before publication
 
-1. Confirm `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, and `VITE_TURNSTILE_SITE_KEY` are set in the production build environment.
+1. Run the GitHub Actions validation workflow and confirm type-check/build pass.
 2. Confirm `TURNSTILE_SECRET_KEY` remains configured in Supabase Edge Function secrets.
-3. Run a production build and inspect the generated TanStack route tree for `/admin`.
-4. Test administrator login, order listing, status changes, Turnstile verification, and one explicitly authorized test order.
-5. Reconcile the migration-history drift before any future schema deployment.
-6. Do not merge or publish until the owner has reviewed and explicitly approved the changes.
+3. Test administrator login, order listing, status changes, Turnstile verification, and one explicitly authorized test order.
+4. Reconcile the migration-history drift before any future schema deployment.
+5. Do not merge or publish until the owner has reviewed and explicitly approved the changes.
 
 ## Not implemented
 
