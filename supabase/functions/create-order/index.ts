@@ -25,6 +25,7 @@ type OrderInput = {
   payment_condition?: string | null;
   notes?: string | null;
   items: Array<{ product_name: string; keg_size: number; quantity: number }>;
+  turnstile_token?: string;
 };
 
 const json = (body: unknown, status = 200) =>
@@ -40,6 +41,12 @@ Deno.serve(async (request) => {
   const origin = request.headers.get("origin");
   if (origin !== "https://www.herragnesteresina.com.br") {
     return json({ error: "Origem não autorizada." }, 403);
+  }
+
+  // Fail closed until Cloudflare Turnstile is configured for the public order form.
+  const turnstileSecret = Deno.env.get("TURNSTILE_SECRET_KEY");
+  if (!turnstileSecret) {
+    return json({ error: "A proteção de segurança do formulário ainda está sendo configurada. Entre em contato pelo WhatsApp." }, 503);
   }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
@@ -82,6 +89,23 @@ Deno.serve(async (request) => {
   }
   if (!["Pix", "Cartão de crédito", "Cartão de débito"].includes(input.payment_method)) {
     return json({ error: "Forma de pagamento inválida." }, 400);
+  }
+
+  if (!input.turnstile_token || input.turnstile_token.length > 2048) {
+    return json({ error: "Confirme a verificação de segurança." }, 400);
+  }
+  const verificationBody = new URLSearchParams({
+    secret: turnstileSecret,
+    response: input.turnstile_token,
+  });
+  const verificationResponse = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: verificationBody,
+  });
+  const verification = await verificationResponse.json().catch(() => ({ success: false }));
+  if (!verificationResponse.ok || verification.success !== true) {
+    return json({ error: "A verificação de segurança falhou. Atualize a página e tente novamente." }, 403);
   }
   const paymentCondition = input.payment_method === "Cartão de crédito"
     ? (input.payment_condition === "Até 3x" ? "Até 3x" : "Crédito à vista")
