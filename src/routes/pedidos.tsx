@@ -61,7 +61,7 @@ function Pedidos() {
     if (pendentes.length > 0) {
       setCamposPendentes(pendentes);
       const ids: Record<string, string> = { "Nome completo": "campo-nome", "WhatsApp": "campo-telefone", "Endereço completo": "campo-endereco", "Ponto de referência": "campo-referencia", "Data desejada": "campo-data", "Horário desejado": "campo-horario" };
-      const elemento = document.getElementById(ids[pendentes[0]]);
+      const elemento = document.getElementById(ids[pendentes[0]!]);
       elemento?.scrollIntoView({ behavior: "smooth", block: "center" });
       window.setTimeout(() => elemento?.focus({ preventScroll: true }), 450);
       return;
