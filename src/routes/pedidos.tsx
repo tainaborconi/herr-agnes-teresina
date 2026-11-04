@@ -91,7 +91,6 @@ function Pedidos() {
         headers: {
           "Content-Type": "application/json",
           apikey: supabaseKey,
-          Authorization: `Bearer ${supabaseKey}`,
         },
         body: JSON.stringify({
           customer_name: nome.trim(),
