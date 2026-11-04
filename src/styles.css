@@ -179,33 +179,36 @@
 .testimonial-card {
   display: flex;
   flex: 0 0 340px;
-  min-height: 230px;
+  min-height: 190px;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 1.75rem;
-  border: 1px solid color-mix(in oklab, var(--color-gold) 38%, transparent);
+  padding: 1rem 1.25rem;
+  border: 0;
   border-radius: var(--radius-lg);
-  background: color-mix(in oklab, var(--color-background) 18%, transparent);
-  box-shadow: 0 12px 30px oklch(0.1 0.04 25 / 0.28);
+  background: oklch(0.08 0.02 25 / 0.22);
+  box-shadow: none;
+  opacity: 0.78;
 }
 .testimonial-quote {
   color: var(--color-gold);
+  opacity: 0.7;
   font-family: Georgia, serif;
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   line-height: 0.8;
 }
 .testimonial-card blockquote {
   flex: 1;
-  padding: 1rem 0;
-  font-size: 1rem;
-  line-height: 1.7;
+  padding: 0.6rem 0;
+  color: color-mix(in oklab, var(--color-foreground) 82%, transparent);
+  font-size: 0.92rem;
+  line-height: 1.65;
 }
 .testimonial-card figcaption {
-  color: var(--color-gold);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  color: color-mix(in oklab, var(--color-gold) 85%, transparent);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 @keyframes testimonial-scroll {
