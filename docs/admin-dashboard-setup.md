@@ -27,7 +27,7 @@ As tabelas `profiles`, `orders` e `order_items`, as políticas RLS e o perfil ad
 
 1. Confirmar que o site Turnstile do Cloudflare está configurado para o hostname `www.herragnesteresina.com.br`.
 2. Configurar o segredo como `TURNSTILE_SECRET_KEY` nos secrets do Supabase.
-3. Configurar a chave pública como `VITE_TURNSTILE_SITE_KEY` nas variáveis de ambiente de build/deploy do site e reconstruir o frontend.
+3. A URL do Supabase, a chave pública e a site key do Turnstile já estão centralizadas em `src/lib/supabase-config.ts`; não é necessário cadastrar variáveis públicas de ambiente para esses três valores.
 4. Confirmar que a URL pública do site é `https://www.herragnesteresina.com.br`.
 5. Testar login, consulta de pedidos, alteração de status e envio de um pedido de teste.
 6. Só então avaliar a publicação/merge para `lovable-sync`, com autorização explícita da proprietária.
