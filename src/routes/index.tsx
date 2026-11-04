@@ -164,6 +164,20 @@ function Index() {
             <Link to="/calculadora" className="btn-outline-gold"><Calculator size={16} /> Calcular meu chopp</Link>
           </div>
         </div>
+        <div className="mx-auto max-w-6xl overflow-hidden px-5 pb-12 pt-2">
+          <p className="testimonial-intro mb-6 text-center">Experiências reais de quem escolheu a HERR AGNES Teresina para brindar.</p>
+          <div className="testimonial-marquee" aria-label="Depoimentos de clientes">
+            <div className="testimonial-track">
+              {[...DEPOIMENTOS, ...DEPOIMENTOS].map((depoimento, index) => (
+                <figure key={`${depoimento.nome}-${index}`} className="testimonial-card">
+                  <span aria-hidden="true" className="testimonial-quote">“</span>
+                  <blockquote>{depoimento.texto}</blockquote>
+                  <figcaption>{depoimento.nome}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="border-y">
@@ -192,22 +206,7 @@ function Index() {
         </div>
       </section>
 
-      <section className="testimonials-section">
-        <div className="mx-auto max-w-6xl overflow-hidden px-5 pb-12 pt-2">
-          <p className="mb-6 text-center text-xs tracking-wide text-muted-foreground">Experiências reais de quem escolheu a HERR AGNES Teresina para brindar.</p>
-          <div className="testimonial-marquee" aria-label="Depoimentos de clientes">
-            <div className="testimonial-track">
-              {[...DEPOIMENTOS, ...DEPOIMENTOS].map((depoimento, index) => (
-                <figure key={`${depoimento.nome}-${index}`} className="testimonial-card">
-                  <span aria-hidden="true" className="testimonial-quote">“</span>
-                  <blockquote>{depoimento.texto}</blockquote>
-                  <figcaption>{depoimento.nome}</figcaption>
-                </figure>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+
 
 
       <section className="section-wine">
