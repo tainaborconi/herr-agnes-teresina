@@ -230,3 +230,17 @@
   font-weight: 400;
   letter-spacing: 0.01em;
 }
+
+
+/* Mesmo brilho neon pulsante da página inicial no botão de envio do pedido */
+.pedidos-whatsapp-neon {
+  animation: home-button-neon 2.4s ease-in-out infinite;
+}
+.pedidos-whatsapp-neon:hover {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pedidos-whatsapp-neon {
+    animation: none;
+  }
+}
