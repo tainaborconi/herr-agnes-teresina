@@ -192,14 +192,8 @@ function Index() {
         </div>
       </section>
 
-
-      <section className="section-wine testimonials-section" aria-labelledby="depoimentos-title">
-        <div className="mx-auto max-w-6xl overflow-hidden px-5 py-20">
-          <div className="mb-10 text-center">
-            <p className="eyebrow">Quem já brindou com a Agnes</p>
-            <h2 id="depoimentos-title" className="mt-3 text-4xl">A opinião de quem já pediu</h2>
-            <p className="mt-3 text-muted-foreground">Experiências reais de quem escolheu a HERR AGNES para brindar.</p>
-          </div>
+        <div className="mx-auto max-w-6xl overflow-hidden px-5 pb-12 pt-2">
+          <p className="mb-6 text-center text-xs tracking-wide text-muted-foreground">Experiências reais de quem escolheu a HERR AGNES Teresina para brindar.</p>
           <div className="testimonial-marquee" aria-label="Depoimentos de clientes">
             <div className="testimonial-track">
               {[...DEPOIMENTOS, ...DEPOIMENTOS].map((depoimento, index) => (
@@ -213,6 +207,7 @@ function Index() {
           </div>
         </div>
       </section>
+
 
       <section className="section-wine">
         <div className="mx-auto max-w-6xl px-5 py-20">
