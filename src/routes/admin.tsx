@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase-config";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { LogOut, RefreshCw, ShieldCheck, ClipboardList } from "lucide-react";
 
@@ -44,8 +45,7 @@ type AuthSession = {
   expires_at?: number;
 };
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+const SUPABASE_KEY = SUPABASE_PUBLISHABLE_KEY;
 const SESSION_KEY = "herr-agnes-admin-session";
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
