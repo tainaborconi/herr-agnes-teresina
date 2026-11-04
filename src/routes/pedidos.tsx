@@ -252,17 +252,6 @@ function Pedidos() {
         />
       </section>
 
-      <section className="border-b border-[#e5e5e0] bg-[#f7f7f5] text-[#171717]">
-        <div className="mx-auto max-w-6xl px-5 py-14 md:py-20">
-          <p className="max-w-2xl text-sm leading-relaxed text-[#686868] md:text-base">Monte seu pedido em poucos passos. Escolha os sabores, informe onde e quando deseja receber e envie tudo pelo WhatsApp. É rápido e fácil!</p>
-          <div className="mt-7 flex flex-wrap gap-3 text-xs text-[#686868]">
-            <span className="rounded-full border px-4 py-2">30L e 50L</span>
-            <span className="rounded-full border px-4 py-2">Chopeira elétrica inclusa</span>
-            <span className="rounded-full border px-4 py-2">Confirmação pela equipe</span>
-          </div>
-        </div>
-      </section>
-
       <section className="bg-[#f7f7f5] text-[#171717]"><div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 lg:grid-cols-[1.5fr_0.8fr] lg:py-16">
         <div className="space-y-10">
           <div>
