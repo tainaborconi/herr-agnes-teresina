@@ -223,9 +223,6 @@
   .testimonial-track { animation: none; }
   .testimonial-marquee { overflow-x: auto; }
 }
-.header-logo-red {
-  filter: brightness(0) saturate(100%) invert(18%) sepia(91%) saturate(2880%) hue-rotate(337deg) brightness(88%) contrast(105%);
-}
 
 .testimonial-intro {
   color: var(--color-red-soft);
