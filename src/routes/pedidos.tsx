@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, CheckCircle2, ChevronDown, Minus, Plus, ShoppingBag } from "lucide-react";
 import { whatsappLink } from "@/lib/site";
 
@@ -27,6 +27,65 @@ const fieldClass = "mt-2 w-full rounded-md border border-[#d7d7d2] bg-white px-3
 
 type Item = { sabor: string; tamanho: 30 | 50; quantidade: number };
 
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (container: HTMLElement, options: {
+        sitekey: string;
+        action: string;
+        callback: (token: string) => void;
+        "expired-callback"?: () => void;
+        "error-callback"?: () => void;
+      }) => string;
+      remove: (widgetId: string) => void;
+    };
+  }
+}
+
+function TurnstileWidget({ siteKey, onToken }: { siteKey: string; onToken: (token: string) => void }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let widgetId: string | undefined;
+    let cancelled = false;
+
+    const renderWidget = () => {
+      if (cancelled || !containerRef.current || !window.turnstile || widgetId) return;
+      widgetId = window.turnstile.render(containerRef.current, {
+        sitekey: siteKey,
+        action: "order",
+        callback: onToken,
+        "expired-callback": () => onToken(""),
+        "error-callback": () => onToken(""),
+      });
+    };
+
+    if (window.turnstile) {
+      renderWidget();
+    } else {
+      let script = document.getElementById("cloudflare-turnstile") as HTMLScriptElement | null;
+      if (!script) {
+        script = document.createElement("script");
+        script.id = "cloudflare-turnstile";
+        script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+      script.addEventListener("load", renderWidget);
+      if (script.dataset.loaded === "true") renderWidget();
+      script.addEventListener("load", () => { script!.dataset.loaded = "true"; }, { once: true });
+    }
+
+    return () => {
+      cancelled = true;
+      if (widgetId && window.turnstile) window.turnstile.remove(widgetId);
+    };
+  }, [siteKey, onToken]);
+
+  return <div ref={containerRef} className="mt-3 min-h-[65px]" />;
+}
+
 function Pedidos() {
   const [itens, setItens] = useState<Item[]>([{ sabor: "Pilsen", tamanho: 30, quantidade: 1 }]);
   const [nome, setNome] = useState("");
@@ -41,6 +100,8 @@ function Pedidos() {
   const [camposPendentes, setCamposPendentes] = useState<string[]>([]);
   const [enviando, setEnviando] = useState(false);
   const [erroEnvio, setErroEnvio] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined;
 
   const total = useMemo(() => itens.reduce((sum, item) => {
     const produto = CATALOGO.find((p) => p.nome === item.sabor)!;
@@ -53,6 +114,10 @@ function Pedidos() {
 
   const enviarPedido = async () => {
     if (enviando) return;
+    if (!turnstileSiteKey || !turnstileToken) {
+      setErroEnvio("Confirme a verificação de segurança antes de enviar o pedido.");
+      return;
+    }
     const pendentes: string[] = [];
     if (!nome.trim()) pendentes.push("Nome completo");
     if (!telefone.trim()) pendentes.push("WhatsApp");
@@ -102,6 +167,7 @@ function Pedidos() {
           payment_method: pagamento,
           payment_condition: pagamento === "Cartão de crédito" ? condicaoCartao : null,
           notes: observacoes.trim() || null,
+          turnstile_token: turnstileToken,
           items: itens.map((item) => ({
             product_name: item.sabor,
             keg_size: item.tamanho,
@@ -270,6 +336,14 @@ function Pedidos() {
               <p className="mt-3 text-xs leading-relaxed text-[#686868]">No parcelamento em até 3x, será aplicado o acréscimo da máquina de cartão. O valor final será informado pela equipe.</p>
             </div>}
             <label className="mt-4 block text-sm">Observações <span className="text-[#686868]">(opcional)</span><textarea className={fieldClass} rows={3} value={observacoes} onChange={(e) => setObservacoes(e.target.value)} placeholder="Alguma informação importante sobre seu pedido?"/></label>
+            <div className="mt-5 rounded-lg border border-[#deded9] bg-white p-4">
+              <p className="text-sm font-semibold">Verificação de segurança</p>
+              {turnstileSiteKey ? (
+                <TurnstileWidget siteKey={turnstileSiteKey} onToken={setTurnstileToken} />
+              ) : (
+                <p className="mt-2 text-xs leading-relaxed text-[#686868]">A verificação de segurança está sendo configurada. O envio ficará disponível assim que a equipe concluir essa etapa.</p>
+              )}
+            </div>
           </div>
         </div>
 
@@ -286,7 +360,7 @@ function Pedidos() {
             <div className="mt-5 flex items-end justify-between border-t pt-5"><span className="text-sm text-[#686868]">Total dos produtos</span><strong className="text-2xl text-[#941b25]">{money(total)}</strong></div>
             <p className="mt-3 text-xs leading-relaxed text-[#686868]">Valor dos barris com chopeira elétrica e kit de extração inclusos. A equipe confirmará a entrega e as condições finais pelo WhatsApp.</p>
             {erroEnvio && <p role="alert" className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{erroEnvio}</p>}
-            <button type="button" onClick={() => void enviarPedido()} disabled={enviando} className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-[#941b25] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-wait disabled:opacity-60">{enviando ? "Registrando pedido..." : "Enviar pedido pelo WhatsApp"}</button>
+            <button type="button" onClick={() => void enviarPedido()} disabled={enviando || !turnstileSiteKey || !turnstileToken} className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-[#941b25] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-wait disabled:opacity-60">{enviando ? "Registrando pedido..." : "Enviar pedido pelo WhatsApp"}</button>
             <p className="mt-3 text-center text-[11px] leading-relaxed text-[#686868]">Você ainda poderá revisar as informações antes de enviar a mensagem.</p>
           </div>
           <div className="mt-4 rounded-lg border p-5 text-sm text-[#686868]"><p className="font-semibold text-[#171717]">Atendemos Teresina, Timon e região.</p><p className="mt-1">A entrega será confirmada pela nossa equipe.</p></div>
