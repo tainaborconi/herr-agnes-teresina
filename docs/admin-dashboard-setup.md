@@ -10,7 +10,7 @@
 
 ## Implantação da Edge Function
 
-A Edge Function `create-order` já está implantada e ativa no projeto Supabase `efdgljkcrngtaztazxgb` (versão 3). A configuração em `supabase/config.toml` marca a função como pública na camada de gateway; a própria função valida origem, método, campos, catálogo, quantidades e o token Turnstile.
+A Edge Function `create-order` já está implantada e ativa no projeto Supabase `efdgljkcrngtaztazxgb` (versão 4). A configuração em `supabase/config.toml` marca a função como pública na camada de gateway; a própria função valida origem, método, campos, catálogo, quantidades e o token Turnstile.
 
 A função usa as variáveis de ambiente gerenciadas pelo Supabase:
 - `SUPABASE_URL`
@@ -21,7 +21,7 @@ A função usa as variáveis de ambiente gerenciadas pelo Supabase:
 
 A função permanece em modo de bloqueio seguro até que o segredo Turnstile seja configurado. Sem ele, a função responde com erro e não grava pedidos. A validação de cabeçalho Origin, isoladamente, não é proteção antiabuso suficiente.
 
-A migração `20261104000000_initial_orders.sql` e a criação do perfil administrador já foram aplicadas anteriormente no projeto Supabase. Não execute a migração novamente manualmente sem conferir o estado do banco.
+As tabelas `profiles`, `orders` e `order_items`, as políticas RLS e o perfil administrador já existem no projeto. Atenção: o histórico remoto de migrações registra a migração de endurecimento, mas não registra `20261104000000_initial_orders.sql`. A estrutura existe, porém há divergência entre o schema e o histórico. A migração inicial foi tornada idempotente para reduzir risco, mas não execute `db push` nem reaplique migrações até reconciliar o histórico com o schema existente.
 
 ## Antes de publicar
 
