@@ -61,6 +61,7 @@ export interface FileRoutesByTo {
   '/contato': typeof ContatoRoute
   '/pedidos': typeof PedidosRoute
   '/sabores': typeof SaboresRoute
+  '/admin': typeof AdminRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
