@@ -104,6 +104,16 @@ function Pedidos() {
       "",
       "*A data, o horário e as condições de entrega estão sujeitos à confirmação da equipe HERR AGNES.*"
     ].filter((linha) => linha !== null).join("\n");
+    // Registra o pedido enviado ao WhatsApp como Lead, com o valor calculado no site.
+    const pixelWindow = window as Window & {
+      fbq?: (...args: (string | Record<string, unknown>)[]) => void;
+    };
+    pixelWindow.fbq?.("track", "Lead", {
+      value: Number(total.toFixed(2)),
+      currency: "BRL",
+      order_id: String(numeroPedido),
+    });
+
     window.open(whatsappLink(mensagem), "_blank", "noopener,noreferrer");
   };
 
