@@ -56,7 +56,7 @@ export function ChoppCarousel({ slides }: { slides: CarouselSlide[] }) {
             alt={s.alt}
             loading={i === 0 ? "eager" : "lazy"}
             aria-hidden={i !== indice}
-            style={{ objectPosition: "40% center" }}
+            style={{ objectPosition: "left center" }}
             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${i === indice ? "opacity-100" : "opacity-0"}`}
           />
         ))}
