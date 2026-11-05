@@ -15,15 +15,6 @@ export const Route = createFileRoute("/pedidos")({
   component: Pedidos,
 });
 
-const CATALOGO = [
-  { nome: "Pilsen", p30: 499, p50: 779, descricao: "Leve, dourado e refrescante." },
-  { nome: "Puro Malte", p30: 565, p50: 889, descricao: "Encorpado e equilibrado." },
-  { nome: "Agnes 08 Zero Glúten", p30: 575, p50: 899, descricao: "Todo o sabor, sem glúten." },
-  { nome: "IPA", p30: 669, p50: 1099, descricao: "Aromático e com amargor marcante." },
-  { nome: "Munich", p30: 649, p50: 1059, descricao: "Maltado, intenso e especial." },
-  { nome: "Red Wein (Chopp de Vinho)", p30: 669, p50: 1099, descricao: "Suave e frutado." },
-];
-
 const money = (value: number) => value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 const fieldClass = "mt-2 w-full rounded-md border border-[#d7d7d2] bg-white px-3 py-3 text-sm text-[#171717] outline-none transition placeholder:text-[#92928d] focus:border-[#941b25] focus:ring-2 focus:ring-[#941b25]/15";
 

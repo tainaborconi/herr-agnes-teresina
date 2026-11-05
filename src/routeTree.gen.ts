@@ -10,16 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as CalculadoraRouteImport } from './routes/calculadora'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as PedidosRouteImport } from './routes/pedidos'
-import { Route as SaboresRouteImport } from './routes/sabores'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SaboresRouteImport } from './routes/sabores'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CalculadoraRoute = CalculadoraRouteImport.update({
@@ -37,66 +42,83 @@ const PedidosRoute = PedidosRouteImport.update({
   path: '/pedidos',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SaboresRoute = SaboresRouteImport.update({
-  id: '/sabores',
-  path: '/sabores',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SaboresRoute = SaboresRouteImport.update({
+  id: '/sabores',
+  path: '/sabores',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/calculadora': typeof CalculadoraRoute
   '/contato': typeof ContatoRoute
   '/pedidos': typeof PedidosRoute
-  '/sabores': typeof SaboresRoute
-  '/admin': typeof AdminRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sabores': typeof SaboresRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/calculadora': typeof CalculadoraRoute
   '/contato': typeof ContatoRoute
   '/pedidos': typeof PedidosRoute
-  '/sabores': typeof SaboresRoute
-  '/admin': typeof AdminRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sabores': typeof SaboresRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/admin': typeof AdminRoute
-  '/reset-password': typeof ResetPasswordRoute
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/calculadora': typeof CalculadoraRoute
   '/contato': typeof ContatoRoute
   '/pedidos': typeof PedidosRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sabores': typeof SaboresRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/calculadora' | '/contato' | '/pedidos' | '/sabores' | '/admin' | '/reset-password'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/calculadora'
+    | '/contato'
+    | '/pedidos'
+    | '/reset-password'
+    | '/sabores'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/calculadora' | '/contato' | '/pedidos' | '/sabores' | '/admin' | '/reset-password'
-  id: '__root__' | '/admin' | '/reset-password' | '/' | '/calculadora' | '/contato' | '/pedidos' | '/sabores'
+  to:
+    | '/'
+    | '/admin'
+    | '/calculadora'
+    | '/contato'
+    | '/pedidos'
+    | '/reset-password'
+    | '/sabores'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/calculadora'
+    | '/contato'
+    | '/pedidos'
+    | '/reset-password'
+    | '/sabores'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   CalculadoraRoute: typeof CalculadoraRoute
   ContatoRoute: typeof ContatoRoute
   PedidosRoute: typeof PedidosRoute
-  SaboresRoute: typeof SaboresRoute
-  AdminRoute: typeof AdminRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SaboresRoute: typeof SaboresRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -106,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/calculadora': {
@@ -129,20 +158,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PedidosRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sabores': {
-      id: '/sabores'
-      path: '/sabores'
-      fullPath: '/sabores'
-      preLoaderRoute: typeof SaboresRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -150,17 +165,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sabores': {
+      id: '/sabores'
+      path: '/sabores'
+      fullPath: '/sabores'
+      preLoaderRoute: typeof SaboresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   CalculadoraRoute: CalculadoraRoute,
   ContatoRoute: ContatoRoute,
   PedidosRoute: PedidosRoute,
-  SaboresRoute: SaboresRoute,
-  AdminRoute: AdminRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SaboresRoute: SaboresRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
