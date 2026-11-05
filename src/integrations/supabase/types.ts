@@ -14,16 +14,137 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      order_items: {
+        Row: {
+          flavor: string
+          id: string
+          line_total: number
+          order_id: string
+          quantity: number
+          size_liters: number
+          unit_price: number
+        }
+        Insert: {
+          flavor: string
+          id?: string
+          line_total: number
+          order_id: string
+          quantity: number
+          size_liters: number
+          unit_price: number
+        }
+        Update: {
+          flavor?: string
+          id?: string
+          line_total?: number
+          order_id?: string
+          quantity?: number
+          size_liters?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          address: string
+          card_condition: string | null
+          created_at: string
+          customer_name: string
+          delivery_date: string
+          delivery_time: string
+          final_value: number | null
+          id: string
+          idempotency_key: string
+          notes: string | null
+          order_number: number
+          payment_method: string
+          phone: string
+          reference: string
+          status: string
+          subtotal: number
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          card_condition?: string | null
+          created_at?: string
+          customer_name: string
+          delivery_date: string
+          delivery_time: string
+          final_value?: number | null
+          id?: string
+          idempotency_key: string
+          notes?: string | null
+          order_number?: number
+          payment_method: string
+          phone: string
+          reference: string
+          status?: string
+          subtotal: number
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          card_condition?: string | null
+          created_at?: string
+          customer_name?: string
+          delivery_date?: string
+          delivery_time?: string
+          final_value?: number | null
+          id?: string
+          idempotency_key?: string
+          notes?: string | null
+          order_number?: number
+          payment_method?: string
+          phone?: string
+          reference?: string
+          status?: string
+          subtotal?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +271,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
