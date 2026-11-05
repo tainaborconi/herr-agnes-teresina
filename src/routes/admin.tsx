@@ -81,6 +81,7 @@ function AdminPage() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [sendingRecovery, setSendingRecovery] = useState(false);
+  const [changingEmail, setChangingEmail] = useState(false);
 
   const headers = useMemo(
     () => ({
@@ -251,6 +252,38 @@ function AdminPage() {
     }
   }
 
+  async function changeAdminEmail() {
+    if (!session) return;
+    const confirmed = window.confirm(
+      "Deseja alterar o e-mail de acesso do painel para tainalimaborconi@gmail.com? Sua senha atual será mantida."
+    );
+    if (!confirmed) return;
+
+    setChangingEmail(true);
+    setError("");
+    setNotice("");
+    try {
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/admin-change-email`, {
+        method: "POST",
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({}),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || "Não foi possível alterar o e-mail.");
+      }
+      setAdminName(result.email || "tainalimaborconi@gmail.com");
+      setNotice("E-mail de acesso atualizado para tainalimaborconi@gmail.com. Sua senha continua a mesma.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Não foi possível alterar o e-mail.");
+    } finally {
+      setChangingEmail(false);
+    }
+  }
+
   async function signOut() {
     if (session) {
       await fetch(`${SUPABASE_URL}/auth/v1/logout`, {
@@ -374,6 +407,7 @@ function AdminPage() {
             <p className="mt-1 text-sm text-[#6c6258]">Olá, {adminName}. Você tem {pendingCount} pedido(s) aguardando atendimento.</p>
           </div>
           <div className="flex gap-2">
+            <button onClick={() => void changeAdminEmail()} disabled={changingEmail} className="inline-flex items-center gap-2 rounded-md border border-[#d8cec1] bg-white px-3 py-2 text-sm font-medium hover:bg-[#f2ece4] disabled:opacity-60"><Mail size={16} /> {changingEmail ? "Alterando..." : "Alterar e-mail"}</button>
             <button onClick={refreshOrders} disabled={loading} className="inline-flex items-center gap-2 rounded-md border border-[#d8cec1] bg-white px-3 py-2 text-sm font-medium hover:bg-[#f2ece4] disabled:opacity-60"><RefreshCw size={16} /> Atualizar</button>
             <button onClick={signOut} className="inline-flex items-center gap-2 rounded-md bg-[#2b211d] px-3 py-2 text-sm font-medium text-white hover:bg-[#46362e]"><LogOut size={16} /> Sair</button>
           </div>
