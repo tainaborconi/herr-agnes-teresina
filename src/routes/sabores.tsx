@@ -2,12 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHero } from "@/components/Layout";
 import { SABORES } from "@/lib/site";
 import { ChoppCarousel, type CarouselSlide } from "@/components/ChoppCarousel";
-import choppVinho from "@/assets/RED WEIN - Vert.png";
-import ipa from "@/assets/IPA - Vert.png";
-import munich from "@/assets/MUNICH- STORIES  -Vert.png";
-import pilsen from "@/assets/Pilsen  - VBERTI.png";
-import puroMalte from "@/assets/PURO MALTE - VERT.png";
-import semGluten from "@/assets/SEM GRU - Vert.png";
+import choppVinho from "@/assets/RED cortada.jpg";
+import ipa from "@/assets/IPA cortada.jpg";
+import munich from "@/assets/MUNICH cortada.jpg";
+import pilsen from "@/assets/PILSEI cortada.jpg";
+import puroMalte from "@/assets/PURO cortada.jpg";
+import semGluten from "@/assets/08 cortada.jpg";
 
 const CARROSSEL: CarouselSlide[] = [
   { src: choppVinho, alt: "Chopp Vinho HERR AGNES", titulo: "Chopp Vinho", detalhe: "Uma opção marcante para quem gosta de sabores especiais." },
