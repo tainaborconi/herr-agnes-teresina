@@ -230,14 +230,15 @@ function AdminPage() {
     setError("");
     setNotice("");
     try {
-      const response = await fetch(`${SUPABASE_URL}/auth/v1/recover`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          email: email.trim(),
-          redirect_to: `${window.location.origin}/reset-password`,
-        }),
-      });
+      const redirectTo = `${window.location.origin}/reset-password`;
+      const response = await fetch(
+        `${SUPABASE_URL}/auth/v1/recover?redirect_to=${encodeURIComponent(redirectTo)}`,
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ email: email.trim() }),
+        },
+      );
       if (!response.ok) {
         const body = await response.json().catch(() => ({}));
         throw new Error(body.msg || body.message || "Não foi possível enviar o e-mail de recuperação.");
