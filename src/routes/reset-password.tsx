@@ -25,16 +25,35 @@ function ResetPasswordPage() {
 
   useEffect(() => {
     let active = true;
-    void supabase.auth.getSession().then(({ data, error: sessionError }) => {
-      if (!active) return;
-      setValidRecovery(Boolean(data.session) && !sessionError);
-      setChecking(false);
-      if (sessionError) setError("O link de redefinição é inválido ou expirou. Solicite um novo link.");
-    }).catch(() => {
-      if (!active) return;
-      setError("Não foi possível validar o link. Solicite um novo e-mail de recuperação.");
-      setChecking(false);
-    });
+
+    async function validateRecoveryLink() {
+      try {
+        // Supabase PKCE recovery emails return to this route with a one-time code.
+        // Exchange it before checking the session, otherwise the page appears unauthenticated.
+        const code = new URLSearchParams(window.location.search).get("code");
+        if (code) {
+          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+          if (exchangeError) throw exchangeError;
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        const { data, error: sessionError } = await supabase.auth.getSession();
+        if (!active) return;
+        setValidRecovery(Boolean(data.session) && !sessionError);
+        if (sessionError) {
+          setError("O link de redefinição é inválido ou expirou. Solicite um novo link.");
+        } else if (!data.session) {
+          setError("O link de redefinição é inválido ou expirou. Solicite um novo link.");
+        }
+      } catch {
+        if (!active) return;
+        setError("Não foi possível validar o link. Solicite um novo e-mail de recuperação.");
+      } finally {
+        if (active) setChecking(false);
+      }
+    }
+
+    void validateRecoveryLink();
     return () => {
       active = false;
     };
