@@ -56,13 +56,13 @@ export function ChoppCarousel({ slides }: { slides: CarouselSlide[] }) {
             alt={s.alt}
             loading={i === 0 ? "eager" : "lazy"}
             aria-hidden={i !== indice}
-            style={{ objectPosition: "left center" }}
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${i === indice ? "opacity-100" : "opacity-0"}`}
+            style={{ objectPosition: "center center" }}
+            className={`absolute inset-0 h-full w-full object-contain sm:object-cover transition-opacity duration-500 ${i === indice ? "opacity-100" : "opacity-0"}`}
           />
         ))}
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-overlay via-overlay/60 to-transparent p-5 pt-16 sm:p-7 sm:pt-20">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden bg-gradient-to-t from-overlay via-overlay/60 to-transparent p-5 pt-16 sm:block sm:p-7 sm:pt-20">
         <p className="eyebrow">{atual.titulo}</p>
         <p className="mt-1 max-w-xl text-sm font-semibold sm:text-base">{atual.detalhe}</p>
       </div>
