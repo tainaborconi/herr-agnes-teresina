@@ -28,26 +28,60 @@ function ResetPasswordPage() {
 
     async function validateRecoveryLink() {
       try {
-        // Supabase PKCE recovery emails return to this route with a one-time code.
-        // Exchange it before checking the session, otherwise the page appears unauthenticated.
-        const code = new URLSearchParams(window.location.search).get("code");
+        const url = new URL(window.location.href);
+        const query = url.searchParams;
+        const hash = new URLSearchParams(url.hash.replace(/^#/, ""));
+
+        const authError =
+          query.get("error_description") ||
+          hash.get("error_description") ||
+          query.get("error");
+        if (authError) {
+          throw new Error(decodeURIComponent(authError.replace(/\+/g, " ")));
+        }
+
+        // Supabase may return a PKCE code, a token_hash from the email
+        // template, or an access/refresh token pair in the URL fragment.
+        const code = query.get("code");
+        const tokenHash = query.get("token_hash");
+        const accessToken = hash.get("access_token");
+        const refreshToken = hash.get("refresh_token");
+        const recoveryType = query.get("type") || hash.get("type");
+
         if (code) {
           const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
           if (exchangeError) throw exchangeError;
-          window.history.replaceState({}, document.title, window.location.pathname);
+        } else if (tokenHash) {
+          const { error: verifyError } = await supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: "recovery",
+          });
+          if (verifyError) throw verifyError;
+        } else if (accessToken && refreshToken) {
+          const { error: sessionError } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+          if (sessionError) throw sessionError;
+        } else if (recoveryType === "recovery") {
+          throw new Error("O e-mail não trouxe um token de recuperação válido.");
         }
 
         const { data, error: sessionError } = await supabase.auth.getSession();
         if (!active) return;
-        setValidRecovery(Boolean(data.session) && !sessionError);
-        if (sessionError) {
-          setError("O link de redefinição é inválido ou expirou. Solicite um novo link.");
-        } else if (!data.session) {
-          setError("O link de redefinição é inválido ou expirou. Solicite um novo link.");
+
+        const isRecoverySession = Boolean(data.session) && !sessionError;
+        setValidRecovery(isRecoverySession);
+        if (!isRecoverySession) {
+          setError("O link de redefinição é inválido ou expirou. Solicite um novo e-mail.");
+        } else {
+          // Remove one-time credentials from the address bar after establishing the session.
+          window.history.replaceState({}, document.title, window.location.pathname);
         }
-      } catch {
+      } catch (err) {
         if (!active) return;
-        setError("Não foi possível validar o link. Solicite um novo e-mail de recuperação.");
+        setValidRecovery(false);
+        setError(err instanceof Error ? err.message : "Não foi possível validar o link. Solicite um novo e-mail de recuperação.");
       } finally {
         if (active) setChecking(false);
       }
