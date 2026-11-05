@@ -6,3 +6,8 @@
 - [x] Calculadora: sabor do chopp de volta como escolha (não altera a quantidade; vai junto no pedido de orçamento do WhatsApp).
 - [x] Logo da Agnes nos copos das fotos geradas
 - [ ] Carrossel de fotos na seção "Um chopp para cada ocasião" da home (estrutura pronta; aguardando fotos reais da cliente para trocar as temporárias)
+- [ ] Confirmar estado atual das 6 campanhas da conta CA - Herr Agnes Teresina (pix) e responder à cliente
+- [ ] Backend (Lovable Cloud): tabelas orders/order_items, user_roles, RLS, número de pedido sequencial
+- [ ] /pedidos: salvar pedido no banco antes de abrir o WhatsApp, com validação no servidor e anti-duplicidade
+- [ ] /admin: login por e-mail/senha, painel com totais, lista, busca, filtros, detalhes, status e valor final (aguardando e-mail e senha da cliente)
+- [ ] Ocultar Header/Footer/botão WhatsApp dentro do /admin
