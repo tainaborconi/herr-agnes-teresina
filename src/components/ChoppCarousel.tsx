@@ -48,7 +48,7 @@ export function ChoppCarousel({ slides }: { slides: CarouselSlide[] }) {
         if (Math.abs(delta) > 40) irPara(indice + (delta < 0 ? 1 : -1));
       }}
     >
-      <div className="aspect-[4/3] w-full sm:aspect-[16/9]">
+      <div className="relative w-full">
         {slides.map((s, i) => (
           <img
             key={s.src}
@@ -57,7 +57,7 @@ export function ChoppCarousel({ slides }: { slides: CarouselSlide[] }) {
             loading={i === 0 ? "eager" : "lazy"}
             aria-hidden={i !== indice}
             style={{ objectPosition: "center center" }}
-            className={`absolute inset-0 h-full w-full object-contain sm:object-cover transition-opacity duration-500 ${i === indice ? "opacity-100" : "opacity-0"}`}
+            className={`${i === indice ? "relative block h-auto w-full opacity-100" : "absolute inset-0 h-full w-full opacity-0"} object-contain transition-opacity duration-500`}
           />
         ))}
       </div>
