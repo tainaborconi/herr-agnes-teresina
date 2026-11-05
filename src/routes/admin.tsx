@@ -351,6 +351,7 @@ function AdminPage() {
               <input type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} className="rounded-md border border-[#d8cec1] px-3 py-3 outline-none focus:border-[#98733d]" placeholder="Sua senha" />
             </label>
             {error && <p role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+            {notice && <p role="status" className="rounded-md bg-green-50 p-3 text-sm text-green-800">{notice}</p>}
             <button disabled={loading} className="mt-2 rounded-md bg-[#2b211d] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#46362e] disabled:opacity-60">
               {loading ? "Verificando..." : "Entrar no painel"}
             </button>
