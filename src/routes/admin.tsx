@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase-config";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { LogOut, RefreshCw, ShieldCheck, ClipboardList } from "lucide-react";
+import { LogOut, RefreshCw, ShieldCheck, ClipboardList, Mail } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -80,6 +80,7 @@ function AdminPage() {
   const [checking, setChecking] = useState(true);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [sendingRecovery, setSendingRecovery] = useState(false);
 
   const headers = useMemo(
     () => ({
@@ -220,6 +221,35 @@ function AdminPage() {
     }
   }
 
+  async function sendPasswordRecovery() {
+    if (!email.trim()) {
+      setError("Informe seu e-mail para receber o link de redefinição.");
+      return;
+    }
+    setSendingRecovery(true);
+    setError("");
+    setNotice("");
+    try {
+      const response = await fetch(`${SUPABASE_URL}/auth/v1/recover`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          email: email.trim(),
+          redirect_to: `${window.location.origin}/reset-password`,
+        }),
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.msg || body.message || "Não foi possível enviar o e-mail de recuperação.");
+      }
+      setNotice("Se esse e-mail estiver cadastrado, você receberá um link para redefinir a senha.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Não foi possível solicitar a redefinição.");
+    } finally {
+      setSendingRecovery(false);
+    }
+  }
+
   async function signOut() {
     if (session) {
       await fetch(`${SUPABASE_URL}/auth/v1/logout`, {
@@ -325,6 +355,7 @@ function AdminPage() {
               {loading ? "Verificando..." : "Entrar no painel"}
             </button>
           </form>
+          <button type="button" onClick={() => void sendPasswordRecovery()} disabled={sendingRecovery} className="mt-3 inline-flex w-full items-center justify-center gap-2 text-sm font-medium text-[#98733d] hover:underline disabled:opacity-60"><Mail size={16} /> {sendingRecovery ? "Enviando link..." : "Esqueci minha senha"}</button>
           <p className="mt-6 text-center text-xs text-[#8a8076]">Acesso restrito à equipe autorizada.</p>
         </section>
       </main>
