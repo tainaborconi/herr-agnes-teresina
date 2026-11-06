@@ -522,15 +522,15 @@ function AdminPage() {
                 const columnOrders = orders.filter((order) => order.status === column.status);
                 const columnTotal = columnOrders.reduce((sum, order) => sum + Number(order.total || 0), 0);
                 return (
-                  <div key={column.status} onDragOver={(event) => event.preventDefault()} onDrop={() => moveDraggedOrder(column.status)} className={`min-h-[260px] rounded-xl border border-[#e4ddd3] border-t-4 bg-[#eeece8] p-3 ${column.accent}`}>
+                  <div key={column.status} onDragOver={(event) => event.preventDefault()} onDrop={() => moveDraggedOrder(column.status)} className={`crm-column crm-column-${column.status} min-h-[260px] rounded-xl border border-t-4 p-3 ${column.accent}`}>
                     <div className="mb-3 flex items-start justify-between gap-2 px-1">
                       <div><h3 className="text-sm font-semibold">{column.title}</h3><p className="mt-0.5 text-[11px] text-[#81766b]">{column.hint}</p></div>
-                      <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold">{columnOrders.length}</span>
+                      <span className="crm-column-count rounded-full px-2.5 py-1 text-xs font-semibold">{columnOrders.length}</span>
                     </div>
-                    <p className="mb-3 px-1 text-xs text-[#81766b]">{money(columnTotal)} em pedidos</p>
+                    <p className="crm-column-total mb-3 px-1 text-xs">{money(columnTotal)} em pedidos</p>
                     <div className="grid gap-3">
                       {columnOrders.map((order) => (
-                        <article key={order.id} draggable onDragStart={() => setDraggingOrderId(order.id)} onDragEnd={() => setDraggingOrderId(null)} className={`cursor-grab rounded-lg border border-[#e6dfd6] bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing ${draggingOrderId === order.id ? "opacity-50" : ""}`}>
+                        <article key={order.id} draggable onDragStart={() => setDraggingOrderId(order.id)} onDragEnd={() => setDraggingOrderId(null)} className={`crm-column-card cursor-grab rounded-lg border bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing ${draggingOrderId === order.id ? "opacity-50" : ""}`}>
                           <div className="flex items-start justify-between gap-2"><span className="text-[11px] font-semibold uppercase tracking-wider text-[#98733d]">Pedido #{order.order_number}</span><span className="text-sm font-semibold">{money(order.confirmed_total ?? order.total)}</span></div>
                           <h4 className="mt-2 font-semibold leading-snug">{order.customer_name}</h4>
                           <p className="mt-0.5 text-xs text-[#81766b]">{order.customer_phone}</p>
@@ -549,7 +549,7 @@ function AdminPage() {
                           </div>
                         </article>
                       ))}
-                      {columnOrders.length === 0 && <div className="rounded-lg border border-dashed border-[#d5cdc2] px-3 py-8 text-center text-xs text-[#9a9086]">Nenhum pedido nesta etapa</div>}
+                      {columnOrders.length === 0 && <div className="crm-column-empty rounded-lg border border-dashed px-3 py-8 text-center text-xs">Nenhum pedido nesta etapa</div>}
                     </div>
                   </div>
                 );
