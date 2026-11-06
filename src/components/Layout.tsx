@@ -47,17 +47,30 @@ export function Header() {
 export function Footer() {
   return (
     <footer className="border-t bg-ink">
-      <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 md:grid-cols-3">
+      <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <img src={logo.url} alt="HERR AGNES Cervejaria" width={1271} height={1124} loading="lazy" className="h-24 w-auto" />
           <p className="mt-2 text-sm text-muted-foreground">Chopp artesanal em Teresina, Piauí.</p>
         </div>
-        <div className="text-sm text-muted-foreground space-y-2">
+        <nav aria-label="Navegação do rodapé" className="space-y-3 text-sm">
+          <h2 className="font-semibold text-foreground">Navegue pelo site</h2>
+          <ul className="space-y-2 text-muted-foreground">
+            {NAV.map((n) => (
+              <li key={n.to}>
+                <Link to={n.to} activeProps={{ className: "text-gold" }} activeOptions={{ exact: true }} className="transition-colors hover:text-foreground">
+                  {n.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className="space-y-3 text-sm text-muted-foreground">
+          <h2 className="font-semibold text-foreground">Fale com a AGNES</h2>
           <p className="flex items-center gap-2"><MapPin size={14} /> Teresina – PI</p>
           <a href={whatsappLink("Olá!")} target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-foreground"><MessageCircle size={14} /> WhatsApp</a>
           <a href="https://instagram.com/herragnes.teresina" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-foreground"><Instagram size={14} /> @herragnes.teresina</a>
         </div>
-        <p className="text-xs text-muted-foreground md:text-right">Beba com moderação. Venda proibida para menores de 18 anos.</p>
+        <p className="text-xs leading-relaxed text-muted-foreground lg:text-right">Beba com moderação. Venda proibida para menores de 18 anos.</p>
       </div>
     </footer>
   );
