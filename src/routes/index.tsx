@@ -15,7 +15,7 @@ import evFormatura from "@/assets/ev-formatura.jpg";
 import evCorporativo from "@/assets/ev-corporativo.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
-import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
+import vaquejadaPortal from "@/assets/844278410_18173385460463207_2385278971228799515_n.jpg";
 import { useState } from "react";
 import { SABORES, TIPOS_EVENTO, INCLUSO, DURACOES, DURACAO_PADRAO, calcularLitros, sugerirBarris } from "@/lib/site";
 import { ChoppCarousel, type CarouselSlide } from "@/components/ChoppCarousel";
@@ -34,10 +34,9 @@ const EVENTOS: Evento[] = [
     src: oktoberfest.url,
   },
   {
-    nome: "BBQ FEST & BEER – Picos 2026",
-    detalhe: "Chopp AGNES Express no festival de churrasco e street food em Picos.",
-    src: bbqFest.url,
-    pos: "bottom",
+    nome: "23ª Grande Vaquejada Portal da Amazônia",
+    detalhe: "A Agnes marcou presença na 23ª Grande Vaquejada Portal da Amazônia.",
+    src: vaquejadaPortal,
   },
 ];
 
