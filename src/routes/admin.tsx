@@ -472,7 +472,7 @@ function AdminPage() {
                             <p><span className="font-medium">Pagamento:</span> {order.payment_method}</p>
                             <p><span className="font-medium">Itens:</span> {order.order_items?.reduce((sum, item) => sum + Number(item.quantity || 0), 0) ?? 0} unidade(s)</p>
                           </div>
-                          {order.order_items?.length > 0 && <div className="mt-2 rounded-md bg-[#faf8f5] p-2 text-xs text-[#6c6258]">{order.order_items.map((item) => <p key={item.id}>{item.quantity} × {item.product_name} · {item.keg_size}L</p>)}</div>}
+                          {(order.order_items?.length ?? 0) > 0 && <div className="mt-2 rounded-md bg-[#faf8f5] p-2 text-xs text-[#6c6258]">{order.order_items.map((item) => <p key={item.id}>{item.quantity} × {item.product_name} · {item.keg_size}L</p>)}</div>}
                           {order.notes && <p className="mt-2 line-clamp-2 text-xs italic text-[#81766b]">“{order.notes}”</p>}
                           <div className="mt-3 flex items-center justify-between gap-2">
                             <a href={`https://wa.me/${order.customer_phone.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-md bg-[#edf5ed] px-2.5 py-2 text-xs font-semibold text-[#356b43] hover:bg-[#e0eee1]">WhatsApp <span aria-hidden="true">↗</span></a>
