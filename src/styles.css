@@ -244,3 +244,27 @@
     animation: none;
   }
 }
+
+
+/* Entrada suave das seções ao rolar a página (scroll reveal) */
+@media (prefers-reduced-motion: no-preference) {
+  main .agnes-scroll-reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 520ms ease, transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  main .agnes-scroll-reveal.is-visible,
+  main .agnes-scroll-reveal:focus-within {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main .agnes-scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
