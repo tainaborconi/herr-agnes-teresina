@@ -12,6 +12,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import logo from "@/assets/logo.png.asset.json";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header, Footer, WhatsFloat } from "@/components/Layout";
 
@@ -91,6 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;500;600;700&display=swap" },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "preload", as: "image", href: logo.url, fetchPriority: "high" },
     ],
   }),
   shellComponent: RootShell,
