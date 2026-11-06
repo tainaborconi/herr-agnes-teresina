@@ -327,3 +327,83 @@
   outline: 2px solid #c6a36a;
   outline-offset: 2px;
 }
+
+
+/* Pipeline CRM: colunas com cores suaves da identidade HERR AGNES. */
+.crm-column {
+  --crm-surface: #f4efe7;
+  --crm-border: #e4d8c8;
+  --crm-ink: #55483a;
+  --crm-soft: #81766b;
+  --crm-pill: #fffdf9;
+  --crm-card-border: #e9e0d5;
+  --crm-empty-border: #d8cbbb;
+  background: var(--crm-surface);
+  border-color: var(--crm-border);
+  transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.crm-column-pending {
+  --crm-surface: #f5eddf;
+  --crm-border: #e5d0aa;
+  --crm-ink: #775523;
+  --crm-pill: #fff9ed;
+  --crm-card-border: #ead9bb;
+  --crm-empty-border: #ddc79e;
+}
+.crm-column-in_progress {
+  --crm-surface: #eaf0f3;
+  --crm-border: #cbd9e0;
+  --crm-ink: #4d6878;
+  --crm-pill: #f7fbfd;
+  --crm-card-border: #d6e0e5;
+  --crm-empty-border: #c5d4dc;
+}
+.crm-column-confirmed {
+  --crm-surface: #eaf1e9;
+  --crm-border: #cbdcc9;
+  --crm-ink: #4e6b50;
+  --crm-pill: #f7fbf5;
+  --crm-card-border: #d5e2d2;
+  --crm-empty-border: #c4d7c1;
+}
+.crm-column-cancelled {
+  --crm-surface: #f3e9e7;
+  --crm-border: #e2cbc6;
+  --crm-ink: #865b55;
+  --crm-pill: #fff9f8;
+  --crm-card-border: #e8d6d2;
+  --crm-empty-border: #dcc4bf;
+}
+.crm-column h3 { color: var(--crm-ink); }
+.crm-column-count {
+  background: var(--crm-pill);
+  color: var(--crm-ink);
+  box-shadow: inset 0 0 0 1px var(--crm-border);
+}
+.crm-column-total { color: var(--crm-soft); }
+.crm-column-card {
+  border-color: var(--crm-card-border);
+  box-shadow: 0 3px 12px rgb(43 33 29 / 5%);
+}
+.crm-column-empty {
+  border-color: var(--crm-empty-border);
+  color: var(--crm-soft);
+  background: color-mix(in srgb, var(--crm-pill) 48%, transparent);
+}
+.admin-theme-dark .crm-column {
+  --crm-surface: #242321;
+  --crm-border: #51483d;
+  --crm-ink: #e4c99b;
+  --crm-soft: #b7aca0;
+  --crm-pill: #332e28;
+  --crm-card-border: #51483d;
+  --crm-empty-border: #5a5045;
+}
+.admin-theme-dark .crm-column-in_progress { --crm-ink: #b8d0df; }
+.admin-theme-dark .crm-column-confirmed { --crm-ink: #bdd8b9; }
+.admin-theme-dark .crm-column-cancelled { --crm-ink: #dfb8b1; }
+.admin-theme-dark .crm-column-card {
+  background: #2c2a27 !important;
+  color: #f1eee9;
+}
+.admin-theme-dark .crm-column-card [class*="border-t"] { border-color: #49443d; }
