@@ -39,6 +39,32 @@ type Order = {
   created_at: string;
   order_items: OrderItem[];
 };
+type MetaCampaign = {
+  id: string;
+  name: string;
+  spend: number;
+  purchases: number;
+  conversionValue: number;
+  roas: number;
+  impressions: number;
+  clicks: number;
+};
+type MetaInsights = {
+  accountName: string;
+  currency: string;
+  datePreset: string;
+  totals: {
+    spend: number;
+    purchases: number;
+    conversionValue: number;
+    roas: number;
+    impressions: number;
+    clicks: number;
+  };
+  campaigns: MetaCampaign[];
+  fetchedAt: string;
+};
+type MetaPeriod = "last_7d" | "last_30d" | "last_90d" | "this_month" | "last_month";
 type AuthSession = {
   access_token: string;
   refresh_token: string;
@@ -55,10 +81,10 @@ const STATUS_LABEL: Record<OrderStatus, string> = {
   cancelled: "Cancelado",
 };
 
-function money(value: number | string | null | undefined) {
+function money(value: number | string | null | undefined, currency = "BRL") {
   return Number(value ?? 0).toLocaleString("pt-BR", {
     style: "currency",
-    currency: "BRL",
+    currency,
   });
 }
 
@@ -84,6 +110,10 @@ function AdminPage() {
   const [changingEmail, setChangingEmail] = useState(false);
   const [activeTab, setActiveTab] = useState<"crm" | "meta">("crm");
   const [draggingOrderId, setDraggingOrderId] = useState<string | null>(null);
+  const [metaData, setMetaData] = useState<MetaInsights | null>(null);
+  const [metaLoading, setMetaLoading] = useState(false);
+  const [metaError, setMetaError] = useState("");
+  const [metaPeriod, setMetaPeriod] = useState<MetaPeriod>("last_30d");
 
   const headers = useMemo(
     () => ({
@@ -314,6 +344,36 @@ function AdminPage() {
     }
   }
 
+  async function loadMetaInsights(accessToken: string, period: MetaPeriod) {
+    setMetaLoading(true);
+    setMetaError("");
+    try {
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/meta-ads-insights`, {
+        method: "POST",
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ date_preset: period }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(result.error || "Não foi possível consultar os dados da Meta.");
+      }
+      setMetaData(result as MetaInsights);
+    } catch (err) {
+      setMetaError(err instanceof Error ? err.message : "Falha ao carregar os dados da Meta.");
+    } finally {
+      setMetaLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (session && activeTab === "meta") {
+      void loadMetaInsights(session.access_token, metaPeriod);
+    }
+  }, [activeTab, session, metaPeriod]);
+
   async function changeStatus(order: Order, status: OrderStatus) {
     if (!session) return;
     setError("");
@@ -491,22 +551,38 @@ function AdminPage() {
           </>
         ) : (
           <section className="space-y-5">
-            <div><h2 className="text-lg font-semibold">Desempenho das campanhas</h2><p className="text-sm text-[#81766b]">Acompanhe investimento, receita atribuída e retorno dos anúncios que direcionam para o site.</p></div>
-            <div className="grid gap-3 md:grid-cols-3">
-              {[
-                { label: "Investimento no Meta", detail: "Total gasto no período" },
-                { label: "Valor de conversão", detail: "Receita atribuída às campanhas" },
-                { label: "ROAS", detail: "Receita atribuída ÷ investimento" },
-              ].map((metric) => <div key={metric.label} className="rounded-xl border border-[#e4ddd3] bg-white p-5"><p className="text-xs text-[#766b60]">{metric.label}</p><p className="mt-3 text-3xl font-semibold text-[#8c8379]">—</p><p className="mt-1 text-xs text-[#9a9086]">{metric.detail}</p></div>)}
-            </div>
-            <div className="rounded-xl border border-[#e4ddd3] bg-white p-6">
-              <div className="flex items-center gap-3"><div className="rounded-lg bg-[#f2ece4] p-3 text-[#98733d]"><ClipboardList size={22} /></div><div><h3 className="font-semibold">Integração com Meta Ads pendente</h3><p className="text-sm text-[#81766b]">O painel visual já está preparado, mas ainda não está conectado à conta de anúncios.</p></div></div>
-              <div className="mt-5 grid gap-4 border-t border-[#eee7de] pt-5 md:grid-cols-2">
-                <div><p className="text-sm font-semibold">Dados que serão exibidos</p><ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-[#6c6258]"><li>Investimento por campanha e por período</li><li>Compras/conversões atribuídas e valor de conversão</li><li>ROAS geral e por campanha</li><li>Pedidos do site confirmados no CRM</li></ul></div>
-                <div><p className="text-sm font-semibold">Conexão segura</p><p className="mt-2 text-sm leading-6 text-[#6c6258]">A integração será feita pela API oficial da Meta, com credenciais guardadas nos secrets do Supabase — nunca no código público do site. Assim os dados poderão ser atualizados sem expor tokens no navegador.</p></div>
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div><h2 className="text-lg font-semibold">Desempenho das campanhas</h2><p className="text-sm text-[#81766b]">Dados da conta Meta Ads · {metaData?.accountName ?? "Herr Agnes"}</p></div>
+              <div className="flex flex-wrap items-center gap-2">
+                <select aria-label="Período das métricas Meta" value={metaPeriod} onChange={(event) => setMetaPeriod(event.target.value as MetaPeriod)} className="rounded-md border border-[#ded7ce] bg-white px-3 py-2 text-sm">
+                  <option value="last_7d">Últimos 7 dias</option>
+                  <option value="last_30d">Últimos 30 dias</option>
+                  <option value="last_90d">Últimos 90 dias</option>
+                  <option value="this_month">Este mês</option>
+                  <option value="last_month">Mês passado</option>
+                </select>
+                <button onClick={() => session && void loadMetaInsights(session.access_token, metaPeriod)} disabled={metaLoading} className="inline-flex items-center gap-2 rounded-md border border-[#d8cec1] bg-white px-3 py-2 text-sm font-medium hover:bg-[#f2ece4] disabled:opacity-60"><RefreshCw size={15} className={metaLoading ? "animate-spin" : ""} /> Atualizar métricas</button>
               </div>
             </div>
-            <div className="rounded-lg border border-dashed border-[#d8cec1] bg-[#faf8f5] p-4 text-sm text-[#766b60]">Os indicadores aparecem como “—” até a conexão ser configurada. Nenhum investimento ou resultado estimado será exibido como se fosse dado real.</div>
+            {metaError && <div role="alert" className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">{metaError}</div>}
+            <div className="grid gap-3 md:grid-cols-3">
+              <div className="rounded-xl border border-[#e4ddd3] bg-white p-5"><p className="text-xs text-[#766b60]">Investimento no Meta</p><p className="mt-3 text-3xl font-semibold">{metaLoading && !metaData ? "…" : metaData ? money(metaData.totals.spend, metaData.currency) : "—"}</p><p className="mt-1 text-xs text-[#9a9086]">Total gasto no período</p></div>
+              <div className="rounded-xl border border-[#e4ddd3] bg-white p-5"><p className="text-xs text-[#766b60]">Valor de conversão</p><p className="mt-3 text-3xl font-semibold">{metaLoading && !metaData ? "…" : metaData ? money(metaData.totals.conversionValue, metaData.currency) : "—"}</p><p className="mt-1 text-xs text-[#9a9086]">{metaData?.totals.purchases ?? 0} compra(s) atribuída(s) pela Meta</p></div>
+              <div className="rounded-xl border border-[#e4ddd3] bg-white p-5"><p className="text-xs text-[#766b60]">ROAS</p><p className="mt-3 text-3xl font-semibold">{metaLoading && !metaData ? "…" : metaData ? `${metaData.totals.roas.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}x` : "—"}</p><p className="mt-1 text-xs text-[#9a9086]">Valor de conversão ÷ investimento</p></div>
+            </div>
+            <div className="overflow-hidden rounded-xl border border-[#e4ddd3] bg-white">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#eee7de] px-5 py-4"><div><h3 className="font-semibold">Desempenho por campanha</h3><p className="text-xs text-[#81766b]">Investimento e conversões atribuídas pela Meta</p></div><span className="text-xs text-[#81766b]">{metaData?.campaigns.length ?? 0} campanha(s)</span></div>
+              {metaLoading && !metaData ? <p className="p-6 text-sm text-[#81766b]">Buscando dados da conta de anúncios…</p> : metaData?.campaigns.length ? (
+                <div className="overflow-x-auto"><table className="w-full min-w-[720px] text-left text-sm">
+                  <thead className="bg-[#faf8f5] text-xs text-[#766b60]"><tr><th className="px-5 py-3 font-semibold">Campanha</th><th className="px-4 py-3 text-right font-semibold">Investimento</th><th className="px-4 py-3 text-right font-semibold">Compras</th><th className="px-4 py-3 text-right font-semibold">Valor de conversão</th><th className="px-5 py-3 text-right font-semibold">ROAS</th></tr></thead>
+                  <tbody>{metaData.campaigns.map((campaign) => <tr key={campaign.id} className="border-t border-[#f0ebe5]"><td className="max-w-[280px] truncate px-5 py-3 font-medium" title={campaign.name}>{campaign.name}</td><td className="px-4 py-3 text-right tabular-nums">{money(campaign.spend, metaData.currency)}</td><td className="px-4 py-3 text-right tabular-nums">{campaign.purchases.toLocaleString("pt-BR", { maximumFractionDigits: 0 })}</td><td className="px-4 py-3 text-right tabular-nums">{money(campaign.conversionValue, metaData.currency)}</td><td className="px-5 py-3 text-right font-semibold tabular-nums">{campaign.roas.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}x</td></tr>)}</tbody>
+                </table></div>
+              ) : <p className="p-6 text-sm text-[#81766b]">{metaError ? "Não foi possível carregar as campanhas." : "Nenhuma campanha com entrega no período selecionado."}</p>}
+            </div>
+            <div className="rounded-lg border border-dashed border-[#d8cec1] bg-[#faf8f5] p-4 text-xs leading-5 text-[#766b60]">
+              Os valores de conversão e compras são os números atribuídos pela própria Meta no período selecionado. Eles dependem da configuração do Pixel/Conversions API e da janela de atribuição da conta; não representam automaticamente a soma dos pedidos confirmados no CRM.
+              {metaData?.fetchedAt && <span className="mt-1 block">Última consulta: {new Date(metaData.fetchedAt).toLocaleString("pt-BR")}</span>}
+            </div>
           </section>
         )}
         <p className="mt-7 text-center text-xs text-[#8a8076]">Área privada · Dados protegidos pelas permissões do Supabase.</p>
