@@ -64,14 +64,61 @@ function Pedidos() {
   const [form, setForm] = useState({
     nome: "",
     telefone: "",
+    cep: "",
     endereco: "",
     bairro: "",
-    cidade: "Teresina",
+    cidade: "",
+    estado: "",
     data: "",
     horario: "",
     pagamento: "PIX",
     observacoes: "",
   });
+
+  const [cepStatus, setCepStatus] = useState<"idle" | "checking" | "valid" | "outside" | "error">("idle");
+  const [cepConsultado, setCepConsultado] = useState("");
+  const entregaPermitida =
+    cepStatus === "valid" &&
+    cepConsultado === form.cep.replace(/[^0-9]/g, "") &&
+    ((form.cidade.toUpperCase() === "TERESINA" && form.estado === "PI") ||
+      (form.cidade.toUpperCase() === "TIMON" && form.estado === "MA"));
+
+  async function consultarCep(cepInformado: string) {
+    const cep = cepInformado.replace(/[^0-9]/g, "");
+    setCepConsultado("");
+    if (cep.length !== 8) {
+      setCepStatus("idle");
+      setForm((atual) => ({ ...atual, cidade: "", estado: "" }));
+      return;
+    }
+
+    setCepStatus("checking");
+    try {
+      const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      if (!resposta.ok) throw new Error("Falha ao consultar CEP");
+      const dados = await resposta.json();
+      if (dados.erro) {
+        setCepStatus("error");
+        setForm((atual) => ({ ...atual, cidade: "", estado: "" }));
+        return;
+      }
+
+      const cidade = String(dados.localidade ?? "").trim();
+      const estado = String(dados.uf ?? "").trim().toUpperCase();
+      setForm((atual) => ({ ...atual, cep, cidade, estado }));
+      setCepConsultado(cep);
+      const cidadeNormalizada = cidade.toUpperCase();
+      setCepStatus(
+        (cidadeNormalizada === "TERESINA" && estado === "PI") ||
+          (cidadeNormalizada === "TIMON" && estado === "MA")
+          ? "valid"
+          : "outside",
+      );
+    } catch {
+      setCepStatus("error");
+      setForm((atual) => ({ ...atual, cidade: "", estado: "" }));
+    }
+  }
 
   const totalItens = carrinho.reduce((soma, item) => soma + item.quantidade, 0);
   const total = useMemo(
@@ -110,7 +157,7 @@ function Pedidos() {
 
   function enviarPedido(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!carrinho.length) return;
+    if (!carrinho.length || !entregaPermitida) return;
 
     const lista = carrinho
       .map((item) => {
@@ -132,7 +179,8 @@ function Pedidos() {
       `WhatsApp: ${form.telefone}`,
       `Endereço: ${form.endereco}`,
       `Bairro: ${form.bairro}`,
-      `Cidade: ${form.cidade}`,
+      `CEP: ${form.cep}`,
+      `Cidade: ${form.cidade} – ${form.estado}`,
       `Data desejada: ${form.data}`,
       `Horário desejado: ${form.horario}`,
       `Pagamento: ${form.pagamento}`,
@@ -278,6 +326,41 @@ function Pedidos() {
                   <input required type="tel" autoComplete="tel" value={form.telefone} onChange={(e) => setForm({ ...form, telefone: e.target.value })} placeholder="(86) 99999-9999" className="mt-2 w-full rounded-md border bg-secondary px-3 py-2.5" />
                 </label>
               </div>
+              <label className="block text-sm">CEP de entrega
+                <input
+                  required
+                  inputMode="numeric"
+                  autoComplete="postal-code"
+                  maxLength={9}
+                  value={form.cep}
+                  onChange={(e) => {
+                    const cep = e.target.value;
+                    setForm((atual) => ({ ...atual, cep, cidade: "", estado: "" }));
+                    setCepConsultado("");
+                    setCepStatus("idle");
+                  }}
+                  onBlur={() => void consultarCep(form.cep)}
+                  placeholder="64000-000"
+                  className="mt-2 w-full rounded-md border bg-secondary px-3 py-2.5"
+                />
+                <span className="mt-1 block text-xs text-muted-foreground">Consultamos o CEP para confirmar se o endereço está na nossa área de entrega.</span>
+              </label>
+              {cepStatus === "checking" && <p role="status" className="text-sm text-muted-foreground">Consultando CEP...</p>}
+              {cepStatus === "valid" && (
+                <p role="status" className="rounded-md border border-green-600/30 bg-green-600/10 px-3 py-2 text-sm text-green-700">
+                  Entrega disponível em {form.cidade} – {form.estado}. Você pode continuar.
+                </p>
+              )}
+              {cepStatus === "outside" && (
+                <p role="alert" className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                  Ainda não atendemos esse endereço. No momento, entregamos somente em Teresina (PI) e Timon (MA).
+                </p>
+              )}
+              {cepStatus === "error" && (
+                <p role="alert" className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                  Não conseguimos localizar esse CEP. Confira os números e tente novamente.
+                </p>
+              )}
               <label className="block text-sm">Endereço de entrega
                 <input required autoComplete="street-address" value={form.endereco} onChange={(e) => setForm({ ...form, endereco: e.target.value })} placeholder="Rua, número e complemento" className="mt-2 w-full rounded-md border bg-secondary px-3 py-2.5" />
               </label>
@@ -286,11 +369,7 @@ function Pedidos() {
                   <input required value={form.bairro} onChange={(e) => setForm({ ...form, bairro: e.target.value })} placeholder="Seu bairro" className="mt-2 w-full rounded-md border bg-secondary px-3 py-2.5" />
                 </label>
                 <label className="block text-sm">Cidade
-                  <select value={form.cidade} onChange={(e) => setForm({ ...form, cidade: e.target.value })} className="mt-2 w-full rounded-md border bg-secondary px-3 py-2.5">
-                    <option>Teresina</option>
-                    <option>Timon</option>
-                    <option>Outra cidade da região</option>
-                  </select>
+                  <input readOnly value={form.cidade ? `${form.cidade} – ${form.estado}` : "Consulte o CEP"} className="mt-2 w-full rounded-md border bg-secondary px-3 py-2.5 text-muted-foreground" />
                 </label>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
@@ -311,7 +390,7 @@ function Pedidos() {
               <label className="block text-sm">Observações <span className="text-muted-foreground">(opcional)</span>
                 <textarea rows={3} value={form.observacoes} onChange={(e) => setForm({ ...form, observacoes: e.target.value })} placeholder="Referência do endereço ou detalhes do pedido" className="mt-2 w-full resize-y rounded-md border bg-secondary px-3 py-2.5" />
               </label>
-              <button type="submit" disabled={!carrinho.length} className="btn-gold w-full justify-center disabled:cursor-not-allowed disabled:opacity-50">
+              <button type="submit" disabled={!carrinho.length || !entregaPermitida} className="btn-gold w-full justify-center disabled:cursor-not-allowed disabled:opacity-50">
                 <MessageCircle size={18} /> Enviar pedido pelo WhatsApp
               </button>
               <p className="flex items-start gap-2 text-xs text-muted-foreground"><CheckCircle2 size={15} className="mt-0.5 shrink-0 text-gold" /> O pedido será enviado para confirmação. Data, horário, disponibilidade e eventuais taxas ainda dependem da equipe HERR AGNES.</p>
