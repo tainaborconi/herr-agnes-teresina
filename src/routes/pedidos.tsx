@@ -76,13 +76,16 @@ function Pedidos() {
   });
 
   const [cepStatus, setCepStatus] = useState<"idle" | "checking" | "valid" | "outside" | "error">("idle");
+  const [cepConsultado, setCepConsultado] = useState("");
   const entregaPermitida =
     cepStatus === "valid" &&
+    cepConsultado === form.cep.replace(/[^0-9]/g, "") &&
     ((form.cidade.toUpperCase() === "TERESINA" && form.estado === "PI") ||
       (form.cidade.toUpperCase() === "TIMON" && form.estado === "MA"));
 
   async function consultarCep(cepInformado: string) {
     const cep = cepInformado.replace(/[^0-9]/g, "");
+    setCepConsultado("");
     if (cep.length !== 8) {
       setCepStatus("idle");
       setForm((atual) => ({ ...atual, cidade: "", estado: "" }));
@@ -103,6 +106,7 @@ function Pedidos() {
       const cidade = String(dados.localidade ?? "").trim();
       const estado = String(dados.uf ?? "").trim().toUpperCase();
       setForm((atual) => ({ ...atual, cep, cidade, estado }));
+      setCepConsultado(cep);
       const cidadeNormalizada = cidade.toUpperCase();
       setCepStatus(
         (cidadeNormalizada === "TERESINA" && estado === "PI") ||
@@ -332,6 +336,7 @@ function Pedidos() {
                   onChange={(e) => {
                     const cep = e.target.value;
                     setForm((atual) => ({ ...atual, cep, cidade: "", estado: "" }));
+                    setCepConsultado("");
                     setCepStatus("idle");
                   }}
                   onBlur={() => void consultarCep(form.cep)}
