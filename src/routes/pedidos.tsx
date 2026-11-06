@@ -287,20 +287,6 @@ function Pedidos() {
 
       <section className="bg-[#f7f7f5] text-[#171717]"><div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 lg:grid-cols-[1.5fr_0.8fr] lg:py-16">
         <div className="space-y-10">
-          <div>
-            <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold"><MapPin size={17} /></span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Área de entrega</p><h2 className="mt-1 text-2xl md:text-3xl">Entregamos no seu endereço?</h2></div></div>
-            <div className="rounded-lg border bg-white p-5 md:p-6">
-              <form className="flex flex-col gap-3 sm:flex-row sm:items-end" onSubmit={(e) => { e.preventDefault(); void verificarCep(); }}>
-                <label className="flex-1 text-sm">CEP de entrega<input id="campo-cep" className={fieldClass} value={cep} onChange={(e) => { setCep(formatarCep(e.target.value)); setResultadoCep(null); }} placeholder="00000-000" inputMode="numeric" autoComplete="postal-code" maxLength={9} /></label>
-                <button type="submit" disabled={consultandoCep} className="rounded-md bg-[#941b25] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-wait disabled:opacity-60">{consultandoCep ? "Consultando..." : "Verificar CEP"}</button>
-              </form>
-              {resultadoCep?.status === "atendido" && <p role="status" className="mt-4 flex gap-2 rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-800"><CheckCircle2 size={18} className="shrink-0" /> Ótimo! Entregamos em {resultadoCep.cidade}-{resultadoCep.uf}. Continue montando seu pedido abaixo.</p>}
-              {resultadoCep?.status === "fora_area" && <p role="alert" className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">CEP de {resultadoCep.cidade}-{resultadoCep.uf}. {MSG_FORA_AREA}</p>}
-              {resultadoCep && resultadoCep.status !== "atendido" && resultadoCep.status !== "fora_area" && <p role="alert" className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{resultadoCep.mensagem}</p>}
-              {!resultadoCep && <p className="mt-3 text-xs text-[#686868]">Informe o CEP para liberar o pedido. Atendemos Teresina-PI e Timon-MA.</p>}
-            </div>
-          </div>
-
           <fieldset disabled={!areaLiberada} aria-disabled={!areaLiberada} className={`space-y-10 transition ${areaLiberada ? "" : "pointer-events-none select-none opacity-40"}`}>
           <div>
             <div className="mb-5 flex items-center gap-3">
@@ -353,14 +339,25 @@ function Pedidos() {
 
           <div>
             <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">2</span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Seus dados</p><h2 className="mt-1 text-2xl md:text-3xl">Onde vamos entregar?</h2></div></div>
-            <div className="grid gap-4 rounded-lg border bg-white p-5 md:grid-cols-2 md:p-6">
+            <div className="rounded-lg border bg-white p-5 md:p-6">
+              <form className="flex flex-col gap-3 sm:flex-row sm:items-end" onSubmit={(e) => { e.preventDefault(); void verificarCep(); }}>
+                <label className="flex-1 text-sm">CEP de entrega<input id="campo-cep" className={fieldClass} value={cep} onChange={(e) => { setCep(formatarCep(e.target.value)); setResultadoCep(null); }} placeholder="00000-000" inputMode="numeric" autoComplete="postal-code" maxLength={9} /></label>
+                <button type="submit" disabled={consultandoCep} className="rounded-md bg-[#941b25] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-wait disabled:opacity-60">{consultandoCep ? "Consultando..." : "Verificar CEP"}</button>
+              </form>
+              {resultadoCep?.status === "atendido" && <p role="status" className="mt-4 flex gap-2 rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-800"><CheckCircle2 size={18} className="shrink-0" /> Ótimo! Entregamos em {resultadoCep.cidade}-{resultadoCep.uf}. Continue preenchendo seus dados.</p>}
+              {resultadoCep?.status === "fora_area" && <p role="alert" className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">CEP de {resultadoCep.cidade}-{resultadoCep.uf}. {MSG_FORA_AREA}</p>}
+              {resultadoCep && resultadoCep.status !== "atendido" && resultadoCep.status !== "fora_area" && <p role="alert" className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{resultadoCep.mensagem}</p>}
+              {!resultadoCep && <p className="mt-3 text-xs text-[#686868]">Informe o CEP para continuar. Atendemos Teresina-PI e Timon-MA.</p>}
+            </div>
+            <fieldset disabled={!areaLiberada} aria-disabled={!areaLiberada} className={`grid gap-4 rounded-lg border bg-white p-5 md:grid-cols-2 md:p-6 transition ${areaLiberada ? "" : "pointer-events-none select-none opacity-40"}`}>
               <label className="text-sm">Nome completo<input id="campo-nome" className={fieldClass} value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Como podemos chamar você?" autoComplete="name" required /></label>
               <label className="text-sm">WhatsApp<input id="campo-telefone" className={fieldClass} value={telefone} onChange={(e) => setTelefone(e.target.value)} placeholder="(00) 00000-0000" inputMode="tel" autoComplete="tel" required /></label>
               <label className="text-sm md:col-span-2">Endereço completo<input id="campo-endereco" className={fieldClass} value={endereco} onChange={(e) => setEndereco(e.target.value)} placeholder="Rua, número, bairro e cidade" autoComplete="street-address" required /></label>
               <label className="text-sm md:col-span-2">Ponto de referência<input id="campo-referencia" className={fieldClass} value={referencia} onChange={(e) => setReferencia(e.target.value)} placeholder="Ex.: próximo à praça..." required /></label>
-            </div>
+            </fieldset>
           </div>
 
+          <fieldset disabled={!areaLiberada} aria-disabled={!areaLiberada} className={`space-y-10 transition ${areaLiberada ? "" : "pointer-events-none select-none opacity-40"}`}>
           <div>
             <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">3</span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Agendamento</p><h2 className="mt-1 text-2xl md:text-3xl">Quando deseja receber?</h2></div></div>
             <div className="grid gap-4 rounded-lg border bg-white p-5 md:grid-cols-2 md:p-6">
@@ -392,6 +389,7 @@ function Pedidos() {
               )}
             </div>
           </div>
+          </fieldset>
           </fieldset>
         </div>
 
