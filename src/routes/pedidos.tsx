@@ -110,6 +110,7 @@ function Pedidos() {
   const [cep, setCep] = useState("");
   const [consultandoCep, setConsultandoCep] = useState(false);
   const [resultadoCep, setResultadoCep] = useState<ResultadoCep | null>(null);
+  const enderecoAuto = useRef("");
   const areaLiberada = resultadoCep?.status === "atendido";
 
   const verificarCep = async () => {
@@ -119,8 +120,10 @@ function Pedidos() {
     const r = await consultarCep(cep);
     setResultadoCep(r);
     setConsultandoCep(false);
-    if (r.status === "atendido" && !endereco.trim()) {
-      setEndereco([r.logradouro, r.bairro, `${r.cidade}-${r.uf}`].filter(Boolean).join(", "));
+    if (r.status === "atendido" && (!endereco.trim() || endereco === enderecoAuto.current)) {
+      const sugerido = [r.logradouro, r.bairro, `${r.cidade}-${r.uf}`].filter(Boolean).join(", ");
+      enderecoAuto.current = sugerido;
+      setEndereco(sugerido);
     }
   };
 
