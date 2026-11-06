@@ -471,6 +471,9 @@ function AdminPage() {
     { status: "confirmed", title: "Conversão", hint: "Lead convertido em venda", accent: "border-t-[#66856b]" },
     { status: "cancelled", title: "Cancelados", hint: "Pedidos que não avançaram", accent: "border-t-[#b47770]" },
   ];
+  const openRevenue = orders
+    .filter((order) => order.status === "pending" || order.status === "in_progress")
+    .reduce((sum, order) => sum + Number(order.total ?? 0), 0);
   const confirmedRevenue = orders.filter((order) => order.status === "confirmed")
     .reduce((sum, order) => sum + Number(order.confirmed_total ?? order.total ?? 0), 0);
   const moveDraggedOrder = (status: OrderStatus) => {
@@ -506,11 +509,12 @@ function AdminPage() {
 
         {activeTab === "crm" ? (
           <>
-            <section className="mb-6 grid grid-cols-2 gap-3 xl:grid-cols-5">
+            <section className="mb-6 grid grid-cols-2 gap-3 xl:grid-cols-6">
               <div className="rounded-xl border border-[#e4ddd3] bg-white p-4"><p className="text-xs text-[#766b60]">Total de pedidos</p><p className="mt-1 text-2xl font-semibold">{orders.length}</p><p className="mt-1 text-[11px] text-[#9a9086]">Pedidos recebidos</p></div>
               <div className="rounded-xl border border-[#e4ddd3] bg-white p-4"><p className="text-xs text-[#766b60]">Novos</p><p className="mt-1 text-2xl font-semibold">{pendingCount}</p><p className="mt-1 text-[11px] text-[#9a9086]">Precisam de contato</p></div>
               <div className="rounded-xl border border-[#e4ddd3] bg-white p-4"><p className="text-xs text-[#766b60]">Em atendimento</p><p className="mt-1 text-2xl font-semibold">{orders.filter((order) => order.status === "in_progress").length}</p><p className="mt-1 text-[11px] text-[#9a9086]">Em negociação</p></div>
               <div className="rounded-xl border border-[#e4ddd3] bg-white p-4"><p className="text-xs text-[#766b60]">Conversões</p><p className="mt-1 text-2xl font-semibold">{orders.filter((order) => order.status === "confirmed").length}</p><p className="mt-1 text-[11px] text-[#9a9086]">Leads que viraram venda</p></div>
+              <div className="col-span-2 rounded-xl border border-[#e4ddd3] bg-white p-4 xl:col-span-1"><p className="text-xs text-[#766b60]">Valor em aberto</p><p className="mt-1 text-2xl font-semibold">{money(openRevenue)}</p><p className="mt-1 text-[11px] text-[#9a9086]">Novos + em atendimento</p></div>
               <div className="col-span-2 rounded-xl border border-[#e4ddd3] bg-white p-4 xl:col-span-1"><p className="text-xs text-[#766b60]">Valor confirmado</p><p className="mt-1 text-2xl font-semibold">{money(confirmedRevenue)}</p><p className="mt-1 text-[11px] text-[#9a9086]">Soma dos pedidos confirmados</p></div>
             </section>
             <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
@@ -531,7 +535,7 @@ function AdminPage() {
                     <div className="grid gap-3">
                       {columnOrders.map((order) => (
                         <article key={order.id} draggable onDragStart={() => setDraggingOrderId(order.id)} onDragEnd={() => setDraggingOrderId(null)} className={`crm-column-card cursor-grab rounded-lg border bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing ${draggingOrderId === order.id ? "opacity-50" : ""}`}>
-                          <div className="flex items-start justify-between gap-2"><span className="text-[11px] font-semibold uppercase tracking-wider text-[#98733d]">Pedido #{order.order_number}</span><span className="text-sm font-semibold">{money(order.confirmed_total ?? order.total)}</span></div>
+                          <div className="flex items-start justify-between gap-2"><span className="text-[11px] font-semibold uppercase tracking-wider text-[#98733d]">Pedido #{order.order_number}</span><span className="text-right"><span className="block text-[10px] text-[#81766b]">Valor do pedido</span><span className="text-sm font-semibold">{money(order.confirmed_total ?? order.total)}</span></span></div>
                           <h4 className="mt-2 font-semibold leading-snug">{order.customer_name}</h4>
                           <p className="mt-0.5 text-xs text-[#81766b]">{order.customer_phone}</p>
                           <div className="mt-3 space-y-1.5 border-t border-[#f0ebe5] pt-3 text-xs text-[#5f574f]">
