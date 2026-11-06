@@ -235,7 +235,7 @@
   display: inline;
   padding: 0.16em 0.48em;
   border-radius: 2px;
-  background: var(--color-primary);
+  background: var(--color-wine);
   color: var(--color-primary-foreground);
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
