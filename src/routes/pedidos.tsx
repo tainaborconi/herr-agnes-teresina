@@ -153,6 +153,9 @@ function Pedidos() {
     const whatsappWindow = window.open("about:blank", "_blank");
     if (whatsappWindow) whatsappWindow.opener = null;
     setEnviando(true);
+    const getCookieValue = (name: string) =>
+      document.cookie.split("; ").find((cookie) => cookie.startsWith(`${name}=`))
+        ?.split("=").slice(1).join("=") ?? null;
 
     try {
       const response = await fetch(`${supabaseUrl}/functions/v1/create-order`, {
@@ -172,6 +175,8 @@ function Pedidos() {
           payment_condition: pagamento === "Cartão de crédito" ? condicaoCartao : null,
           notes: observacoes.trim() || null,
           turnstile_token: turnstileToken,
+          fbp: getCookieValue("_fbp"),
+          fbc: getCookieValue("_fbc"),
           items: itens.map((item) => ({
             product_name: item.sabor,
             keg_size: item.tamanho,
