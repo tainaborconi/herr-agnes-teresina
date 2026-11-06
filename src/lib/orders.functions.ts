@@ -101,7 +101,8 @@ export const submitOrder = createServerFn({ method: "POST" })
   });
 
 /** Verifica no servidor se o usuário autenticado tem perfil de administrador. */
-async function exigirAdmin(supabase: { rpc: (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }> }, userId: string) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function exigirAdmin(supabase: any, userId: string) {
   const { data, error } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
   if (error || data !== true) throw new Error("Acesso restrito ao administrador.");
 }
@@ -168,7 +169,7 @@ export const updateOrder = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await exigirAdmin(context.supabase, context.userId);
 
-    const patch: Record<string, unknown> = { updated_at: new Date().toISOString() };
+    const patch: { updated_at: string; status?: StatusPedido; final_value?: number | null } = { updated_at: new Date().toISOString() };
     if (data.status) patch.status = data.status;
     if (data.valorFinal !== undefined) patch.final_value = data.valorFinal;
 
