@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, CheckCircle2, ChevronDown, MapPin, Minus, Plus, ShoppingBag } from "lucide-react";
-import noahImage from "../assets/noah-16.jpg";
+import noahImage from "../assets/noah-pedidos.jpg";
 import { whatsappLink } from "@/lib/site";
 import { consultarCep, formatarCep, MSG_FORA_AREA, type ResultadoCep } from "@/lib/cep";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL, TURNSTILE_SITE_KEY } from "@/lib/supabase-config";
