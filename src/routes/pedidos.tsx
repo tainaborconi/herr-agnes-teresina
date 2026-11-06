@@ -287,7 +287,6 @@ function Pedidos() {
 
       <section className="bg-[#f7f7f5] text-[#171717]"><div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 lg:grid-cols-[1.5fr_0.8fr] lg:py-16">
         <div className="space-y-10">
-          <div className="space-y-10">
           <div>
             <div className="mb-5 flex items-center gap-3">
               <span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">1</span>
