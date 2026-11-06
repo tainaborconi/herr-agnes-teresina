@@ -43,6 +43,7 @@ type MetaCampaign = {
   id: string;
   name: string;
   spend: number;
+  leads: number;
   purchases: number;
   conversionValue: number;
   roas: number;
@@ -55,6 +56,7 @@ type MetaInsights = {
   datePreset: string;
   totals: {
     spend: number;
+    leads: number;
     purchases: number;
     conversionValue: number;
     roas: number;
@@ -77,7 +79,7 @@ const SESSION_KEY = "herr-agnes-admin-session";
 const STATUS_LABEL: Record<OrderStatus, string> = {
   pending: "Novo pedido",
   in_progress: "Em atendimento",
-  confirmed: "Confirmado",
+  confirmed: "Conversão",
   cancelled: "Cancelado",
 };
 
@@ -458,7 +460,7 @@ function AdminPage() {
   const columns: { status: OrderStatus; title: string; hint: string; accent: string }[] = [
     { status: "pending", title: "Novos pedidos", hint: "Aguardando primeiro contato", accent: "border-t-[#b98a42]" },
     { status: "in_progress", title: "Em atendimento", hint: "Em conversa com o cliente", accent: "border-t-[#71869a]" },
-    { status: "confirmed", title: "Confirmados", hint: "Vendas concluídas", accent: "border-t-[#66856b]" },
+    { status: "confirmed", title: "Conversão", hint: "Lead convertido em venda", accent: "border-t-[#66856b]" },
     { status: "cancelled", title: "Cancelados", hint: "Pedidos que não avançaram", accent: "border-t-[#b47770]" },
   ];
   const confirmedRevenue = orders.filter((order) => order.status === "confirmed")
@@ -499,7 +501,7 @@ function AdminPage() {
               <div className="rounded-xl border border-[#e4ddd3] bg-white p-4"><p className="text-xs text-[#766b60]">Total de pedidos</p><p className="mt-1 text-2xl font-semibold">{orders.length}</p><p className="mt-1 text-[11px] text-[#9a9086]">Pedidos recebidos</p></div>
               <div className="rounded-xl border border-[#e4ddd3] bg-white p-4"><p className="text-xs text-[#766b60]">Novos</p><p className="mt-1 text-2xl font-semibold">{pendingCount}</p><p className="mt-1 text-[11px] text-[#9a9086]">Precisam de contato</p></div>
               <div className="rounded-xl border border-[#e4ddd3] bg-white p-4"><p className="text-xs text-[#766b60]">Em atendimento</p><p className="mt-1 text-2xl font-semibold">{orders.filter((order) => order.status === "in_progress").length}</p><p className="mt-1 text-[11px] text-[#9a9086]">Em negociação</p></div>
-              <div className="rounded-xl border border-[#e4ddd3] bg-white p-4"><p className="text-xs text-[#766b60]">Confirmados</p><p className="mt-1 text-2xl font-semibold">{orders.filter((order) => order.status === "confirmed").length}</p><p className="mt-1 text-[11px] text-[#9a9086]">Vendas concluídas</p></div>
+              <div className="rounded-xl border border-[#e4ddd3] bg-white p-4"><p className="text-xs text-[#766b60]">Conversões</p><p className="mt-1 text-2xl font-semibold">{orders.filter((order) => order.status === "confirmed").length}</p><p className="mt-1 text-[11px] text-[#9a9086]">Leads que viraram venda</p></div>
               <div className="col-span-2 rounded-xl border border-[#e4ddd3] bg-white p-4 xl:col-span-1"><p className="text-xs text-[#766b60]">Valor confirmado</p><p className="mt-1 text-2xl font-semibold">{money(confirmedRevenue)}</p><p className="mt-1 text-[11px] text-[#9a9086]">Soma dos pedidos confirmados</p></div>
             </section>
             <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
@@ -561,22 +563,23 @@ function AdminPage() {
               </div>
             </div>
             {metaError && <div role="alert" className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">{metaError}</div>}
-            <div className="grid gap-3 md:grid-cols-3">
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
               <div className="rounded-xl border border-[#e4ddd3] bg-white p-5"><p className="text-xs text-[#766b60]">Investimento no Meta</p><p className="mt-3 text-3xl font-semibold">{metaLoading && !metaData ? "…" : metaData ? money(metaData.totals.spend, metaData.currency) : "—"}</p><p className="mt-1 text-xs text-[#9a9086]">Total gasto no período</p></div>
-              <div className="rounded-xl border border-[#e4ddd3] bg-white p-5"><p className="text-xs text-[#766b60]">Valor de conversão</p><p className="mt-3 text-3xl font-semibold">{metaLoading && !metaData ? "…" : metaData ? money(metaData.totals.conversionValue, metaData.currency) : "—"}</p><p className="mt-1 text-xs text-[#9a9086]">{metaData?.totals.purchases ?? 0} compra(s) atribuída(s) pela Meta</p></div>
-              <div className="rounded-xl border border-[#e4ddd3] bg-white p-5"><p className="text-xs text-[#766b60]">ROAS</p><p className="mt-3 text-3xl font-semibold">{metaLoading && !metaData ? "…" : metaData ? `${metaData.totals.roas.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}x` : "—"}</p><p className="mt-1 text-xs text-[#9a9086]">Valor de conversão ÷ investimento</p></div>
+              <div className="rounded-xl border border-[#e4ddd3] bg-white p-5"><p className="text-xs text-[#766b60]">Leads gerados</p><p className="mt-3 text-3xl font-semibold">{metaLoading && !metaData ? "…" : (metaData?.totals.leads ?? 0).toLocaleString("pt-BR")}</p><p className="mt-1 text-xs text-[#9a9086]">Conversões primárias das campanhas</p></div>
+              <div className="rounded-xl border border-[#e4ddd3] bg-white p-5"><p className="text-xs text-[#766b60]">Vendas convertidas</p><p className="mt-3 text-3xl font-semibold">{metaLoading && !metaData ? "…" : (metaData?.totals.purchases ?? 0).toLocaleString("pt-BR")}</p><p className="mt-1 text-xs text-[#9a9086]">Leads marcados como Conversão no CRM</p></div>
+              <div className="rounded-xl border border-[#e4ddd3] bg-white p-5"><p className="text-xs text-[#766b60]">Faturamento atribuído</p><p className="mt-3 text-3xl font-semibold">{metaLoading && !metaData ? "…" : metaData ? money(metaData.totals.conversionValue, metaData.currency) : "—"}</p><p className="mt-1 text-xs text-[#9a9086]">ROAS: {metaData ? `${metaData.totals.roas.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}x` : "—"}</p></div>
             </div>
             <div className="overflow-hidden rounded-xl border border-[#e4ddd3] bg-white">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#eee7de] px-5 py-4"><div><h3 className="font-semibold">Desempenho por campanha</h3><p className="text-xs text-[#81766b]">Investimento e conversões atribuídas pela Meta</p></div><span className="text-xs text-[#81766b]">{metaData?.campaigns.length ?? 0} campanha(s)</span></div>
               {metaLoading && !metaData ? <p className="p-6 text-sm text-[#81766b]">Buscando dados da conta de anúncios…</p> : metaData?.campaigns.length ? (
                 <div className="overflow-x-auto"><table className="w-full min-w-[720px] text-left text-sm">
-                  <thead className="bg-[#faf8f5] text-xs text-[#766b60]"><tr><th className="px-5 py-3 font-semibold">Campanha</th><th className="px-4 py-3 text-right font-semibold">Investimento</th><th className="px-4 py-3 text-right font-semibold">Compras</th><th className="px-4 py-3 text-right font-semibold">Valor de conversão</th><th className="px-5 py-3 text-right font-semibold">ROAS</th></tr></thead>
-                  <tbody>{metaData.campaigns.map((campaign) => <tr key={campaign.id} className="border-t border-[#f0ebe5]"><td className="max-w-[280px] truncate px-5 py-3 font-medium" title={campaign.name}>{campaign.name}</td><td className="px-4 py-3 text-right tabular-nums">{money(campaign.spend, metaData.currency)}</td><td className="px-4 py-3 text-right tabular-nums">{campaign.purchases.toLocaleString("pt-BR", { maximumFractionDigits: 0 })}</td><td className="px-4 py-3 text-right tabular-nums">{money(campaign.conversionValue, metaData.currency)}</td><td className="px-5 py-3 text-right font-semibold tabular-nums">{campaign.roas.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}x</td></tr>)}</tbody>
+                  <thead className="bg-[#faf8f5] text-xs text-[#766b60]"><tr><th className="px-5 py-3 font-semibold">Campanha</th><th className="px-4 py-3 text-right font-semibold">Investimento</th><th className="px-4 py-3 text-right font-semibold">Leads</th><th className="px-4 py-3 text-right font-semibold">Vendas</th><th className="px-4 py-3 text-right font-semibold">Faturamento</th><th className="px-5 py-3 text-right font-semibold">ROAS</th></tr></thead>
+                  <tbody>{metaData.campaigns.map((campaign) => <tr key={campaign.id} className="border-t border-[#f0ebe5]"><td className="max-w-[280px] truncate px-5 py-3 font-medium" title={campaign.name}>{campaign.name}</td><td className="px-4 py-3 text-right tabular-nums">{money(campaign.spend, metaData.currency)}</td><td className="px-4 py-3 text-right tabular-nums">{campaign.leads.toLocaleString("pt-BR", { maximumFractionDigits: 0 })}</td><td className="px-4 py-3 text-right tabular-nums">{campaign.purchases.toLocaleString("pt-BR", { maximumFractionDigits: 0 })}</td><td className="px-4 py-3 text-right tabular-nums">{money(campaign.conversionValue, metaData.currency)}</td><td className="px-5 py-3 text-right font-semibold tabular-nums">{campaign.roas.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}x</td></tr>)}</tbody>
                 </table></div>
               ) : <p className="p-6 text-sm text-[#81766b]">{metaError ? "Não foi possível carregar as campanhas." : "Nenhuma campanha com entrega no período selecionado."}</p>}
             </div>
             <div className="rounded-lg border border-dashed border-[#d8cec1] bg-[#faf8f5] p-4 text-xs leading-5 text-[#766b60]">
-              Os valores de conversão e compras são os números atribuídos pela própria Meta no período selecionado. Eles dependem da configuração do Pixel/Conversions API e da janela de atribuição da conta; não representam automaticamente a soma dos pedidos confirmados no CRM.
+              Leads são as conversões primárias das campanhas. Purchase só é enviado à Meta quando um lead é movido para a coluna Conversão do CRM. O faturamento e o ROAS consideram apenas esses eventos Purchase confirmados e dependem da atribuição da Meta.
               {metaData?.fetchedAt && <span className="mt-1 block">Última consulta: {new Date(metaData.fetchedAt).toLocaleString("pt-BR")}</span>}
             </div>
           </section>
