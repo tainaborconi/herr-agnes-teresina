@@ -96,6 +96,8 @@ function Pedidos() {
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [endereco, setEndereco] = useState("");
+  const [numeroEndereco, setNumeroEndereco] = useState("");
+  const [complemento, setComplemento] = useState("");
   const [referencia, setReferencia] = useState("");
   const [data, setData] = useState("");
   const [horario, setHorario] = useState("");
@@ -151,13 +153,14 @@ function Pedidos() {
     if (!nome.trim()) pendentes.push("Nome completo");
     if (!telefone.trim()) pendentes.push("WhatsApp");
     if (!endereco.trim()) pendentes.push("Endereço completo");
+    if (!numeroEndereco.trim()) pendentes.push("Número da residência");
     if (!referencia.trim()) pendentes.push("Ponto de referência");
     if (!data) pendentes.push("Data desejada");
     if (!horario) pendentes.push("Horário desejado");
 
     if (pendentes.length > 0) {
       setCamposPendentes(pendentes);
-      const ids: Record<string, string> = { "Nome completo": "campo-nome", "WhatsApp": "campo-telefone", "Endereço completo": "campo-endereco", "Ponto de referência": "campo-referencia", "Data desejada": "campo-data", "Horário desejado": "campo-horario" };
+      const ids: Record<string, string> = { "Nome completo": "campo-nome", "WhatsApp": "campo-telefone", "Endereço completo": "campo-endereco", "Número da residência": "campo-numero", "Ponto de referência": "campo-referencia", "Data desejada": "campo-data", "Horário desejado": "campo-horario" };
       const elemento = document.getElementById(ids[pendentes[0]!]!);
       elemento?.scrollIntoView({ behavior: "smooth", block: "center" });
       window.setTimeout(() => elemento?.focus({ preventScroll: true }), 450);
@@ -192,7 +195,7 @@ function Pedidos() {
         body: JSON.stringify({
           customer_name: nome.trim(),
           customer_phone: telefone.trim(),
-          delivery_address: endereco.trim(),
+          delivery_address: `${endereco.trim()}, nº ${numeroEndereco.trim()}${complemento.trim() ? `, ${complemento.trim()}` : ""}`,
           delivery_reference: referencia.trim(),
           delivery_date: data,
           delivery_time: horario,
@@ -233,6 +236,8 @@ function Pedidos() {
         `👤 Nome: ${nome}`,
         `📱 Telefone: ${telefone}`,
         `📍 Endereço: ${endereco}`,
+        `🔢 Número: ${numeroEndereco}`,
+        complemento.trim() ? `🏠 Complemento: ${complemento.trim()}` : null,
         `📮 CEP: ${formatarCep(resultadoCep.cep)} (${resultadoCep.cidade}-${resultadoCep.uf})`,
         `📌 Referência: ${referencia}`,
         "",
@@ -351,7 +356,9 @@ function Pedidos() {
             <fieldset disabled={!areaLiberada} aria-disabled={!areaLiberada} className={`grid gap-4 rounded-lg border bg-white p-5 md:grid-cols-2 md:p-6 transition ${areaLiberada ? "" : "pointer-events-none select-none opacity-40"}`}>
               <label className="text-sm">Nome completo<input id="campo-nome" className={fieldClass} value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Como podemos chamar você?" autoComplete="name" required /></label>
               <label className="text-sm">WhatsApp<input id="campo-telefone" className={fieldClass} value={telefone} onChange={(e) => setTelefone(e.target.value)} placeholder="(00) 00000-0000" inputMode="tel" autoComplete="tel" required /></label>
-              <label className="text-sm md:col-span-2">Endereço completo<input id="campo-endereco" className={fieldClass} value={endereco} onChange={(e) => setEndereco(e.target.value)} placeholder="Rua, número, bairro e cidade" autoComplete="street-address" required /></label>
+              <label className="text-sm md:col-span-2">Endereço completo<input id="campo-endereco" className={fieldClass} value={endereco} onChange={(e) => setEndereco(e.target.value)} placeholder="Rua, bairro e cidade" autoComplete="street-address" required /></label>
+              <label className="text-sm">Número da residência<input id="campo-numero" className={fieldClass} value={numeroEndereco} onChange={(e) => setNumeroEndereco(e.target.value)} placeholder="Ex.: 123" inputMode="numeric" required /></label>
+              <label className="text-sm">Complemento <span className="text-[#686868]">(opcional)</span><input className={fieldClass} value={complemento} onChange={(e) => setComplemento(e.target.value)} placeholder="Apto, bloco, casa..." autoComplete="address-line2" /></label>
               <label className="text-sm md:col-span-2">Ponto de referência<input id="campo-referencia" className={fieldClass} value={referencia} onChange={(e) => setReferencia(e.target.value)} placeholder="Ex.: próximo à praça..." required /></label>
             </fieldset>
           </div>
