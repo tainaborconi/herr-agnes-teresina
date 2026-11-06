@@ -268,3 +268,62 @@
     transition: none;
   }
 }
+
+
+/* Tema escuro restrito ao painel administrativo; não afeta o site público. */
+.admin-theme-dark {
+  color-scheme: dark;
+  background: #151515 !important;
+  color: #f1eee9 !important;
+}
+.admin-theme-dark [class*="bg-white"],
+.admin-theme-dark [class*="bg-[#f6f4f0]"],
+.admin-theme-dark [class*="bg-[#faf8f5]"],
+.admin-theme-dark [class*="bg-[#faf8f"],
+.admin-theme-dark [class*="bg-[#eeece8]"],
+.admin-theme-dark [class*="bg-[#f2ece4]"] {
+  background-color: #242424 !important;
+}
+.admin-theme-dark [class*="border-[#"] {
+  border-color: #414141 !important;
+}
+.admin-theme-dark [class*="text-[#29231f]"],
+.admin-theme-dark [class*="text-[#2b211d]"],
+.admin-theme-dark [class*="text-[#5f574f]"],
+.admin-theme-dark [class*="text-[#6c6258]"],
+.admin-theme-dark [class*="text-[#766b60]"],
+.admin-theme-dark [class*="text-[#81766b]"],
+.admin-theme-dark [class*="text-[#8a8076]"],
+.admin-theme-dark [class*="text-[#9a9086]"] {
+  color: #c5c0b9 !important;
+}
+.admin-theme-dark input,
+.admin-theme-dark select,
+.admin-theme-dark textarea {
+  color-scheme: dark;
+  background-color: #202020;
+  color: #f1eee9;
+  border-color: #484848;
+}
+.admin-theme-dark input::placeholder,
+.admin-theme-dark textarea::placeholder {
+  color: #928c84;
+}
+.admin-theme-dark [class*="border-b"] {
+  border-color: #414141;
+}
+.admin-theme-dark article,
+.admin-theme-dark section > [class*="rounded-xl"],
+.admin-theme-dark section > [class*="rounded-lg"] {
+  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+}
+.admin-theme-dark a[href*="wa.me"] {
+  background-color: #203b2a !important;
+  color: #b9e4c3 !important;
+}
+.admin-theme-dark button:focus-visible,
+.admin-theme-dark a:focus-visible,
+.admin-theme-dark select:focus-visible {
+  outline: 2px solid #c6a36a;
+  outline-offset: 2px;
+}
