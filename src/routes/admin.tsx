@@ -379,28 +379,24 @@ function AdminPage() {
     setError("");
     setNotice("");
     try {
-      const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/orders?id=eq.${encodeURIComponent(order.id)}`,
-        {
-          method: "PATCH",
-          headers: {
-            ...headers,
-            Authorization: `Bearer ${session.access_token}`,
-            Prefer: "return=representation",
-          },
-          body: JSON.stringify({ status }),
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/admin-update-order-status`, {
+        method: "POST",
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${session.access_token}`,
         },
-      );
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        throw new Error(body.message || "Não foi possível atualizar o status.");
+        body: JSON.stringify({ order_id: order.id, status }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || "Não foi possível atualizar o status.");
       }
-      const updated = (await response.json()) as Order[];
-      const updatedOrder = updated[0];
-      if (updatedOrder) {
-        setOrders((current) => current.map((item) => item.id === order.id ? { ...item, status: updatedOrder.status } : item));
+      setOrders((current) => current.map((item) => item.id === order.id ? { ...item, status } : item));
+      if (result.warning) {
+        setNotice(`Pedido #${order.order_number} confirmado. Atenção: ${result.warning}`);
+      } else {
+        setNotice(result.message || `Pedido #${order.order_number}: ${STATUS_LABEL[status].toLowerCase()}.`);
       }
-      setNotice(`Pedido #${order.order_number}: ${STATUS_LABEL[status].toLowerCase()}.`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Falha ao atualizar o pedido.");
     }
