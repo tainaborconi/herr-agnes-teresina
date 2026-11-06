@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CalendarDays, CheckCircle2, ChevronDown, MapPin, Minus, Plus, ShoppingBag } from "lucide-react";
+import { CalendarDays, CheckCircle2, ChevronDown, Minus, Plus, ShoppingBag } from "lucide-react";
 import noahImage from "../assets/noah-pedidos.jpg";
 import { whatsappLink } from "@/lib/site";
 import { consultarCep, formatarCep, MSG_FORA_AREA, type ResultadoCep } from "@/lib/cep";
@@ -336,6 +336,7 @@ function Pedidos() {
             <button type="button" onClick={adicionarItem} className="mt-4 inline-flex items-center gap-2 rounded-md border border-[#941b25] px-5 py-3 text-sm font-semibold text-[#941b25] transition hover:bg-[#941b25]/[0.06]"><Plus size={16}/> Adicionar outro barril</button>
             <p className="mt-4 text-xs leading-relaxed text-[#686868]">Todos os pedidos incluem barril lacrado, chopeira elétrica e kit de extração.</p>
           </div>
+          </fieldset>
 
           <div>
             <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">2</span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Seus dados</p><h2 className="mt-1 text-2xl md:text-3xl">Onde vamos entregar?</h2></div></div>
@@ -389,7 +390,6 @@ function Pedidos() {
               )}
             </div>
           </div>
-          </fieldset>
           </fieldset>
         </div>
 
