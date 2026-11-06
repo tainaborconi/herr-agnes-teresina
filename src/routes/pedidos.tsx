@@ -287,7 +287,7 @@ function Pedidos() {
 
       <section className="bg-[#f7f7f5] text-[#171717]"><div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 lg:grid-cols-[1.5fr_0.8fr] lg:py-16">
         <div className="space-y-10">
-          <fieldset disabled={!areaLiberada} aria-disabled={!areaLiberada} className={`space-y-10 transition ${areaLiberada ? "" : "pointer-events-none select-none opacity-40"}`}>
+          <div className="space-y-10">
           <div>
             <div className="mb-5 flex items-center gap-3">
               <span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">1</span>
@@ -336,7 +336,6 @@ function Pedidos() {
             <button type="button" onClick={adicionarItem} className="mt-4 inline-flex items-center gap-2 rounded-md border border-[#941b25] px-5 py-3 text-sm font-semibold text-[#941b25] transition hover:bg-[#941b25]/[0.06]"><Plus size={16}/> Adicionar outro barril</button>
             <p className="mt-4 text-xs leading-relaxed text-[#686868]">Todos os pedidos incluem barril lacrado, chopeira elétrica e kit de extração.</p>
           </div>
-          </fieldset>
 
           <div>
             <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">2</span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Seus dados</p><h2 className="mt-1 text-2xl md:text-3xl">Onde vamos entregar?</h2></div></div>
