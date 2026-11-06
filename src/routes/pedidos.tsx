@@ -78,11 +78,11 @@ function Pedidos() {
   const [cepStatus, setCepStatus] = useState<"idle" | "checking" | "valid" | "outside" | "error">("idle");
   const entregaPermitida =
     cepStatus === "valid" &&
-    ((form.cidade.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toUpperCase() === "TERESINA" && form.estado === "PI") ||
-      (form.cidade.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toUpperCase() === "TIMON" && form.estado === "MA"));
+    ((form.cidade.toUpperCase() === "TERESINA" && form.estado === "PI") ||
+      (form.cidade.toUpperCase() === "TIMON" && form.estado === "MA"));
 
   async function consultarCep(cepInformado: string) {
-    const cep = cepInformado.replace(/\\D/g, "");
+    const cep = cepInformado.replace(/[^0-9]/g, "");
     if (cep.length !== 8) {
       setCepStatus("idle");
       setForm((atual) => ({ ...atual, cidade: "", estado: "" }));
@@ -103,7 +103,7 @@ function Pedidos() {
       const cidade = String(dados.localidade ?? "").trim();
       const estado = String(dados.uf ?? "").trim().toUpperCase();
       setForm((atual) => ({ ...atual, cep, cidade, estado }));
-      const cidadeNormalizada = cidade.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toUpperCase();
+      const cidadeNormalizada = cidade.toUpperCase();
       setCepStatus(
         (cidadeNormalizada === "TERESINA" && estado === "PI") ||
           (cidadeNormalizada === "TIMON" && estado === "MA")
