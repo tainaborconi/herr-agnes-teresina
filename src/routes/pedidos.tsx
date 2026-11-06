@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CalendarDays, CheckCircle2, ChevronDown, Minus, Plus, ShoppingBag } from "lucide-react";
-import noahImage from "../assets/NOAH .JPG";
+import { CalendarDays, CheckCircle2, ChevronDown, MapPin, Minus, Plus, ShoppingBag } from "lucide-react";
+import noahImage from "../assets/noah-pedidos.jpg";
 import { whatsappLink } from "@/lib/site";
+import { consultarCep, formatarCep, MSG_FORA_AREA, type ResultadoCep } from "@/lib/cep";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL, TURNSTILE_SITE_KEY } from "@/lib/supabase-config";
 
 export const Route = createFileRoute("/pedidos")({
@@ -106,6 +107,25 @@ function Pedidos() {
   const [erroEnvio, setErroEnvio] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
   const turnstileSiteKey = TURNSTILE_SITE_KEY;
+  const [cep, setCep] = useState("");
+  const [consultandoCep, setConsultandoCep] = useState(false);
+  const [resultadoCep, setResultadoCep] = useState<ResultadoCep | null>(null);
+  const enderecoAuto = useRef("");
+  const areaLiberada = resultadoCep?.status === "atendido";
+
+  const verificarCep = async () => {
+    if (consultandoCep) return;
+    setConsultandoCep(true);
+    setResultadoCep(null);
+    const r = await consultarCep(cep);
+    setResultadoCep(r);
+    setConsultandoCep(false);
+    if (r.status === "atendido" && (!endereco.trim() || endereco === enderecoAuto.current)) {
+      const sugerido = [r.logradouro, r.bairro, `${r.cidade}-${r.uf}`].filter(Boolean).join(", ");
+      enderecoAuto.current = sugerido;
+      setEndereco(sugerido);
+    }
+  };
 
   const total = useMemo(() => itens.reduce((sum, item) => {
     const produto = CATALOGO.find((p) => p.nome === item.sabor)!;
@@ -118,6 +138,11 @@ function Pedidos() {
 
   const enviarPedido = async () => {
     if (enviando) return;
+    if (resultadoCep?.status !== "atendido") {
+      setErroEnvio("Confirme primeiro o CEP de entrega. Entregamos apenas em Teresina, Timon e regiões atendidas próximas.");
+      document.getElementById("campo-cep")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
     if (!turnstileSiteKey || !turnstileToken) {
       setErroEnvio("Confirme a verificação de segurança antes de enviar o pedido.");
       return;
@@ -208,6 +233,7 @@ function Pedidos() {
         `👤 Nome: ${nome}`,
         `📱 Telefone: ${telefone}`,
         `📍 Endereço: ${endereco}`,
+        `📮 CEP: ${formatarCep(resultadoCep.cep)} (${resultadoCep.cidade}-${resultadoCep.uf})`,
         `📌 Referência: ${referencia}`,
         "",
         "*ITENS DO PEDIDO*",
@@ -261,6 +287,21 @@ function Pedidos() {
 
       <section className="bg-[#f7f7f5] text-[#171717]"><div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 lg:grid-cols-[1.5fr_0.8fr] lg:py-16">
         <div className="space-y-10">
+          <div>
+            <div className="mb-5 flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold"><MapPin size={17} /></span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#941b25]">Área de entrega</p><h2 className="mt-1 text-2xl md:text-3xl">Entregamos no seu endereço?</h2></div></div>
+            <div className="rounded-lg border bg-white p-5 md:p-6">
+              <form className="flex flex-col gap-3 sm:flex-row sm:items-end" onSubmit={(e) => { e.preventDefault(); void verificarCep(); }}>
+                <label className="flex-1 text-sm">CEP de entrega<input id="campo-cep" className={fieldClass} value={cep} onChange={(e) => { setCep(formatarCep(e.target.value)); setResultadoCep(null); }} placeholder="00000-000" inputMode="numeric" autoComplete="postal-code" maxLength={9} /></label>
+                <button type="submit" disabled={consultandoCep} className="rounded-md bg-[#941b25] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-wait disabled:opacity-60">{consultandoCep ? "Consultando..." : "Verificar CEP"}</button>
+              </form>
+              {resultadoCep?.status === "atendido" && <p role="status" className="mt-4 flex gap-2 rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-800"><CheckCircle2 size={18} className="shrink-0" /> Ótimo! Entregamos em {resultadoCep.cidade}-{resultadoCep.uf}. Continue montando seu pedido abaixo.</p>}
+              {resultadoCep?.status === "fora_area" && <p role="alert" className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">CEP de {resultadoCep.cidade}-{resultadoCep.uf}. {MSG_FORA_AREA}</p>}
+              {resultadoCep && resultadoCep.status !== "atendido" && resultadoCep.status !== "fora_area" && <p role="alert" className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{resultadoCep.mensagem}</p>}
+              {!resultadoCep && <p className="mt-3 text-xs text-[#686868]">Informe o CEP para liberar o pedido. Atendemos Teresina-PI e Timon-MA.</p>}
+            </div>
+          </div>
+
+          <fieldset disabled={!areaLiberada} aria-disabled={!areaLiberada} className={`space-y-10 transition ${areaLiberada ? "" : "pointer-events-none select-none opacity-40"}`}>
           <div>
             <div className="mb-5 flex items-center gap-3">
               <span className="grid h-9 w-9 place-items-center rounded-full bg-[#941b25] text-white font-semibold">1</span>
@@ -351,6 +392,7 @@ function Pedidos() {
               )}
             </div>
           </div>
+          </fieldset>
         </div>
 
         <aside className="lg:sticky lg:top-28 lg:self-start">
@@ -366,7 +408,7 @@ function Pedidos() {
             <div className="mt-5 flex items-end justify-between border-t pt-5"><span className="text-sm text-[#686868]">Total dos produtos</span><strong className="text-2xl text-[#941b25]">{money(total)}</strong></div>
             <p className="mt-3 text-xs leading-relaxed text-[#686868]">Valor dos barris com chopeira elétrica e kit de extração inclusos. A equipe confirmará a entrega e as condições finais pelo WhatsApp.</p>
             {erroEnvio && <p role="alert" className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{erroEnvio}</p>}
-            <button type="button" onClick={() => void enviarPedido()} disabled={enviando || !turnstileSiteKey || !turnstileToken} className="pedidos-whatsapp-neon mt-6 inline-flex w-full items-center justify-center rounded-md bg-[#941b25] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-wait disabled:opacity-60">{enviando ? "Registrando pedido..." : "Enviar pedido pelo WhatsApp"}</button>
+            <button type="button" onClick={() => void enviarPedido()} disabled={enviando || !areaLiberada || !turnstileSiteKey || !turnstileToken} className="pedidos-whatsapp-neon mt-6 inline-flex w-full items-center justify-center rounded-md bg-[#941b25] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-wait disabled:opacity-60">{enviando ? "Registrando pedido..." : "Enviar pedido pelo WhatsApp"}</button>
             <p className="mt-3 text-center text-[11px] leading-relaxed text-[#686868]">Você ainda poderá revisar as informações antes de enviar a mensagem.</p>
           </div>
           <div className="mt-4 rounded-lg border p-5 text-sm text-[#686868]"><p className="font-semibold text-[#171717]">Atendemos Teresina, Timon e região.</p><p className="mt-1">A entrega será confirmada pela nossa equipe.</p></div>

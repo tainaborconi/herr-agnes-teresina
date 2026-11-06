@@ -11,4 +11,5 @@
 - [ ] Backend (Lovable Cloud): tabelas orders/order_items, user_roles, RLS, número de pedido sequencial
 - [ ] /pedidos: salvar pedido no banco antes de abrir o WhatsApp, com validação no servidor e anti-duplicidade
 - [ ] /admin: login por e-mail/senha, painel com totais, lista, busca, filtros, detalhes, status e valor final (aguardando e-mail e senha da cliente)
+- [x] /pedidos: verificação de CEP (ViaCEP) como primeira etapa; só Teresina-PI e Timon-MA liberam o pedido
 - [ ] Ocultar Header/Footer/botão WhatsApp dentro do /admin
