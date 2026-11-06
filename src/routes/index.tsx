@@ -69,6 +69,9 @@ const DEPOIMENTOS = [
 
 export const Route = createFileRoute("/")({
   head: () => ({
+    links: [
+      { rel: "preload", as: "image", href: tirandoChopp, fetchPriority: "high" },
+    ],
     meta: [
       { title: "HERR AGNES — Chopp artesanal para festas em Teresina" },
       { name: "description", content: "Chopp artesanal premium em Teresina para aniversários, casamentos, formaturas e eventos corporativos. Delivery com barril no mesmo dia." },
