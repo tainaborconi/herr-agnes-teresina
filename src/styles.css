@@ -231,6 +231,16 @@
   letter-spacing: 0.01em;
 }
 
+.testimonial-highlight {
+  display: inline;
+  padding: 0.16em 0.48em;
+  border-radius: 2px;
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
 
 /* Mesmo brilho neon pulsante da página inicial no botão de envio do pedido */
 .pedidos-whatsapp-neon {
