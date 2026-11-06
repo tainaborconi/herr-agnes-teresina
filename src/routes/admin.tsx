@@ -238,6 +238,12 @@ function AdminPage() {
 
   const visibleOrders = filter === "all" ? orders : orders.filter((order) => order.status === filter);
   const pendingCount = orders.filter((order) => order.status === "pending").length;
+  // Em aberto inclui pedidos novos e em atendimento; cancelados e confirmados ficam fora.
+  const openOrders = orders.filter((order) => order.status === "pending" || order.status === "in_progress");
+  const openAmount = openOrders.reduce((sum, order) => sum + Number(order.total ?? 0), 0);
+  const confirmedAmount = orders
+    .filter((order) => order.status === "confirmed")
+    .reduce((sum, order) => sum + Number(order.confirmed_total ?? order.total ?? 0), 0);
 
   if (!configured) {
     return (
@@ -312,6 +318,19 @@ function AdminPage() {
           <div className="rounded-lg border border-[#e1d8cc] bg-white p-4"><p className="text-xs text-[#766b60]">Confirmados</p><p className="mt-1 text-2xl font-semibold">{orders.filter((order) => order.status === "confirmed").length}</p></div>
         </section>
 
+        <section className="mb-5 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-lg border border-[#d9c8aa] border-l-4 border-l-[#98733d] bg-white p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#98733d]">Valor em aberto</p>
+            <p className="mt-2 text-2xl font-semibold tracking-tight text-[#29231f]">{money(openAmount)}</p>
+            <p className="mt-1 text-xs text-[#766b60]">{openOrders.length} pedido(s) novos ou em atendimento · aguardando confirmação</p>
+          </div>
+          <div className="rounded-lg border border-[#d8dcd2] border-l-4 border-l-[#68765b] bg-white p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#68765b]">Valor confirmado</p>
+            <p className="mt-2 text-2xl font-semibold tracking-tight text-[#29231f]">{money(confirmedAmount)}</p>
+            <p className="mt-1 text-xs text-[#766b60]">Soma dos pedidos com status confirmado</p>
+          </div>
+        </section>
+
         <section className="overflow-hidden rounded-lg border border-[#e1d8cc] bg-white">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#eee7de] p-4">
             <div className="flex items-center gap-2"><ClipboardList size={18} className="text-[#98733d]" /><h2 className="font-semibold">Lista de pedidos</h2></div>
@@ -336,7 +355,8 @@ function AdminPage() {
                       <p className="text-sm text-[#766b60]">{order.customer_phone}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold">{money(order.total)}</p>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8a8076]">Valor do pedido</p>
+                      <p className="mt-0.5 text-lg font-semibold text-[#29231f]">{money(order.total)}</p>
                       <p className="text-xs text-[#766b60]">Criado em {new Date(order.created_at).toLocaleString("pt-BR")}</p>
                     </div>
                   </div>
