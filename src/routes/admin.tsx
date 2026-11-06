@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase-config";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { LogOut, RefreshCw, ShieldCheck, ClipboardList, Mail } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import { LogOut, RefreshCw, ShieldCheck, Mail } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -344,7 +344,7 @@ function AdminPage() {
     }
   }
 
-  async function loadMetaInsights(accessToken: string, period: MetaPeriod) {
+  const loadMetaInsights = useCallback(async (accessToken: string, period: MetaPeriod) => {
     setMetaLoading(true);
     setMetaError("");
     try {
@@ -366,13 +366,13 @@ function AdminPage() {
     } finally {
       setMetaLoading(false);
     }
-  }
+  }, [headers]);
 
   useEffect(() => {
     if (session && activeTab === "meta") {
       void loadMetaInsights(session.access_token, metaPeriod);
     }
-  }, [activeTab, session, metaPeriod]);
+  }, [activeTab, session, metaPeriod, loadMetaInsights]);
 
   async function changeStatus(order: Order, status: OrderStatus) {
     if (!session) return;
