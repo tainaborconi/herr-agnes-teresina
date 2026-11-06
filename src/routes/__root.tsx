@@ -145,10 +145,14 @@ function RootComponent() {
     const sections = Array.from(document.querySelectorAll<HTMLElement>("main section"));
     if (pathname.startsWith("/admin") || sections.length === 0) return;
 
+    // Keep the homepage hero visible immediately so its LCP image is never hidden by scroll reveal.
+    const revealSections = pathname === "/" ? sections.slice(1) : sections;
+    if (revealSections.length === 0) return;
+
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reducedMotion || !("IntersectionObserver" in window)) return;
 
-    sections.forEach((section) => section.classList.add("agnes-scroll-reveal"));
+    revealSections.forEach((section) => section.classList.add("agnes-scroll-reveal"));
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -161,7 +165,7 @@ function RootComponent() {
       { threshold: 0.12, rootMargin: "0px 0px -36px 0px" },
     );
 
-    sections.forEach((section) => observer.observe(section));
+    revealSections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, [pathname]);
 
