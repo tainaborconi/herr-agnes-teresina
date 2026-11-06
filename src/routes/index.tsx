@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ShoppingBag, Calculator, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, type LucideIcon } from "lucide-react";
+import { ShoppingBag, Calculator, Check, PartyPopper, Heart, GraduationCap, Building2, Music2, Sparkles, Instagram, type LucideIcon } from "lucide-react";
 import choppVinho from "@/assets/RED cortada.jpg";
 import ipa from "@/assets/IPA cortada.jpg";
 import munich from "@/assets/MUNICH cortada.jpg";
@@ -16,12 +16,9 @@ import evCorporativo from "@/assets/ev-corporativo.jpg";
 import corridaAdvocacia from "@/assets/corrida-advocacia-2026.jpg.asset.json";
 import oktoberfest from "@/assets/oktoberfest-parnaiba-2026.jpg.asset.json";
 import bbqFest from "@/assets/bbq-fest-beer-picos-2026.png.asset.json";
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { SABORES, TIPOS_EVENTO, INCLUSO, DURACOES, DURACAO_PADRAO, calcularLitros, sugerirBarris } from "@/lib/site";
-import { InstagramBand } from "@/components/InstagramFeed";
 import { ChoppCarousel, type CarouselSlide } from "@/components/ChoppCarousel";
-import { feedQueryOptions } from "@/lib/instagram.queries";
 
 type Evento = { nome: string; detalhe: string; src: string; pos?: string };
 
@@ -147,7 +144,6 @@ function HomeCalculator() {
 }
 
 function Index() {
-  const { data: feed } = useQuery(feedQueryOptions);
   return (
     <div className="home-page">
       <section className="relative overflow-hidden">
@@ -280,7 +276,23 @@ function Index() {
         </div>
       </section>
 
-      <InstagramBand feed={feed} />
+      <section className="section-wine border-t">
+        <div className="mx-auto max-w-6xl px-5 py-14 text-center">
+          <p className="eyebrow">Instagram</p>
+          <h2 className="mt-3 text-3xl sm:text-4xl">Acompanhe a Agnes por lá</h2>
+          <p className="mx-auto mt-3 max-w-lg text-muted-foreground">
+            Bastidores, eventos e muito chopp gelado direto do nosso perfil.
+          </p>
+          <a
+            href="https://instagram.com/herragnes.teresina"
+            target="_blank"
+            rel="noreferrer"
+            className="btn-outline-gold mt-7"
+          >
+            <Instagram size={16} /> Seguir @herragnes.teresina
+          </a>
+        </div>
+      </section>
     </div>
   );
 }
