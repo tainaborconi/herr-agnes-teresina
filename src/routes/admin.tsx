@@ -82,6 +82,8 @@ function AdminPage() {
   const [notice, setNotice] = useState("");
   const [sendingRecovery, setSendingRecovery] = useState(false);
   const [changingEmail, setChangingEmail] = useState(false);
+  const [activeTab, setActiveTab] = useState<"crm" | "meta">("crm");
+  const [draggingOrderId, setDraggingOrderId] = useState<string | null>(null);
 
   const headers = useMemo(
     () => ({
@@ -397,86 +399,117 @@ function AdminPage() {
     );
   }
 
+  const columns: { status: OrderStatus; title: string; hint: string; accent: string }[] = [
+    { status: "pending", title: "Novos pedidos", hint: "Aguardando primeiro contato", accent: "border-t-[#b98a42]" },
+    { status: "in_progress", title: "Em atendimento", hint: "Em conversa com o cliente", accent: "border-t-[#71869a]" },
+    { status: "confirmed", title: "Confirmados", hint: "Vendas concluídas", accent: "border-t-[#66856b]" },
+    { status: "cancelled", title: "Cancelados", hint: "Pedidos que não avançaram", accent: "border-t-[#b47770]" },
+  ];
+  const confirmedRevenue = orders.filter((order) => order.status === "confirmed")
+    .reduce((sum, order) => sum + Number(order.confirmed_total ?? order.total ?? 0), 0);
+  const moveDraggedOrder = (status: OrderStatus) => {
+    if (!draggingOrderId) return;
+    const order = orders.find((item) => item.id === draggingOrderId);
+    if (order && order.status !== status) void changeStatus(order, status);
+    setDraggingOrderId(null);
+  };
+
   return (
-    <main className="min-h-screen bg-[#f7f4ef] px-4 py-8 text-[#29231f] sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
+    <main className="min-h-screen bg-[#f6f4f0] px-4 py-7 text-[#29231f] sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1500px]">
+        <header className="mb-7 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#98733d]">HERR AGNES · ADMINISTRAÇÃO</p>
-            <h1 className="mt-1 font-display text-3xl">Pedidos recebidos</h1>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#98733d]">HERR AGNES · ADMINISTRAÇÃO</p>
+            <h1 className="mt-1 font-display text-3xl">Central comercial</h1>
             <p className="mt-1 text-sm text-[#6c6258]">Olá, {adminName}. Você tem {pendingCount} pedido(s) aguardando atendimento.</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button onClick={() => void changeAdminEmail()} disabled={changingEmail} className="inline-flex items-center gap-2 rounded-md border border-[#d8cec1] bg-white px-3 py-2 text-sm font-medium hover:bg-[#f2ece4] disabled:opacity-60"><Mail size={16} /> {changingEmail ? "Alterando..." : "Alterar e-mail"}</button>
             <button onClick={refreshOrders} disabled={loading} className="inline-flex items-center gap-2 rounded-md border border-[#d8cec1] bg-white px-3 py-2 text-sm font-medium hover:bg-[#f2ece4] disabled:opacity-60"><RefreshCw size={16} /> Atualizar</button>
             <button onClick={signOut} className="inline-flex items-center gap-2 rounded-md bg-[#2b211d] px-3 py-2 text-sm font-medium text-white hover:bg-[#46362e]"><LogOut size={16} /> Sair</button>
           </div>
         </header>
-
         {error && <p role="alert" className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</p>}
         {notice && <p role="status" className="mb-4 rounded-md bg-green-50 p-3 text-sm text-green-800">{notice}</p>}
 
-        <section className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded-lg border border-[#e1d8cc] bg-white p-4"><p className="text-xs text-[#766b60]">Total de pedidos</p><p className="mt-1 text-2xl font-semibold">{orders.length}</p></div>
-          <div className="rounded-lg border border-[#e1d8cc] bg-white p-4"><p className="text-xs text-[#766b60]">Novos</p><p className="mt-1 text-2xl font-semibold">{pendingCount}</p></div>
-          <div className="rounded-lg border border-[#e1d8cc] bg-white p-4"><p className="text-xs text-[#766b60]">Em atendimento</p><p className="mt-1 text-2xl font-semibold">{orders.filter((order) => order.status === "in_progress").length}</p></div>
-          <div className="rounded-lg border border-[#e1d8cc] bg-white p-4"><p className="text-xs text-[#766b60]">Confirmados</p><p className="mt-1 text-2xl font-semibold">{orders.filter((order) => order.status === "confirmed").length}</p></div>
-        </section>
+        <nav className="mb-6 flex gap-2 border-b border-[#ded7ce]">
+          <button onClick={() => setActiveTab("crm")} className={`border-b-2 px-4 py-3 text-sm font-semibold transition ${activeTab === "crm" ? "border-[#98733d] text-[#2b211d]" : "border-transparent text-[#81766b] hover:text-[#2b211d]"}`}>CRM · Pedidos</button>
+          <button onClick={() => setActiveTab("meta")} className={`border-b-2 px-4 py-3 text-sm font-semibold transition ${activeTab === "meta" ? "border-[#98733d] text-[#2b211d]" : "border-transparent text-[#81766b] hover:text-[#2b211d]"}`}>Meta Ads · Resultados</button>
+        </nav>
 
-        <section className="overflow-hidden rounded-lg border border-[#e1d8cc] bg-white">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#eee7de] p-4">
-            <div className="flex items-center gap-2"><ClipboardList size={18} className="text-[#98733d]" /><h2 className="font-semibold">Lista de pedidos</h2></div>
-            <select aria-label="Filtrar pedidos por status" value={filter} onChange={(event) => setFilter(event.target.value as "all" | OrderStatus)} className="rounded-md border border-[#d8cec1] bg-white px-3 py-2 text-sm">
-              <option value="all">Todos os status</option>
-              <option value="pending">Novos</option>
-              <option value="in_progress">Em atendimento</option>
-              <option value="confirmed">Confirmados</option>
-              <option value="cancelled">Cancelados</option>
-            </select>
-          </div>
-          {visibleOrders.length === 0 ? (
-            <div className="p-12 text-center text-sm text-[#766b60]">Nenhum pedido encontrado para este filtro.</div>
-          ) : (
-            <div className="divide-y divide-[#eee7de]">
-              {visibleOrders.map((order) => (
-                <article key={order.id} className="p-5">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-[#98733d]">Pedido #{order.order_number}</p>
-                      <h3 className="mt-1 text-lg font-semibold">{order.customer_name}</h3>
-                      <p className="text-sm text-[#766b60]">{order.customer_phone}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-semibold">{money(order.total)}</p>
-                      <p className="text-xs text-[#766b60]">Criado em {new Date(order.created_at).toLocaleString("pt-BR")}</p>
-                    </div>
-                  </div>
-                  <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
-                    <div><p className="text-xs text-[#8a8076]">Entrega</p><p>{dateTime(order.delivery_date, order.delivery_time)}</p></div>
-                    <div><p className="text-xs text-[#8a8076]">Endereço</p><p>{order.delivery_address}</p>{order.delivery_reference && <p className="text-xs text-[#766b60]">Referência: {order.delivery_reference}</p>}</div>
-                    <div><p className="text-xs text-[#8a8076]">Pagamento</p><p>{order.payment_method}{order.payment_condition ? ` · ${order.payment_condition}` : ""}</p></div>
-                  </div>
-                  <div className="mt-4 rounded-md bg-[#faf8f5] p-3">
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#8a8076]">Itens</p>
-                    {order.order_items?.length ? order.order_items.map((item) => (
-                      <p key={item.id} className="text-sm">{item.quantity} × {item.product_name} · Barril {item.keg_size}L — {money(item.unit_price)} cada</p>
-                    )) : <p className="text-sm text-[#766b60]">Itens não disponíveis neste pedido.</p>}
-                    {order.notes && <p className="mt-2 text-sm"><strong>Observações:</strong> {order.notes}</p>}
-                  </div>
-                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                    <span className="rounded-full bg-[#f2ece4] px-3 py-1 text-xs font-medium">{STATUS_LABEL[order.status]}</span>
-                    <label className="flex items-center gap-2 text-sm">Atualizar status
-                      <select value={order.status} onChange={(event) => void changeStatus(order, event.target.value as OrderStatus)} className="rounded-md border border-[#d8cec1] bg-white px-3 py-2">
-                        {Object.entries(STATUS_LABEL).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-                      </select>
-                    </label>
-                  </div>
-                </article>
-              ))}
+        {activeTab === "crm" ? (
+          <>
+            <section className="mb-6 grid grid-cols-2 gap-3 xl:grid-cols-5">
+              <div className="rounded-xl border border-[#e4ddd3] bg-white p-4"><p className="text-xs text-[#766b60]">Total de pedidos</p><p className="mt-1 text-2xl font-semibold">{orders.length}</p><p className="mt-1 text-[11px] text-[#9a9086]">Pedidos recebidos</p></div>
+              <div className="rounded-xl border border-[#e4ddd3] bg-white p-4"><p className="text-xs text-[#766b60]">Novos</p><p className="mt-1 text-2xl font-semibold">{pendingCount}</p><p className="mt-1 text-[11px] text-[#9a9086]">Precisam de contato</p></div>
+              <div className="rounded-xl border border-[#e4ddd3] bg-white p-4"><p className="text-xs text-[#766b60]">Em atendimento</p><p className="mt-1 text-2xl font-semibold">{orders.filter((order) => order.status === "in_progress").length}</p><p className="mt-1 text-[11px] text-[#9a9086]">Em negociação</p></div>
+              <div className="rounded-xl border border-[#e4ddd3] bg-white p-4"><p className="text-xs text-[#766b60]">Confirmados</p><p className="mt-1 text-2xl font-semibold">{orders.filter((order) => order.status === "confirmed").length}</p><p className="mt-1 text-[11px] text-[#9a9086]">Vendas concluídas</p></div>
+              <div className="col-span-2 rounded-xl border border-[#e4ddd3] bg-white p-4 xl:col-span-1"><p className="text-xs text-[#766b60]">Valor confirmado</p><p className="mt-1 text-2xl font-semibold">{money(confirmedRevenue)}</p><p className="mt-1 text-[11px] text-[#9a9086]">Soma dos pedidos confirmados</p></div>
+            </section>
+            <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
+              <div><h2 className="text-lg font-semibold">Pipeline de vendas</h2><p className="text-sm text-[#81766b]">Arraste os cartões entre as etapas para atualizar o andamento.</p></div>
+              <span className="text-xs text-[#81766b]">{orders.length} pedido(s) no painel</span>
             </div>
-          )}
-        </section>
-        <p className="mt-5 text-center text-xs text-[#8a8076]">Área privada · Os dados são exibidos conforme as permissões do Supabase.</p>
+            <section className="grid items-start gap-4 md:grid-cols-2 2xl:grid-cols-4">
+              {columns.map((column) => {
+                const columnOrders = orders.filter((order) => order.status === column.status);
+                const columnTotal = columnOrders.reduce((sum, order) => sum + Number(order.total || 0), 0);
+                return (
+                  <div key={column.status} onDragOver={(event) => event.preventDefault()} onDrop={() => moveDraggedOrder(column.status)} className={`min-h-[260px] rounded-xl border border-[#e4ddd3] border-t-4 bg-[#eeece8] p-3 ${column.accent}`}>
+                    <div className="mb-3 flex items-start justify-between gap-2 px-1">
+                      <div><h3 className="text-sm font-semibold">{column.title}</h3><p className="mt-0.5 text-[11px] text-[#81766b]">{column.hint}</p></div>
+                      <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold">{columnOrders.length}</span>
+                    </div>
+                    <p className="mb-3 px-1 text-xs text-[#81766b]">{money(columnTotal)} em pedidos</p>
+                    <div className="grid gap-3">
+                      {columnOrders.map((order) => (
+                        <article key={order.id} draggable onDragStart={() => setDraggingOrderId(order.id)} onDragEnd={() => setDraggingOrderId(null)} className={`cursor-grab rounded-lg border border-[#e6dfd6] bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing ${draggingOrderId === order.id ? "opacity-50" : ""}`}>
+                          <div className="flex items-start justify-between gap-2"><span className="text-[11px] font-semibold uppercase tracking-wider text-[#98733d]">Pedido #{order.order_number}</span><span className="text-sm font-semibold">{money(order.confirmed_total ?? order.total)}</span></div>
+                          <h4 className="mt-2 font-semibold leading-snug">{order.customer_name}</h4>
+                          <p className="mt-0.5 text-xs text-[#81766b]">{order.customer_phone}</p>
+                          <div className="mt-3 space-y-1.5 border-t border-[#f0ebe5] pt-3 text-xs text-[#5f574f]">
+                            <p><span className="font-medium">Entrega:</span> {dateTime(order.delivery_date, order.delivery_time)}</p>
+                            <p><span className="font-medium">Pagamento:</span> {order.payment_method}</p>
+                            <p><span className="font-medium">Itens:</span> {order.order_items?.reduce((sum, item) => sum + Number(item.quantity || 0), 0) ?? 0} unidade(s)</p>
+                          </div>
+                          {order.order_items?.length > 0 && <div className="mt-2 rounded-md bg-[#faf8f5] p-2 text-xs text-[#6c6258]">{order.order_items.map((item) => <p key={item.id}>{item.quantity} × {item.product_name} · {item.keg_size}L</p>)}</div>}
+                          {order.notes && <p className="mt-2 line-clamp-2 text-xs italic text-[#81766b]">“{order.notes}”</p>}
+                          <div className="mt-3 flex items-center justify-between gap-2">
+                            <a href={`https://wa.me/${order.customer_phone.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-md bg-[#edf5ed] px-2.5 py-2 text-xs font-semibold text-[#356b43] hover:bg-[#e0eee1]">WhatsApp <span aria-hidden="true">↗</span></a>
+                            <select aria-label={`Alterar etapa do pedido ${order.order_number}`} value={order.status} onChange={(event) => void changeStatus(order, event.target.value as OrderStatus)} className="max-w-[145px] rounded-md border border-[#ded7ce] bg-white px-2 py-2 text-xs">
+                              {Object.entries(STATUS_LABEL).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                            </select>
+                          </div>
+                        </article>
+                      ))}
+                      {columnOrders.length === 0 && <div className="rounded-lg border border-dashed border-[#d5cdc2] px-3 py-8 text-center text-xs text-[#9a9086]">Nenhum pedido nesta etapa</div>}
+                    </div>
+                  </div>
+                );
+              })}
+            </section>
+          </>
+        ) : (
+          <section className="space-y-5">
+            <div><h2 className="text-lg font-semibold">Desempenho das campanhas</h2><p className="text-sm text-[#81766b]">Acompanhe investimento, receita atribuída e retorno dos anúncios que direcionam para o site.</p></div>
+            <div className="grid gap-3 md:grid-cols-3">
+              {[
+                { label: "Investimento no Meta", detail: "Total gasto no período" },
+                { label: "Valor de conversão", detail: "Receita atribuída às campanhas" },
+                { label: "ROAS", detail: "Receita atribuída ÷ investimento" },
+              ].map((metric) => <div key={metric.label} className="rounded-xl border border-[#e4ddd3] bg-white p-5"><p className="text-xs text-[#766b60]">{metric.label}</p><p className="mt-3 text-3xl font-semibold text-[#8c8379]">—</p><p className="mt-1 text-xs text-[#9a9086]">{metric.detail}</p></div>)}
+            </div>
+            <div className="rounded-xl border border-[#e4ddd3] bg-white p-6">
+              <div className="flex items-center gap-3"><div className="rounded-lg bg-[#f2ece4] p-3 text-[#98733d]"><ClipboardList size={22} /></div><div><h3 className="font-semibold">Integração com Meta Ads pendente</h3><p className="text-sm text-[#81766b]">O painel visual já está preparado, mas ainda não está conectado à conta de anúncios.</p></div></div>
+              <div className="mt-5 grid gap-4 border-t border-[#eee7de] pt-5 md:grid-cols-2">
+                <div><p className="text-sm font-semibold">Dados que serão exibidos</p><ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-[#6c6258]"><li>Investimento por campanha e por período</li><li>Compras/conversões atribuídas e valor de conversão</li><li>ROAS geral e por campanha</li><li>Pedidos do site confirmados no CRM</li></ul></div>
+                <div><p className="text-sm font-semibold">Conexão segura</p><p className="mt-2 text-sm leading-6 text-[#6c6258]">A integração será feita pela API oficial da Meta, com credenciais guardadas nos secrets do Supabase — nunca no código público do site. Assim os dados poderão ser atualizados sem expor tokens no navegador.</p></div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-dashed border-[#d8cec1] bg-[#faf8f5] p-4 text-sm text-[#766b60]">Os indicadores aparecem como “—” até a conexão ser configurada. Nenhum investimento ou resultado estimado será exibido como se fosse dado real.</div>
+          </section>
+        )}
+        <p className="mt-7 text-center text-xs text-[#8a8076]">Área privada · Dados protegidos pelas permissões do Supabase.</p>
       </div>
     </main>
   );
