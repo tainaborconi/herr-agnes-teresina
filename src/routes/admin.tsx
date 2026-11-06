@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase-config";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
-import { LogOut, RefreshCw, ShieldCheck, Mail } from "lucide-react";
+import { LogOut, RefreshCw, ShieldCheck, Mail, Moon, Sun } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -116,6 +116,14 @@ function AdminPage() {
   const [metaLoading, setMetaLoading] = useState(false);
   const [metaError, setMetaError] = useState("");
   const [metaPeriod, setMetaPeriod] = useState<MetaPeriod>("last_30d");
+  const [adminTheme, setAdminTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "light";
+    return window.localStorage.getItem("herr-agnes-admin-theme") === "dark" ? "dark" : "light";
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem("herr-agnes-admin-theme", adminTheme);
+  }, [adminTheme]);
 
   const headers = useMemo(
     () => ({
@@ -473,7 +481,7 @@ function AdminPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f6f4f0] px-4 py-7 text-[#29231f] sm:px-6 lg:px-8">
+    <main className={`admin-dashboard min-h-screen px-4 py-7 sm:px-6 lg:px-8 ${adminTheme === "dark" ? "admin-theme-dark" : "bg-[#f6f4f0] text-[#29231f]"}`}>
       <div className="mx-auto max-w-[1500px]">
         <header className="mb-7 flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -482,6 +490,7 @@ function AdminPage() {
             <p className="mt-1 text-sm text-[#6c6258]">Olá, {adminName}. Você tem {pendingCount} pedido(s) aguardando atendimento.</p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <button type="button" onClick={() => setAdminTheme((current) => current === "light" ? "dark" : "light")} aria-label={adminTheme === "light" ? "Ativar tema escuro" : "Ativar tema claro"} title={adminTheme === "light" ? "Ativar tema escuro" : "Ativar tema claro"} className="inline-flex items-center gap-2 rounded-md border border-[#d8cec1] bg-white px-3 py-2 text-sm font-medium hover:bg-[#f2ece4]"><span>{adminTheme === "light" ? <Moon size={16} /> : <Sun size={16} />}</span><span>{adminTheme === "light" ? "Tema escuro" : "Tema claro"}</span></button>
             <button onClick={() => void changeAdminEmail()} disabled={changingEmail} className="inline-flex items-center gap-2 rounded-md border border-[#d8cec1] bg-white px-3 py-2 text-sm font-medium hover:bg-[#f2ece4] disabled:opacity-60"><Mail size={16} /> {changingEmail ? "Alterando..." : "Alterar e-mail"}</button>
             <button onClick={refreshOrders} disabled={loading} className="inline-flex items-center gap-2 rounded-md border border-[#d8cec1] bg-white px-3 py-2 text-sm font-medium hover:bg-[#f2ece4] disabled:opacity-60"><RefreshCw size={16} /> Atualizar</button>
             <button onClick={signOut} className="inline-flex items-center gap-2 rounded-md bg-[#2b211d] px-3 py-2 text-sm font-medium text-white hover:bg-[#46362e]"><LogOut size={16} /> Sair</button>
