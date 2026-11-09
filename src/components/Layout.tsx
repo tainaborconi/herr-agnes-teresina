@@ -34,14 +34,15 @@ export function Header() {
         <div className="agnes-black-friday-track" aria-hidden="true">
           {Array.from({ length: 4 }, (_, i) => (
             <span key={i} className="flex shrink-0 items-center gap-5 px-6 text-xs font-bold uppercase tracking-[0.14em] text-gold sm:text-sm">
-              <span>🖤 BLACK FRIDAY DA AGNES</span>
+              <span>🖤 BLACK FRIDAY</span>
               <span className="text-primary-foreground">— 10% OFF NO BARRIL ZERO GLÚTEN</span>
+              <span className="text-primary-foreground">— CUPOM AGNES10</span>
               <span aria-hidden="true">🍻</span>
               <span className="mx-2 text-gold/50">✦</span>
             </span>
           ))}
         </div>
-        <span className="sr-only">Black Friday da Agnes: 10% de desconto no barril Zero Glúten.</span>
+        <span className="sr-only">Black Friday: 10% de desconto no barril Zero Glúten. Cupom AGNES10.</span>
       </div>
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
         <Link to="/" aria-label="HERR AGNES — início"><img src={logo.url} alt="HERR AGNES Cervejaria" width={1271} height={1124} fetchPriority="high" loading="eager" decoding="async" className="h-14 w-auto" /></Link>
