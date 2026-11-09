@@ -24,6 +24,7 @@ type OrderInput = {
   payment_method: string;
   payment_condition?: string | null;
   notes?: string | null;
+  coupon_code?: string | null;
   items: Array<{ product_name: string; keg_size: number; quantity: number }>;
   turnstile_token?: string;
   fbp?: string | null;
@@ -135,6 +136,15 @@ Deno.serve(async (request) => {
     });
   }
 
+  const couponCode = (input.coupon_code ?? "").trim().toUpperCase();
+  if (couponCode && couponCode !== "AGNES10") {
+    return json({ error: "Cupom inválido. Confira o código e tente novamente." }, 400);
+  }
+  const subtotal = total;
+  const discountPercent = couponCode === "AGNES10" ? 10 : 0;
+  const discountAmount = Math.round(subtotal * discountPercent) / 100;
+  total = Math.max(0, subtotal - discountAmount);
+
   const headers = {
     apikey: serviceKey,
     Authorization: `Bearer ${serviceKey}`,
@@ -153,6 +163,9 @@ Deno.serve(async (request) => {
       payment_method: input.payment_method,
       payment_condition: paymentCondition,
       notes: (input.notes ?? "").trim() || null,
+      coupon_code: couponCode || null,
+      discount_percent: discountPercent,
+      discount_amount: discountAmount,
       fbp: typeof input.fbp === "string" ? input.fbp.slice(0, 255) : null,
       fbc: typeof input.fbc === "string" ? input.fbc.slice(0, 500) : null,
       total,
@@ -211,6 +224,7 @@ Deno.serve(async (request) => {
           <thead><tr><th style="padding:10px;border-bottom:2px solid #ddd;">Produto</th><th style="padding:10px;border-bottom:2px solid #ddd;">Barril</th><th style="padding:10px;border-bottom:2px solid #ddd;">Qtd.</th><th style="padding:10px;border-bottom:2px solid #ddd;">Subtotal</th></tr></thead>
           <tbody>${itemRows}</tbody>
         </table>
+        ${discountPercent ? `<p style="text-align:right;color:#16733c;">Cupom ${escapeHtml(couponCode)} (${discountPercent}%): -${money(discountAmount)}</p>` : ""}
         <h3 style="text-align:right;">Total: ${money(Number(order.total ?? total))}</h3>
         ${input.notes?.trim() ? `<p><strong>Observações:</strong> ${escapeHtml(input.notes.trim())}</p>` : ""}
         <p style="color:#888;font-size:12px;margin-top:28px;">Notificação automática do site Herr Agnes.</p>
@@ -225,6 +239,7 @@ Deno.serve(async (request) => {
       `Pagamento: ${input.payment_method}${paymentCondition ? ` (${paymentCondition})` : ""}`,
       "Itens:",
       ...items.map((item) => `- ${item.product_name}, barril ${item.keg_size}L, quantidade ${item.quantity}, subtotal ${money(item.unit_price * item.quantity)}`),
+      ...(discountPercent ? [`Cupom ${couponCode} (${discountPercent}%): -${money(discountAmount)}`] : []),
       `Total: ${money(Number(order.total ?? total))}`,
       input.notes?.trim() ? `Observações: ${input.notes.trim()}` : "",
     ].filter(Boolean).join("\\n");
@@ -253,5 +268,5 @@ Deno.serve(async (request) => {
     console.error("RESEND_API_KEY is not configured; order notification email was skipped.");
   }
 
-  return json({ order_number: order.order_number, total: order.total });
+  return json({ order_number: order.order_number, subtotal, discount_percent: discountPercent, discount_amount: discountAmount, total: order.total });
 });
