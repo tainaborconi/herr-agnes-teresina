@@ -474,8 +474,8 @@ function Pedidos() {
             <div className="mt-6 rounded-lg border border-[#deded9] bg-[#fafaf8] p-4">
               <p className="text-sm font-semibold">Cupom de desconto</p>
               <div className="mt-2 flex gap-2">
-                <input aria-label="Cupom de desconto" className={`${fieldClass} mt-0 min-w-0 flex-1`} value={cupomDigitado} readOnly placeholder={temZeroGluten ? "Cupom disponível" : "Adicione o Agnes 08 Zero Glúten"} />
-                <button type="button" onClick={aplicarCupom} disabled={!temZeroGluten || cupomAplicado} className="shrink-0 rounded-md bg-[#941b25] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-not-allowed disabled:opacity-50">{cupomAplicado ? "Desconto aplicado" : "Aplicar desconto"}</button>
+                <input aria-label="Cupom de desconto" className={`${fieldClass} mt-0 min-w-0 flex-1`} value={cupomDigitado} onChange={(e) => { setCupomDigitado(e.target.value); setCupomAplicado(false); setMensagemCupom(""); }} placeholder="Digite seu cupom" />
+                <button type="button" onClick={aplicarCupom} disabled={cupomAplicado} className="shrink-0 rounded-md bg-[#941b25] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-not-allowed disabled:opacity-50">{cupomAplicado ? "Desconto aplicado" : "Aplicar desconto"}</button>
               </div>
               {mensagemCupom && <p role="status" className={`mt-2 text-xs ${cupomAplicado ? "text-green-700" : "text-red-600"}`}>{mensagemCupom}</p>}
             </div>
