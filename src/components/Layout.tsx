@@ -33,12 +33,11 @@ export function Header() {
       <div className="overflow-hidden border-b border-gold/30 bg-ink py-2.5" aria-label="Promoção Black Friday">
         <div className="agnes-black-friday-track" aria-hidden="true">
           {Array.from({ length: 4 }, (_, i) => (
-            <span key={i} className="flex shrink-0 items-center gap-5 px-6 text-xs font-bold uppercase tracking-[0.14em] text-gold sm:text-sm">
+            <span key={i} className="flex shrink-0 items-center gap-2 px-3 text-xs font-bold uppercase tracking-[0.14em] text-gold sm:text-sm">
               <span>🖤 BLACK FRIDAY</span>
               <span className="text-primary-foreground">— 10% OFF NO BARRIL ZERO GLÚTEN</span>
               <span className="text-primary-foreground">— CUPOM AGNES10</span>
-              <span aria-hidden="true">🍻</span>
-              <span className="mx-2 text-gold/50">✦</span>
+              <span className="ml-2 text-gold/50">✦</span>
             </span>
           ))}
         </div>
