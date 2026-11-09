@@ -143,6 +143,20 @@ function Pedidos() {
     return sum + (item.tamanho === 30 ? produto.p30 : produto.p50) * item.quantidade;
   }, 0), [itens]);
 
+  const temZeroGluten = itens.some((item) => item.sabor === "Agnes 08 Zero Glúten");
+
+  useEffect(() => {
+    if (temZeroGluten) {
+      setCupomDigitado("AGNES10");
+      setCupomAplicado(false);
+      setMensagemCupom("");
+    } else {
+      setCupomDigitado("");
+      setCupomAplicado(false);
+      setMensagemCupom("");
+    }
+  }, [temZeroGluten]);
+
   const desconto = cupomAplicado ? Math.round(subtotalZeroGluten * 0.10 * 100) / 100 : 0;
   const totalComDesconto = Math.max(0, total - desconto);
 
@@ -436,8 +450,8 @@ function Pedidos() {
             <div className="mt-6 rounded-lg border border-[#deded9] bg-[#fafaf8] p-4">
               <p className="text-sm font-semibold">Cupom de desconto</p>
               <div className="mt-2 flex gap-2">
-                <input aria-label="Código do cupom" className={`${fieldClass} mt-0 min-w-0 flex-1`} value={cupomDigitado} onChange={(e) => { setCupomDigitado(e.target.value.toUpperCase()); setCupomAplicado(false); setMensagemCupom(""); }} placeholder="Digite seu cupom" maxLength={30} />
-                <button type="button" onClick={aplicarCupom} className="shrink-0 rounded-md bg-[#941b25] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#76151d]">Aplicar</button>
+                <input aria-label="Cupom de desconto" className={`${fieldClass} mt-0 min-w-0 flex-1`} value={cupomDigitado} readOnly placeholder={temZeroGluten ? "Cupom disponível" : "Adicione o Agnes 08 Zero Glúten"} />
+                <button type="button" onClick={aplicarCupom} disabled={!temZeroGluten || cupomAplicado} className="shrink-0 rounded-md bg-[#941b25] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-not-allowed disabled:opacity-50">{cupomAplicado ? "Desconto aplicado" : "Aplicar desconto"}</button>
               </div>
               {mensagemCupom && <p role="status" className={`mt-2 text-xs ${cupomAplicado ? "text-green-700" : "text-red-600"}`}>{mensagemCupom}</p>}
             </div>
