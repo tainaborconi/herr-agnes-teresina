@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Check, MessageCircle } from "lucide-react";
 import { PageHero } from "@/components/Layout";
@@ -38,6 +38,33 @@ function Calc() {
   const durTxt = DURACOES.find((d) => d.h === horas)?.rotulo ?? `${horas} horas`;
   const saborTxt = sabores.length ? sabores.join(", ") : "a definir com a Agnes";
   const msg = mensagemOrcamento(pessoas, horas, sabores);
+  const nomesCatalogo: Record<string, string> = {
+    "Zero Glúten": "Agnes 08 Zero Glúten",
+    "Chopp de Vinho": "Red Wein (Chopp de Vinho)",
+  };
+  const saboresParaPedido = (sabores.length ? sabores : ["Pilsen"]).map((sabor) => nomesCatalogo[sabor] ?? sabor);
+  const distribuicao = saboresParaPedido.map((sabor) => ({ sabor, litros: 0, barris: [] as (30 | 50)[] }));
+  const barrisCalculados: (30 | 50)[] = [
+    ...Array.from({ length: b.b50 }, () => 50 as const),
+    ...Array.from({ length: b.b30 }, () => 30 as const),
+  ];
+  barrisCalculados.forEach((tamanho) => {
+    const menorVolume = Math.min(...distribuicao.map((item) => item.litros));
+    const indice = distribuicao.findIndex((item) => item.litros === menorVolume);
+    if (indice >= 0) {
+      distribuicao[indice]!.litros += tamanho;
+      distribuicao[indice]!.barris.push(tamanho);
+    }
+  });
+  const itensCalculados = distribuicao.flatMap((grupo) =>
+    ([30, 50] as const).flatMap((tamanho) => {
+      const quantidade = grupo.barris.filter((barril) => barril === tamanho).length;
+      return quantidade ? [{ sabor: grupo.sabor, tamanho, quantidade }] : [];
+    }),
+  );
+  const linkPedido = itensCalculados.length
+    ? `/pedidos?itens=${encodeURIComponent(JSON.stringify(itensCalculados))}`
+    : "/pedidos";
 
   const alternar = (nome: string) =>
     setSabores((atual) => (atual.includes(nome) ? atual.filter((s) => s !== nome) : [...atual, nome]));
@@ -60,7 +87,7 @@ function Calc() {
           <fieldset>
             <legend className="text-sm">Sabor do chopp <span className="text-muted-foreground">(opcional)</span></legend>
             <p className="mt-1 text-xs text-muted-foreground">
-              Pode marcar um ou mais. A escolha não muda a quantidade estimada — ela só vai junto no seu pedido de orçamento.
+              Escolha um ou mais sabores. A quantidade total calculada será dividida da forma mais equilibrada possível entre eles.
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               {SABORES.map((s) => {
@@ -102,9 +129,9 @@ function Calc() {
             <p className="rounded-md border border-gold/50 bg-secondary p-4 text-sm leading-relaxed text-foreground">
               <span className="font-semibold text-gold">Observação:</span> {OBS_CALCULADORA}
             </p>
-            <Link to="/pedidos" className="btn-gold mt-6 w-fit">
+            <a href={linkPedido} className="btn-gold mt-6 w-fit">
               Fazer pedido online agora
-            </Link>
+            </a>
           </div>
         </div>
       </section>
