@@ -16,6 +16,34 @@ export function Header() {
   const [open, setOpen] = useState(false);
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-wine backdrop-blur">
+      <style>{`
+        @keyframes agnes-black-friday-marquee {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        .agnes-black-friday-track {
+          display: flex;
+          width: max-content;
+          animation: agnes-black-friday-marquee 28s linear infinite;
+        }
+        .agnes-black-friday-track:hover { animation-play-state: paused; }
+        @media (prefers-reduced-motion: reduce) {
+          .agnes-black-friday-track { animation: none; }
+        }
+      `}</style>
+      <div className="overflow-hidden border-b border-gold/30 bg-ink py-2.5" aria-label="Promoção Black Friday">
+        <div className="agnes-black-friday-track" aria-hidden="true">
+          {Array.from({ length: 4 }, (_, i) => (
+            <span key={i} className="flex shrink-0 items-center gap-5 px-6 text-xs font-bold uppercase tracking-[0.14em] text-gold sm:text-sm">
+              <span>🖤 BLACK FRIDAY DA AGNES</span>
+              <span className="text-primary-foreground">— 10% OFF NO BARRIL ZERO GLÚTEN</span>
+              <span aria-hidden="true">🍻</span>
+              <span className="mx-2 text-gold/50">✦</span>
+            </span>
+          ))}
+        </div>
+        <span className="sr-only">Black Friday da Agnes: 10% de desconto no barril Zero Glúten.</span>
+      </div>
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
         <Link to="/" aria-label="HERR AGNES — início"><img src={logo.url} alt="HERR AGNES Cervejaria" width={1271} height={1124} fetchPriority="high" loading="eager" decoding="async" className="h-14 w-auto" /></Link>
         <nav className="hidden gap-6 text-sm lg:flex">
