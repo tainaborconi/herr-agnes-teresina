@@ -104,6 +104,9 @@ function Pedidos() {
   const [pagamento, setPagamento] = useState("Pix");
   const [condicaoCartao, setCondicaoCartao] = useState("Crédito à vista");
   const [observacoes, setObservacoes] = useState("");
+  const [cupomDigitado, setCupomDigitado] = useState("");
+  const [cupomAplicado, setCupomAplicado] = useState(false);
+  const [mensagemCupom, setMensagemCupom] = useState("");
   const [camposPendentes, setCamposPendentes] = useState<string[]>([]);
   const [enviando, setEnviando] = useState(false);
   const [erroEnvio, setErroEnvio] = useState("");
@@ -133,6 +136,20 @@ function Pedidos() {
     const produto = CATALOGO.find((p) => p.nome === item.sabor)!;
     return sum + (item.tamanho === 30 ? produto.p30 : produto.p50) * item.quantidade;
   }, 0), [itens]);
+
+  const desconto = cupomAplicado ? Math.round(total * 0.10 * 100) / 100 : 0;
+  const totalComDesconto = Math.max(0, total - desconto);
+
+  const aplicarCupom = () => {
+    if (cupomDigitado.trim().toUpperCase() === "AGNES10") {
+      setCupomAplicado(true);
+      setCupomDigitado("AGNES10");
+      setMensagemCupom("Cupom aplicado! Você ganhou 10% de desconto.");
+    } else {
+      setCupomAplicado(false);
+      setMensagemCupom("Cupom inválido. Confira o código e tente novamente.");
+    }
+  };
 
   const atualizarItem = (index: number, patch: Partial<Item>) => setItens((atual) => atual.map((item, i) => i === index ? { ...item, ...patch } : item));
   const adicionarItem = () => setItens((atual) => [...atual, { sabor: "Pilsen", tamanho: 30, quantidade: 1 }]);
@@ -202,6 +219,7 @@ function Pedidos() {
           payment_method: pagamento,
           payment_condition: pagamento === "Cartão de crédito" ? condicaoCartao : null,
           notes: observacoes.trim() || null,
+          coupon_code: cupomAplicado ? "AGNES10" : null,
           turnstile_token: turnstileToken,
           fbp: getCookieValue("_fbp"),
           fbc: getCookieValue("_fbc"),
@@ -244,7 +262,8 @@ function Pedidos() {
         "*ITENS DO PEDIDO*",
         linhas,
         "",
-        `💰 *TOTAL DO PEDIDO: ${money(total)}*`,
+        cupomAplicado ? `🎟️ Cupom AGNES10: 10% de desconto (-${money(desconto)})` : null,
+        cupomAplicado ? `💰 *TOTAL COM DESCONTO: ${money(totalComDesconto)}*` : `💰 *TOTAL DO PEDIDO: ${money(total)}*`,
         "",
         "*ENTREGA*",
         `📅 Data desejada: ${dataFormatada}`,
@@ -261,7 +280,7 @@ function Pedidos() {
         fbq?: (...args: (string | Record<string, unknown>)[]) => void;
       };
       pixelWindow.fbq?.("track", "Lead", {
-        value: Number(total.toFixed(2)),
+        value: Number(totalComDesconto.toFixed(2)),
         currency: "BRL",
         order_id: String(numeroPedido),
       });
@@ -408,7 +427,19 @@ function Pedidos() {
                 return <div key={i} className="flex justify-between gap-3 text-sm"><span className="text-[#686868]">{item.quantidade}x {item.sabor} {item.tamanho}L</span><strong className="whitespace-nowrap">{money(preco * item.quantidade)}</strong></div>;
               })}
             </div>
-            <div className="mt-5 flex items-end justify-between border-t pt-5"><span className="text-sm text-[#686868]">Total dos produtos</span><strong className="text-2xl text-[#941b25]">{money(total)}</strong></div>
+            <div className="mt-6 rounded-lg border border-[#deded9] bg-[#fafaf8] p-4">
+              <p className="text-sm font-semibold">Cupom de desconto</p>
+              <div className="mt-2 flex gap-2">
+                <input aria-label="Código do cupom" className={`${fieldClass} mt-0 min-w-0 flex-1`} value={cupomDigitado} onChange={(e) => { setCupomDigitado(e.target.value.toUpperCase()); setCupomAplicado(false); setMensagemCupom(""); }} placeholder="Digite seu cupom" maxLength={30} />
+                <button type="button" onClick={aplicarCupom} className="shrink-0 rounded-md bg-[#941b25] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#76151d]">Aplicar</button>
+              </div>
+              {mensagemCupom && <p role="status" className={`mt-2 text-xs ${cupomAplicado ? "text-green-700" : "text-red-600"}`}>{mensagemCupom}</p>}
+            </div>
+            <div className="mt-5 space-y-2 border-t pt-5 text-sm">
+              <div className="flex justify-between"><span className="text-[#686868]">Total dos produtos</span><strong>{money(total)}</strong></div>
+              {cupomAplicado && <div className="flex justify-between text-green-700"><span>Desconto AGNES10 (10%)</span><strong>− {money(desconto)}</strong></div>}
+              <div className="flex items-end justify-between border-t pt-3"><span className="font-semibold">Total a pagar</span><strong className="text-2xl text-[#941b25]">{money(totalComDesconto)}</strong></div>
+            </div>
             <p className="mt-3 text-xs leading-relaxed text-[#686868]">Valor dos barris com chopeira elétrica e kit de extração inclusos. A equipe confirmará a entrega e as condições finais pelo WhatsApp.</p>
             {erroEnvio && <p role="alert" className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{erroEnvio}</p>}
             <button type="button" onClick={() => void enviarPedido()} disabled={enviando || !areaLiberada || !turnstileSiteKey || !turnstileToken} className="pedidos-whatsapp-neon mt-6 inline-flex w-full items-center justify-center rounded-md bg-[#941b25] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#76151d] disabled:cursor-wait disabled:opacity-60">{enviando ? "Registrando pedido..." : "Enviar pedido pelo WhatsApp"}</button>
