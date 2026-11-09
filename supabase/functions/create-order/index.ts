@@ -133,6 +133,15 @@ Deno.serve(async (request) => {
     });
   }
 
+  const couponCode = (input.coupon_code ?? "").trim().toUpperCase();
+  if (couponCode && couponCode !== "AGNES10") {
+    return json({ error: "Cupom inválido. Confira o código e tente novamente." }, 400);
+  }
+  const subtotal = total;
+  const discountPercent = couponCode === "AGNES10" ? 10 : 0;
+  const discountAmount = Math.round(subtotal * discountPercent) / 100;
+  total = Math.max(0, subtotal - discountAmount);
+
   const headers = {
     apikey: serviceKey,
     Authorization: `Bearer ${serviceKey}`,
@@ -174,5 +183,5 @@ Deno.serve(async (request) => {
     return json({ error: "Não foi possível concluir o registro do pedido. Tente novamente." }, 502);
   }
 
-  return json({ order_number: order.order_number, total: order.total });
+  return json({ order_number: order.order_number, subtotal, discount_percent: discountPercent, discount_amount: discountAmount, total: order.total });
 });
