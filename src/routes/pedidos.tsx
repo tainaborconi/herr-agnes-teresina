@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, CheckCircle2, ChevronDown, Minus, Plus, ShoppingBag } from "lucide-react";
-import noahImage from "../assets/noah-pedidos.jpg";
+import pedidosBanner from "../assets/94f83cae-a2f9-48f7-b8e1-fd8e28b60186_1793841632606_0.jpg";
 import { whatsappLink } from "@/lib/site";
 import { consultarCep, formatarCep, MSG_FORA_AREA, type ResultadoCep } from "@/lib/cep";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL, TURNSTILE_SITE_KEY } from "@/lib/supabase-config";
@@ -309,9 +309,9 @@ function Pedidos() {
     <>
       <section className="w-full overflow-hidden bg-[#171717]">
         <img
-          src={noahImage}
+          src={pedidosBanner}
           alt="HERR AGNES — chopp para celebrar"
-          className="h-[220px] w-full object-cover object-[center_75%] md:h-[380px]"
+          className="mx-auto block h-auto w-full object-contain"
         />
       </section>
 
