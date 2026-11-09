@@ -92,7 +92,31 @@ function TurnstileWidget({ siteKey, onToken }: { siteKey: string; onToken: (toke
 }
 
 function Pedidos() {
-  const [itens, setItens] = useState<Item[]>([{ sabor: "Pilsen", tamanho: 30, quantidade: 1 }]);
+  const [itens, setItens] = useState<Item[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const dados = new URLSearchParams(window.location.search).get("itens");
+        if (dados) {
+          const recebidos = JSON.parse(dados) as unknown;
+          if (Array.isArray(recebidos)) {
+            const validos = recebidos.filter((item): item is Item =>
+              item !== null &&
+              typeof item === "object" &&
+              CATALOGO.some((produto) => produto.nome === (item as Item).sabor) &&
+              ((item as Item).tamanho === 30 || (item as Item).tamanho === 50) &&
+              Number.isInteger((item as Item).quantidade) &&
+              (item as Item).quantidade > 0 &&
+              (item as Item).quantidade <= 20
+            );
+            if (validos.length) return validos;
+          }
+        }
+      } catch {
+        // Link inválido: mantém o pedido padrão.
+      }
+    }
+    return [{ sabor: "Pilsen", tamanho: 30, quantidade: 1 }];
+  });
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [endereco, setEndereco] = useState("");
