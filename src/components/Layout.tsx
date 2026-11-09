@@ -26,7 +26,6 @@ export function Header() {
           width: max-content;
           animation: agnes-black-friday-marquee 28s linear infinite;
         }
-        .agnes-black-friday-track:hover { animation-play-state: paused; }
         @media (prefers-reduced-motion: reduce) {
           .agnes-black-friday-track { animation: none; }
         }
