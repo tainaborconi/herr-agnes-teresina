@@ -137,17 +137,23 @@ function Pedidos() {
     return sum + (item.tamanho === 30 ? produto.p30 : produto.p50) * item.quantidade;
   }, 0), [itens]);
 
-  const desconto = cupomAplicado ? Math.round(total * 0.10 * 100) / 100 : 0;
+  const subtotalZeroGluten = useMemo(() => itens.reduce((sum, item) => {
+    if (item.sabor !== "Agnes 08 Zero Glúten") return sum;
+    const produto = CATALOGO.find((p) => p.nome === item.sabor)!;
+    return sum + (item.tamanho === 30 ? produto.p30 : produto.p50) * item.quantidade;
+  }, 0), [itens]);
+
+  const desconto = cupomAplicado ? Math.round(subtotalZeroGluten * 0.10 * 100) / 100 : 0;
   const totalComDesconto = Math.max(0, total - desconto);
 
   const aplicarCupom = () => {
-    if (cupomDigitado.trim().toUpperCase() === "AGNES10") {
+    if (cupomDigitado.trim().toUpperCase() === "AGNES10" && subtotalZeroGluten > 0) {
       setCupomAplicado(true);
       setCupomDigitado("AGNES10");
-      setMensagemCupom("Cupom aplicado! Você ganhou 10% de desconto.");
+      setMensagemCupom("Cupom aplicado! Você ganhou 10% de desconto no Agnes 08 Zero Glúten.");
     } else {
       setCupomAplicado(false);
-      setMensagemCupom("Cupom inválido. Confira o código e tente novamente.");
+      setMensagemCupom(cupomDigitado.trim().toUpperCase() === "AGNES10" ? "O cupom AGNES10 é válido somente para o Agnes 08 Zero Glúten. Adicione esse sabor ao pedido para usar o desconto." : "Cupom inválido. Confira o código e tente novamente.");
     }
   };
 
@@ -437,7 +443,7 @@ function Pedidos() {
             </div>
             <div className="mt-5 space-y-2 border-t pt-5 text-sm">
               <div className="flex justify-between"><span className="text-[#686868]">Total dos produtos</span><strong>{money(total)}</strong></div>
-              {cupomAplicado && <div className="flex justify-between text-green-700"><span>Desconto AGNES10 (10%)</span><strong>− {money(desconto)}</strong></div>}
+              {cupomAplicado && <div className="flex justify-between text-green-700"><span>Desconto AGNES10 (10% no Agnes 08 Zero Glúten)</span><strong>− {money(desconto)}</strong></div>}
               <div className="flex items-end justify-between border-t pt-3"><span className="font-semibold">Total a pagar</span><strong className="text-2xl text-[#941b25]">{money(totalComDesconto)}</strong></div>
             </div>
             <p className="mt-3 text-xs leading-relaxed text-[#686868]">Valor dos barris com chopeira elétrica e kit de extração inclusos. A equipe confirmará a entrega e as condições finais pelo WhatsApp.</p>
