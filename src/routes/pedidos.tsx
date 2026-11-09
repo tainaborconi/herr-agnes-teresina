@@ -184,6 +184,7 @@ function Pedidos() {
           payment_method: pagamento,
           payment_condition: pagamento === "Cartão de crédito" ? condicaoCartao : null,
           notes: observacoes.trim() || null,
+          coupon_code: cupomAplicado ? "AGNES10" : null,
           turnstile_token: turnstileToken,
           items: itens.map((item) => ({
             product_name: item.sabor,
