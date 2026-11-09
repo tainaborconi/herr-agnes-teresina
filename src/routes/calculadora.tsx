@@ -124,6 +124,23 @@ function Calc() {
             <p className="mt-2 text-muted-foreground">
               <span className="font-semibold text-gold">Sabores:</span> {saborTxt}
             </p>
+            {itensCalculados.length > 0 && (
+              <div className="mt-4 rounded-md border border-gold/40 bg-secondary p-4 text-sm">
+                <p className="font-semibold text-gold">Distribuição sugerida por sabor</p>
+                <ul className="mt-2 space-y-1 text-foreground">
+                  {itensCalculados.map((item) => (
+                    <li key={`${item.sabor}-${item.tamanho}`}>
+                      {item.sabor}: {item.quantidade} barril(is) de {item.tamanho}L
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {sabores.length > barrisCalculados.length && barrisCalculados.length > 0 && (
+              <p className="mt-3 text-xs leading-relaxed text-amber-200">
+                Foram calculados {barrisCalculados.length} barris para {sabores.length} sabores. Como cada sabor precisa de pelo menos um barril, nem todos poderão entrar neste pedido sem aumentar a quantidade.
+              </p>
+            )}
           </div>
           <div className="mt-8">
             <p className="rounded-md border border-gold/50 bg-secondary p-4 text-sm leading-relaxed text-foreground">
