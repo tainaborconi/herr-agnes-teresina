@@ -143,7 +143,7 @@ function RootComponent() {
 
   useEffect(() => {
     const sections = Array.from(document.querySelectorAll<HTMLElement>("main section"));
-    if (pathname.startsWith("/admin") || sections.length === 0) return;
+    if (pathname.startsWith("/admin") || pathname === "/pedidos" || sections.length === 0) return;
 
     // Keep the homepage hero visible immediately so its LCP image is never hidden by scroll reveal.
     const revealSections = pathname === "/" ? sections.slice(1) : sections;
