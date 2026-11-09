@@ -24,8 +24,11 @@ type OrderInput = {
   payment_method: string;
   payment_condition?: string | null;
   notes?: string | null;
+  coupon_code?: string | null;
   items: Array<{ product_name: string; keg_size: number; quantity: number }>;
   turnstile_token?: string;
+  fbp?: string | null;
+  fbc?: string | null;
 };
 
 const json = (body: unknown, status = 200) =>
@@ -142,6 +145,15 @@ Deno.serve(async (request) => {
   const discountAmount = Math.round(subtotal * discountPercent) / 100;
   total = Math.max(0, subtotal - discountAmount);
 
+  const couponCode = (input.coupon_code ?? "").trim().toUpperCase();
+  if (couponCode && couponCode !== "AGNES10") {
+    return json({ error: "Cupom inválido. Confira o código e tente novamente." }, 400);
+  }
+  const subtotal = total;
+  const discountPercent = couponCode === "AGNES10" ? 10 : 0;
+  const discountAmount = Math.round(subtotal * discountPercent) / 100;
+  total = Math.max(0, subtotal - discountAmount);
+
   const headers = {
     apikey: serviceKey,
     Authorization: `Bearer ${serviceKey}`,
@@ -160,6 +172,11 @@ Deno.serve(async (request) => {
       payment_method: input.payment_method,
       payment_condition: paymentCondition,
       notes: (input.notes ?? "").trim() || null,
+      coupon_code: couponCode || null,
+      discount_percent: discountPercent,
+      discount_amount: discountAmount,
+      fbp: typeof input.fbp === "string" ? input.fbp.slice(0, 255) : null,
+      fbc: typeof input.fbc === "string" ? input.fbc.slice(0, 500) : null,
       total,
     }),
   });
@@ -181,6 +198,85 @@ Deno.serve(async (request) => {
       headers,
     });
     return json({ error: "Não foi possível concluir o registro do pedido. Tente novamente." }, 502);
+  }
+
+
+  // Notify both administrators after the order and its items are safely stored.
+  // Email failures must never undo or block a successful customer order.
+  const resendApiKey = Deno.env.get("RESEND_API_KEY");
+  if (resendApiKey) {
+    const escapeHtml = (value: unknown) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+    })[char] ?? char);
+    const money = (value: number) => new Intl.NumberFormat("pt-BR", {
+      style: "currency", currency: "BRL",
+    }).format(value);
+    const itemRows = items.map((item) =>
+      `<tr><td style="padding:10px;border-bottom:1px solid #eee;">${escapeHtml(item.product_name)}</td><td style="padding:10px;border-bottom:1px solid #eee;">${item.keg_size} L</td><td style="padding:10px;border-bottom:1px solid #eee;">${item.quantity}</td><td style="padding:10px;border-bottom:1px solid #eee;">${money(item.unit_price * item.quantity)}</td></tr>`
+    ).join("");
+    const subject = `Novo pedido #${order.order_number} - Herr Agnes`;
+    const html = `
+      <div style="font-family:Arial,sans-serif;color:#222;max-width:680px;margin:0 auto;">
+        <h2 style="margin-bottom:4px;">Novo pedido recebido 🍻</h2>
+        <p style="color:#666;margin-top:0;">Pedido #${escapeHtml(order.order_number)} registrado no site Herr Agnes.</p>
+        <h3>Dados do cliente</h3>
+        <p><strong>Nome:</strong> ${escapeHtml(input.customer_name)}<br>
+        <strong>Telefone:</strong> ${escapeHtml(input.customer_phone)}<br>
+        <strong>Endereço:</strong> ${escapeHtml(input.delivery_address)}<br>
+        <strong>Referência:</strong> ${escapeHtml(input.delivery_reference)}</p>
+        <h3>Entrega e pagamento</h3>
+        <p><strong>Data:</strong> ${escapeHtml(input.delivery_date)}<br>
+        <strong>Horário:</strong> ${escapeHtml(input.delivery_time)}<br>
+        <strong>Pagamento:</strong> ${escapeHtml(input.payment_method)}${paymentCondition ? ` (${escapeHtml(paymentCondition)})` : ""}</p>
+        <h3>Itens do pedido</h3>
+        <table style="width:100%;border-collapse:collapse;text-align:left;">
+          <thead><tr><th style="padding:10px;border-bottom:2px solid #ddd;">Produto</th><th style="padding:10px;border-bottom:2px solid #ddd;">Barril</th><th style="padding:10px;border-bottom:2px solid #ddd;">Qtd.</th><th style="padding:10px;border-bottom:2px solid #ddd;">Subtotal</th></tr></thead>
+          <tbody>${itemRows}</tbody>
+        </table>
+        ${discountPercent ? `<p style="text-align:right;color:#16733c;">Cupom ${escapeHtml(couponCode)} (${discountPercent}%): -${money(discountAmount)}</p>` : ""}
+        ${discountPercent ? `<p style="text-align:right;color:#16733c;">Cupom ${escapeHtml(couponCode)} (${discountPercent}%): -${money(discountAmount)}</p>` : ""}
+        <h3 style="text-align:right;">Total: ${money(Number(order.total ?? total))}</h3>
+        ${input.notes?.trim() ? `<p><strong>Observações:</strong> ${escapeHtml(input.notes.trim())}</p>` : ""}
+        <p style="color:#888;font-size:12px;margin-top:28px;">Notificação automática do site Herr Agnes.</p>
+      </div>`;
+    const textBody = [
+      `Novo pedido #${order.order_number} - Herr Agnes`,
+      `Cliente: ${input.customer_name}`,
+      `Telefone: ${input.customer_phone}`,
+      `Endereço: ${input.delivery_address}`,
+      `Referência: ${input.delivery_reference}`,
+      `Entrega: ${input.delivery_date} às ${input.delivery_time}`,
+      `Pagamento: ${input.payment_method}${paymentCondition ? ` (${paymentCondition})` : ""}`,
+      "Itens:",
+      ...items.map((item) => `- ${item.product_name}, barril ${item.keg_size}L, quantidade ${item.quantity}, subtotal ${money(item.unit_price * item.quantity)}`),
+      ...(discountPercent ? [`Cupom ${couponCode} (${discountPercent}%): -${money(discountAmount)}`] : []),
+      ...(discountPercent ? [`Cupom ${couponCode} (${discountPercent}%): -${money(discountAmount)}`] : []),
+      `Total: ${money(Number(order.total ?? total))}`,
+      input.notes?.trim() ? `Observações: ${input.notes.trim()}` : "",
+    ].filter(Boolean).join("\\n");
+    try {
+      const emailResponse = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${resendApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "Herr Agnes Pedidos <pedidos@herragnesteresina.com.br>",
+          to: ["agnesteresina@gmail.com", "tainalimaborconi@gmail.com"],
+          subject,
+          html,
+          text: textBody,
+        }),
+      });
+      if (!emailResponse.ok) {
+        console.error("Order notification email failed:", await emailResponse.text());
+      }
+    } catch (emailError) {
+      console.error("Order notification email request failed:", emailError);
+    }
+  } else {
+    console.error("RESEND_API_KEY is not configured; order notification email was skipped.");
   }
 
   return json({ order_number: order.order_number, subtotal, discount_percent: discountPercent, discount_amount: discountAmount, total: order.total });
