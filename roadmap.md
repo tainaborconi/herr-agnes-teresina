@@ -13,3 +13,4 @@
 - [ ] /admin: login por e-mail/senha, painel com totais, lista, busca, filtros, detalhes, status e valor final (aguardando e-mail e senha da cliente)
 - [x] /pedidos: verificação de CEP (ViaCEP) como primeira etapa; só Teresina-PI e Timon-MA liberam o pedido
 - [ ] Ocultar Header/Footer/botão WhatsApp dentro do /admin
+- [x] Supabase sempre acordado: workflow do GitHub Actions consulta o banco a cada 3 dias e reativa o próprio agendamento (secrets SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY cadastrados; teste manual OK em 16/11/2026)
