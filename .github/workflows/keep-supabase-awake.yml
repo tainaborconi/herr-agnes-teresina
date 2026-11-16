@@ -1,0 +1,51 @@
+# Mantém o Supabase (plano gratuito) acordado.
+# O Supabase pausa projetos gratuitos após 7 dias sem atividade;
+# este workflow faz uma consulta leve no banco a cada 3 dias.
+#
+# Secrets necessários (GitHub → Settings → Secrets and variables → Actions):
+#   SUPABASE_URL              ex.: https://hyenifcivcgoqpkphgsr.supabase.co
+#   SUPABASE_PUBLISHABLE_KEY  chave pública (anon/publishable) do .env
+
+name: Manter Supabase acordado
+
+on:
+  schedule:
+    - cron: "0 12 */3 * *" # a cada 3 dias, 12:00 UTC (09:00 em Teresina)
+  workflow_dispatch: # permite rodar manualmente pela aba Actions
+
+permissions:
+  actions: write # necessário para reativar o próprio agendamento
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar o banco
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
+            echo "::error::Cadastre os secrets SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY."
+            exit 1
+          fi
+          status=$(curl -s -o response.txt -w "%{http_code}" \
+            "${SUPABASE_URL%/}/rest/v1/orders?select=id&limit=1" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY")
+          echo "HTTP $status"
+          cat response.txt; echo
+          # 200 = consulta feita (vazia por causa do RLS é normal).
+          # Qualquer outra coisa (ex.: 540 = projeto pausado) falha e o GitHub avisa por e-mail.
+          if [ "$status" != "200" ]; then
+            echo "::error::Supabase respondeu HTTP $status. Verifique se o projeto está pausado."
+            exit 1
+          fi
+
+      - name: Reativar o agendamento (evita o desligamento após 60 dias sem commits)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -X PUT \
+            "repos/${{ github.repository }}/actions/workflows/keep-supabase-awake.yml/enable"
