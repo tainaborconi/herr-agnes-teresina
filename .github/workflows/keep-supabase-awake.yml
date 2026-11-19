@@ -1,10 +1,12 @@
-# Mantém o Supabase (plano gratuito) acordado.
+# Mantém os projetos Supabase (plano gratuito) acordados.
 # O Supabase pausa projetos gratuitos após 7 dias sem atividade;
-# este workflow faz uma consulta leve no banco a cada 3 dias.
+# este workflow faz uma consulta leve em cada banco a cada 3 dias.
 #
-# Secrets necessários (GitHub → Settings → Secrets and variables → Actions):
-#   SUPABASE_URL              ex.: https://hyenifcivcgoqpkphgsr.supabase.co
-#   SUPABASE_PUBLISHABLE_KEY  chave pública (anon/publishable) do .env
+# Projetos consultados:
+#   1. efdgljkcrngtaztazxgb — projeto principal (painel /admin, login, CRM).
+#      URL e chave pública vêm de src/lib/supabase-config.ts (já públicas no site).
+#   2. Lovable Cloud — lido dos secrets SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY
+#      (GitHub → Settings → Secrets and variables → Actions).
 
 name: Manter Supabase acordado
 
@@ -21,29 +23,39 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Consultar o banco
+      - name: Consultar os bancos
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+          MAIN_URL: https://efdgljkcrngtaztazxgb.supabase.co
+          MAIN_KEY: sb_publishable_ESB3eGD26Go3CwcG3JpACg_vyl17tLH
+          CLOUD_URL: ${{ secrets.SUPABASE_URL }}
+          CLOUD_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
         run: |
-          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
-            echo "::error::Cadastre os secrets SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY."
-            exit 1
-          fi
-          status=$(curl -s -o response.txt -w "%{http_code}" \
-            "${SUPABASE_URL%/}/rest/v1/orders?select=id&limit=1" \
-            -H "apikey: $SUPABASE_KEY" \
-            -H "Authorization: Bearer $SUPABASE_KEY")
-          echo "HTTP $status"
-          cat response.txt; echo
-          # 200 = consulta feita (vazia por causa do RLS é normal).
-          # Qualquer outra coisa (ex.: 540 = projeto pausado) falha e o GitHub avisa por e-mail.
-          if [ "$status" != "200" ]; then
-            echo "::error::Supabase respondeu HTTP $status. Verifique se o projeto está pausado."
-            exit 1
-          fi
+          failed=0
+          ping() {
+            name="$1"; url="$2"; key="$3"
+            if [ -z "$url" ] || [ -z "$key" ]; then
+              echo "::warning::$name: URL ou chave não configurada, pulando."
+              return
+            fi
+            status=$(curl -s -m 30 -o response.txt -w "%{http_code}" \
+              "${url%/}/rest/v1/orders?select=id&limit=1" \
+              -H "apikey: $key" \
+              -H "Authorization: Bearer $key")
+            echo "$name → HTTP $status"
+            # 200 = consulta feita (vazia por causa do RLS é normal).
+            # Qualquer outra coisa (ex.: 000/540 = projeto pausado) marca falha
+            # e o GitHub avisa por e-mail.
+            if [ "$status" != "200" ]; then
+              echo "::error::$name respondeu HTTP $status. Verifique se o projeto está pausado no painel do Supabase."
+              failed=1
+            fi
+          }
+          ping "Principal (efdg…)" "$MAIN_URL" "$MAIN_KEY"
+          ping "Lovable Cloud" "$CLOUD_URL" "$CLOUD_KEY"
+          exit $failed
 
       - name: Reativar o agendamento (evita o desligamento após 60 dias sem commits)
+        if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
